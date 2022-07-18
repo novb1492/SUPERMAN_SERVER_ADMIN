@@ -1,6 +1,6 @@
-package com.kimcompany.jangbogbackendver2.Company.Model;
+package com.kimcompany.jangbogbackendver2.Store.Model;
 
-import com.kimcompany.jangbogbackendver2.Common.AddressColumn;
+
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import lombok.AllArgsConstructor;
@@ -14,23 +14,23 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "COMPANY")
+@Table(name = "EMPLOYEE")
 @Entity
-public class CompanyEntity {
+public class EmployeeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "COMPANY_ID", unique = false)
+    @Column(name = "EMPLOYEE_ID")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STORE_ID",referencedColumnName = "STORE_ID")
+    private StoreEntity storeEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ADMIN_ID",referencedColumnName = "ADMIN_ID")
     private MemberEntity memberEntity;
 
     @Embedded
-    private AddressColumn addressColumn;
-
-    @Embedded
     private CommonColumn commonColumn;
-
-
 }

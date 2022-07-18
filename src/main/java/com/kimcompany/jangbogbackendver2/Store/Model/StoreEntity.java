@@ -3,7 +3,6 @@ package com.kimcompany.jangbogbackendver2.Store.Model;
 import com.kimcompany.jangbogbackendver2.Common.AddressColumn;
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
 import com.kimcompany.jangbogbackendver2.Company.Model.CompanyEntity;
-import com.kimcompany.jangbogbackendver2.admin.Model.AdminEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
