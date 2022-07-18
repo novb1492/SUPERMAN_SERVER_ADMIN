@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class CommonColumn {
 
     @Column(name = "STATE", columnDefinition = "TINYINT")
-    private int state;
+    private Integer state;
 
     @Column(name = "CREATED")
     @CreatedDate

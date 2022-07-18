@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -15,13 +16,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "MEMBER")
+@Table(name = "ADMIN",indexes = {@Index(name = "EMAIL_INDEX", columnList = "EMAIL")})
 @Entity
 public class MemberEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MEMBER_ID")
+    @Column(name = "ADMIN_ID")
     private Long id;
 
     @Column(name = "EMAIL",nullable = false,length = 50)
@@ -39,17 +40,14 @@ public class MemberEntity {
     @Column(name = "PHONE",nullable = false,length = 20)
     private String phone;
 
-    @Column(name = "ADDR",nullable = false,length = 50)
-    private String addr;
+    @Column(name = "ROLE",nullable = false,length = 20)
+    private String role;
 
     @Embedded
     private CommonColumn commonColumn;
 
     @Column(name = "LAST_LOGIN_DATE")
     private LocalDateTime lastLoginDate;
-
-    @Column(name = "BIRTH",nullable = false)
-    private LocalDate birth;
 
     @Column(name = "Last_UPDATE_PWD_DATE",nullable = false)
     private LocalDate lastUpdatePwdDate;
@@ -63,10 +61,8 @@ public class MemberEntity {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
-                ", addr='" + addr + '\'' +
                 ", commonColumn=" + commonColumn +
                 ", lastLoginDate=" + lastLoginDate +
-                ", birth=" + birth +
                 ", lastUpdatePwdDate=" + lastUpdatePwdDate +
                 '}';
     }
