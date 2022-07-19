@@ -37,7 +37,8 @@ public class SecurityConfig  {
         return  new BCryptPasswordEncoder();
     }
 
-    protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .csrf().disable()
