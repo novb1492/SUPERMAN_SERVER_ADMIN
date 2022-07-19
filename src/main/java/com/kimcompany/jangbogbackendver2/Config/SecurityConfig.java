@@ -2,6 +2,8 @@ package com.kimcompany.jangbogbackendver2.Config;
 
 
 import com.kimcompany.jangbogbackendver2.Filter.CorsConfig;
+import com.kimcompany.jangbogbackendver2.Filter.LoginFilter;
+import com.kimcompany.jangbogbackendver2.Util.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +27,7 @@ public class SecurityConfig  {
     private final CorsConfig corsConfig;
     private final AuthenticationConfiguration authenticationConfiguration;
 
-   // private final LoginService loginService;
+    private final LoginService loginService;
    // private final AuthorizationService authorizationService;
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -45,7 +47,7 @@ public class SecurityConfig  {
                 //.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 //.and()
                 .addFilter(corsConfig.corsfilter())
-                //.addFilter(new LoginFilter(authenticationManager(), loginService))
+                .addFilter(new LoginFilter(loginService,authenticationManager(authenticationConfiguration)))
                 //.addFilter(new AuthorizationFilter(authenticationManager(), authorizationService))
                 .formLogin().disable().httpBasic().disable()
                 .authorizeRequests().antMatchers("/auth/**").authenticated()
