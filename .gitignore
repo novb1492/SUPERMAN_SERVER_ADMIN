@@ -42,4 +42,5 @@ LoginService.java
 loginController.java
 AuthorizationFilter.java
 AuthorizationService.java
+LoginServiceTest.java
 
