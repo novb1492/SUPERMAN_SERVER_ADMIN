@@ -11,7 +11,7 @@ public class MemberService {
 
     private final MemberRepo memberRepo;
 
-    public Long updateLoginFailPwdNum(int num,Long memberId){
+    public Integer updateLoginFailPwdNum(int num,Long memberId){
         return memberRepo.updatePwdFail(num, memberId);
     }
 
