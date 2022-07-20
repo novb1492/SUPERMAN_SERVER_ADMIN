@@ -1,5 +1,6 @@
 package com.kimcompany.jangbogbackendver2.Util;
 
+import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.StringUtils;

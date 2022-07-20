@@ -14,6 +14,6 @@ class UserDetailsServiceTest {
 
     @Test
     public void test(){
-        System.out.println(memberRepo.findByEmail("user123").toString());
+        System.out.println(memberRepo.findByUserId("user123").toString());
     }
 }

@@ -16,16 +16,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "ADMIN",indexes = {@Index(name = "EMAIL_INDEX", columnList = "EMAIL")})
+@Table(name = "ADMIN",indexes = {@Index(name = "EMAIL_INDEX", columnList = "EMAIL"),@Index(name = "PHONE_INDEX", columnList = "PHONE"),@Index(name = "ID_INDEX", columnList = "ID")})
 @Entity
 public class MemberEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ADMIN_ID")
+    @Column(name = "ADMIN_ID",unique = true)
     private Long id;
 
-    @Column(name = "EMAIL",nullable = false,length = 50)
+    @Column(name = "ID",nullable = false,length = 50)
+    private String userId;
+    @Column(name = "EMAIL",nullable = false,length = 50,unique = true)
     private String email;
 
     @Column(name = "PWD",nullable = false,length = 1000)
@@ -37,7 +39,7 @@ public class MemberEntity {
     @Column(name = "LAST_NAME",nullable = false,length = 20)
     private String lastName;
 
-    @Column(name = "PHONE",nullable = false,length = 20)
+    @Column(name = "PHONE",nullable = false,length = 20,unique = true)
     private String phone;
 
     @Column(name = "ROLE",nullable = false,length = 20)
