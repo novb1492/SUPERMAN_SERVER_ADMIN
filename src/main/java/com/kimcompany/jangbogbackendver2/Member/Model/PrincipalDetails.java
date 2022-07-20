@@ -52,7 +52,12 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return memberEntity.getLastUpdatePwdDate().plusMonths(BasicText.updatePwdPeriodMon).isAfter(LocalDate.now());
+        if(memberEntity.getLastUpdatePwdDate().plusMonths(BasicText.updatePwdPeriodMon).isAfter(LocalDate.now())){
+            return true;
+        }else if(memberEntity.getFailPwd()<5){
+            return true;
+        }
+        return false;
     }
 
     @Override

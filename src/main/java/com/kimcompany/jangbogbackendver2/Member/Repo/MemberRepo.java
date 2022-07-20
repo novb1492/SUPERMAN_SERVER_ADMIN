@@ -20,4 +20,8 @@ public interface MemberRepo extends JpaRepository<MemberEntity,Long>, MemberSupp
     @Query("UPDATE MemberEntity m SET m.lastLoginDate=:now WHERE m.email=:email")
     void updateLoginDate(@Param("now")LocalDateTime now ,@Param("email")String email);
 
+    @Modifying
+    @Query("update MemberEntity m set m.failPwd=:num where m.id=:id")
+    Long updatePwdFail(@Param("num")int num,@Param("id")Long id);
+
 }

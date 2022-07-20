@@ -52,6 +52,9 @@ public class MemberEntity {
     @Column(name = "Last_UPDATE_PWD_DATE",nullable = false)
     private LocalDate lastUpdatePwdDate;
 
+    @Column(name = "FAIL_PWD",nullable = false,columnDefinition = "TINYINT")
+    private Integer failPwd;
+
     @Override
     public String toString() {
         return "MemberEntity{" +
