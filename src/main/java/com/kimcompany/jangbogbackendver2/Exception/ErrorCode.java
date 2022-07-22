@@ -15,8 +15,8 @@ public enum ErrorCode {
     NOT_FOUND_REFRESH_INFO(INTERNAL_SERVER_ERROR, "재발급 정보를 찾지 못했습니다"),
 
     EXPIRATION_REFRESH_TOKEN(INTERNAL_SERVER_ERROR,"세션 만료 재로그인 필요"),
-    FAIL_MAKE_TOKEN(INTERNAL_SERVER_ERROR,"세션 만료 재로그인 필요")
-
+    FAIL_MAKE_TOKEN(INTERNAL_SERVER_ERROR,"세션 만료 재로그인 필요"),
+    UNAUTHORIZED_TOKEN(UNAUTHORIZED, "사용 불가능한 토큰입니다.")
             ;
 
     private final HttpStatus httpStatus;
