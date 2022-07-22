@@ -24,4 +24,9 @@ public interface MemberRepo extends JpaRepository<MemberEntity,Long>, MemberSupp
     @Query("update MemberEntity m set m.failPwd=:num,m.lastLoginDate=:now where m.id=:id")
     Integer updatePwdFail(@Param("num")int num,@Param("id")Long id,@Param(("now"))LocalDateTime now);
 
+    @Modifying
+    @Query("update MemberEntity m set m.failPwd=m.failPwd+1 where m.userId=:userId")
+    Integer updateFailNum(@Param("userId")String userId);
+
+
 }
