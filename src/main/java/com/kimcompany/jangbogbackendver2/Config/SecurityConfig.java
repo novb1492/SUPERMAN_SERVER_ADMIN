@@ -1,8 +1,10 @@
 package com.kimcompany.jangbogbackendver2.Config;
 
 
+import com.kimcompany.jangbogbackendver2.Filter.AuthorizationFilter;
 import com.kimcompany.jangbogbackendver2.Filter.CorsConfig;
 import com.kimcompany.jangbogbackendver2.Filter.LoginFilter;
+import com.kimcompany.jangbogbackendver2.Util.AuthorizationService;
 import com.kimcompany.jangbogbackendver2.Util.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ public class SecurityConfig  {
     private final AuthenticationConfiguration authenticationConfiguration;
 
     private final LoginService loginService;
-   // private final AuthorizationService authorizationService;
+    private final AuthorizationService authorizationService;
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -48,7 +50,7 @@ public class SecurityConfig  {
                 //.and()
                 .addFilter(corsConfig.corsfilter())
                 .addFilter(new LoginFilter(loginService,authenticationManager(authenticationConfiguration)))
-                //.addFilter(new AuthorizationFilter(authenticationManager(), authorizationService))
+                .addFilter(new AuthorizationFilter(authenticationManager(authenticationConfiguration), authorizationService))
                 .formLogin().disable().httpBasic().disable()
                 .authorizeRequests().antMatchers("/auth/**").authenticated()
                 .anyRequest().permitAll();

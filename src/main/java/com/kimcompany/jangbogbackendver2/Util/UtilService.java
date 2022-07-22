@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Util;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.PrincipalDetails;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.kimcompany.jangbogbackendver2.Text.PropertiesText;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +13,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -54,15 +56,21 @@ public class UtilService {
     }
     public static Map<String,String> getAuthentication(){
         HttpServletRequest request = getHttpSerRequest();
+        Cookie[] cookies = request.getCookies();
         Map<String, String> token = new HashMap<>();
-        token.put(BasicText.AuthenticationText, request.getHeader(BasicText.AuthenticationText));
-        token.put(BasicText.refreshTokenHeaderName,request.getHeader(BasicText.refreshTokenHeaderName));
+        for(Cookie c:cookies){
+            if(c.getName().equals(AuthenticationText)){
+                token.put(AuthenticationText, c.getValue());
+            }else if(c.getName().equals(refreshTokenHeaderName)){
+                token.put(refreshTokenHeaderName,c.getValue());
+            }
+        }
         return token;
     }
     public static void saveAuthenticationInCookie(String accessToken,String refreshToken) {
         HttpServletResponse response = getHttpSerResponse();
         //엑세스토큰 쿠키 삽입
-        ResponseCookie cookie = ResponseCookie.from(BasicText.AuthenticationText, accessToken)
+        ResponseCookie cookie = ResponseCookie.from(AuthenticationText, accessToken)
                 .httpOnly(true).build();
         response.addHeader("Set-Cookie",cookie.toString());
         //리프레시토큰 쿠키 삽입
