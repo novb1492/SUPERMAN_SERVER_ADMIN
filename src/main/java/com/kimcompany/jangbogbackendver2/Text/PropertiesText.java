@@ -10,42 +10,45 @@ public class PropertiesText {
     public static int refreshTokenExpireDay;
     public static String accessTokenName;
     public static String refreshTokenName;
-    public static String jwtSign;
-
+    public static String accessTokenSign;
     public static int redisPort;
-
     public static String redisHost;
+    public static String refreshTokenSign;
 
     @Value("${spring.redis.host}")
     public void setRedisHost(String value){
-        this.redisHost = value;
+        redisHost = value;
     }
     @Value("${spring.redis.port}")
     public void setRedisPort(String value){
-        this.redisPort = Integer.parseInt(value);
+        redisPort = Integer.parseInt(value);
     }
-    /*@Value("${jwt.access.token.name}")
+    @Value("${access.token.name}")
     public  void setAccessTokenName(String accessTokenName) {
-        this.accessTokenName = accessTokenName;
+        PropertiesText.accessTokenName = accessTokenName;
     }
 
-    @Value("${jwt.refresh.token.name}")
+    @Value("${refresh.token.name}")
     public  void setRefreshTokenName(String refreshTokenName) {
-        this.refreshTokenName = refreshTokenName;
+        PropertiesText.refreshTokenName = refreshTokenName;
     }
 
-    @Value("${jwt.sing}")
-    public void setJwtSign(String value) {
-        this.jwtSign = value;
+    @Value("${access.token.sign}")
+    public void setAccessTokenSign(String value) {
+        accessTokenSign = value;
+    }
+    @Value("${refresh.token.sign}")
+    public void setRefreshTokenSign(String value) {
+        refreshTokenSign = value;
     }
 
-    @Value("${refresh.expire.day}")
+    @Value("${refresh.token.day}")
     public void setRefreshTokenExpireDay(String value) {
-        this.refreshTokenExpireDay = Integer.parseInt(value);
+        refreshTokenExpireDay = Integer.parseInt(value);
     }
 
-    @Value("${access.expire.min}")
+    @Value("${access.token.min}")
     public void setAccessTokenExpireMin(String value) {
         this.accessTokenExpireMin = Integer.parseInt(value);
-    }*/
+    }
 }

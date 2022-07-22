@@ -18,7 +18,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     private final MemberRepo memberRepo;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MemberEntity memberEntity = memberRepo.findByEmail(username).orElseThrow(() -> new RuntimeException(BasicText.notFoundByEmail));
+        MemberEntity memberEntity = memberRepo.findByUserId(username).orElseThrow(() -> new RuntimeException(BasicText.notFoundByEmail));
         return new PrincipalDetails(memberEntity);
     }
 }
