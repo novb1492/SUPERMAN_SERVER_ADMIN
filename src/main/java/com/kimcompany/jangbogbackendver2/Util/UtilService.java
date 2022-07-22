@@ -19,8 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.AuthenticationText;
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.refreshTokenHeaderName;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 public class UtilService {
 
@@ -76,14 +75,13 @@ public class UtilService {
     public static int LoginExceptionHandle(AuthenticationException failed) {
         int state = 0;
         if (Objects.equals(failed.getMessage(), "자격 증명에 실패하였습니다.")) {
-            state = BasicText.notEqualPwd;
+            state = notEqualPwd;
         } else if (Objects.equals(failed.getMessage(), "사용자 계정이 잠겨 있습니다.")) {
-            state = BasicText.accountLock;
+            state = accountLock;
         }
         return state;
     }
     public static PrincipalDetails getPrincipalDetails(){
         return (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
-
 }

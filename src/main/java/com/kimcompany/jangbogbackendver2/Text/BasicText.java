@@ -15,5 +15,8 @@ public class BasicText {
     public static String refreshKey = "again";
     public static int notEqualPwd=1;
     public static int accountLock=2;
+    public static String notEqualPwdMessage = "비밀번호가 일치하지 않습니다";
+    public static String accountLockMessage = "사용자 계정이 잠겨있습니다 본인인증 후 진행해주세요";
+    public static String notFoundByUserid = "일치하는 아이디가 없습니다";
 
 }

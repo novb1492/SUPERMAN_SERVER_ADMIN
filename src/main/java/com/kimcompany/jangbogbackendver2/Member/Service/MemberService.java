@@ -14,7 +14,11 @@ public class MemberService {
     private final MemberRepo memberRepo;
 
     public Integer updateSuccessLogin(Long memberId){
+        System.out.println( LocalDateTime.now());
         return memberRepo.updatePwdFail(0, memberId, LocalDateTime.now());
+    }
+    public Integer updateFailLoginTime(String userId){
+        return memberRepo.updateFailNum(userId);
     }
 
 }
