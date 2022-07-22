@@ -11,7 +11,7 @@ public class BasicText {
     public static String basicLoginType = "superMan";
     public static String successText = "SUCCESS";
     public static String failText = "FAIL";
-    public static String loginKey = "login";
+    public static String loginKey = "Login";
     public static String refreshKey = "again";
     public static int notEqualPwd=1;
     public static int accountLock=2;
