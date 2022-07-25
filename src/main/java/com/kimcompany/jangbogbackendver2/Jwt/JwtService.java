@@ -17,7 +17,7 @@ public class JwtService {
         return JWT.create().withSubject(PropertiesText.accessTokenName).withClaim("id",id).withExpiresAt(new Date(System.currentTimeMillis()+1000* PropertiesText.accessTokenExpireMin)).sign(Algorithm.HMAC512(PropertiesText.accessTokenSign));
     }
     public String getToken(String tokenName,int expireSecond,String jwtSign) {
-        return JWT.create().withSubject(tokenName).withExpiresAt(new Date(System.currentTimeMillis()+(1000*expireSecond))).sign(Algorithm.HMAC512(jwtSign));
+        return JWT.create().withSubject(tokenName).withExpiresAt(new Date(System.currentTimeMillis()+expireSecond)).sign(Algorithm.HMAC512(jwtSign));
     }
     public long openAccessToken(String accessToken) {
         return JWT.require(Algorithm.HMAC512(PropertiesText.accessTokenSign)).build().verify(accessToken).getClaim("id").asLong();
