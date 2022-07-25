@@ -10,16 +10,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
@@ -91,5 +96,14 @@ public class UtilService {
     }
     public static PrincipalDetails getPrincipalDetails(){
         return (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+    public static File convert(MultipartFile multipartFile) {
+        File file=new File(LocalDate.now().toString()+ UUID.randomUUID()+multipartFile.getOriginalFilename());
+        try(FileOutputStream fileOutputStream=new FileOutputStream(file)){
+            fileOutputStream.write(multipartFile.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 }
