@@ -58,29 +58,16 @@ public class UtilService {
     }
     public static Map<String,String> getAuthentication(){
         HttpServletRequest request = getHttpSerRequest();
-        Cookie[] cookies = request.getCookies();
         Map<String, String> token = new HashMap<>();
-        for(Cookie c:cookies){
-            if(c.getName().equals(AuthenticationText)){
-                token.put(AuthenticationText, c.getValue());
-            }else if(c.getName().equals(refreshTokenHeaderName)){
-                token.put(refreshTokenHeaderName,c.getValue());
-            }
-        }
+        token.put(AuthenticationText, request.getHeader(AuthenticationText));
+        token.put(refreshTokenHeaderName,request.getHeader(refreshTokenHeaderName));
+
         return token;
     }
     public static void saveAuthenticationInCookie(String accessToken,String refreshToken) {
         HttpServletResponse response = getHttpSerResponse();
-        //엑세스토큰 쿠키 삽입
-        ResponseCookie cookie = ResponseCookie.from(AuthenticationText, accessToken)
-                .httpOnly(true).build();
-        response.addHeader("Set-Cookie",cookie.toString());
-        //리프레시토큰 쿠키 삽입
-        ResponseCookie cookie2 = ResponseCookie.from(refreshTokenHeaderName, refreshToken)
-                .httpOnly(true).build();
-        response.addHeader("Set-Cookie",cookie2.toString());
-
-
+        response.setHeader(AuthenticationText,accessToken);
+        response.setHeader(refreshTokenHeaderName,refreshToken);
     }
     public static int LoginExceptionHandle(AuthenticationException failed) {
         int state = 0;
