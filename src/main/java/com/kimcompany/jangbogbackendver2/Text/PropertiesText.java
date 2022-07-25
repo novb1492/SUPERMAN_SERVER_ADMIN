@@ -14,6 +14,17 @@ public class PropertiesText {
     public static int redisPort;
     public static String redisHost;
     public static String refreshTokenSign;
+    public static String awsAccessKey;
+    public static String awsSecret;
+
+    @Value("${cloud.aws.credentials.access-key}")
+    public void setAwsAccessKey(String value){
+        awsAccessKey = value;
+    }
+    @Value("${cloud.aws.credentials.secret-key}")
+    public void setAwsSecret(String value){
+        awsSecret = value;
+    }
 
     @Value("${spring.redis.host}")
     public void setRedisHost(String value){
