@@ -21,10 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
@@ -105,5 +102,15 @@ public class UtilService {
             e.printStackTrace();
         }
         return file;
+    }
+    public static List<File>getFiles(List<MultipartFile>multipartFiles){
+        List<File> files = new ArrayList<>();
+        if(multipartFiles.isEmpty()){
+            return files;
+        }
+        for(MultipartFile m:multipartFiles){
+            files.add(UtilService.convert(m));
+        }
+        return files;
     }
 }

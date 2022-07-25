@@ -16,7 +16,12 @@ public class PropertiesText {
     public static String refreshTokenSign;
     public static String awsAccessKey;
     public static String awsSecret;
+    public static String awsUrl;
 
+    @Value("${aws.s3.url}")
+    public void setAwsUrl(String value){
+        awsUrl = value;
+    }
     @Value("${cloud.aws.credentials.access-key}")
     public void setAwsAccessKey(String value){
         awsAccessKey = value;
