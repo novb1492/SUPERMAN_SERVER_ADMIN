@@ -17,7 +17,22 @@ public class PropertiesText {
     public static String awsAccessKey;
     public static String awsSecret;
     public static String awsUrl;
+    public static String coolSmsKey;
+    public static String coolSmsSecret;
+    public static String companyNum;
 
+    @Value("${cool.apikey}")
+    public void setCoolSmsKey(String value){
+        coolSmsKey = value;
+    }
+    @Value("${cool.apiSecret}")
+    public void setCoolSmsSecret(String value){
+        coolSmsSecret = value;
+    }
+    @Value("${company.num}")
+    public void setCompanyNum(String value){
+        companyNum = value;
+    }
     @Value("${aws.s3.url}")
     public void setAwsUrl(String value){
         awsUrl = value;

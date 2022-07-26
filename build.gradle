@@ -27,6 +27,8 @@ repositories {
 }
 
 dependencies {
+        // https://mvnrepository.com/artifact/net.nurigo/javaSDK
+        implementation group: 'net.nurigo', name: 'javaSDK', version: '2.2'
 
 //    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-aws-messaging aws sqs
 //    implementation group: 'org.springframework.cloud', name: 'spring-cloud-aws-messaging', version: '2.2.6.RELEASE'
@@ -58,6 +60,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
 }
 //querydsl 추가 시작
 def querydslDir = "$buildDir/generated/querydsl"
