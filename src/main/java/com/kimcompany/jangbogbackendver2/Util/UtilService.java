@@ -10,16 +10,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.util.*;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
@@ -56,29 +58,16 @@ public class UtilService {
     }
     public static Map<String,String> getAuthentication(){
         HttpServletRequest request = getHttpSerRequest();
-        Cookie[] cookies = request.getCookies();
         Map<String, String> token = new HashMap<>();
-        for(Cookie c:cookies){
-            if(c.getName().equals(AuthenticationText)){
-                token.put(AuthenticationText, c.getValue());
-            }else if(c.getName().equals(refreshTokenHeaderName)){
-                token.put(refreshTokenHeaderName,c.getValue());
-            }
-        }
+        token.put(AuthenticationText, request.getHeader(AuthenticationText));
+        token.put(refreshTokenHeaderName,request.getHeader(refreshTokenHeaderName));
+
         return token;
     }
     public static void saveAuthenticationInCookie(String accessToken,String refreshToken) {
         HttpServletResponse response = getHttpSerResponse();
-        //엑세스토큰 쿠키 삽입
-        ResponseCookie cookie = ResponseCookie.from(AuthenticationText, accessToken)
-                .httpOnly(true).build();
-        response.addHeader("Set-Cookie",cookie.toString());
-        //리프레시토큰 쿠키 삽입
-        ResponseCookie cookie2 = ResponseCookie.from(refreshTokenHeaderName, refreshToken)
-                .httpOnly(true).build();
-        response.addHeader("Set-Cookie",cookie2.toString());
-
-
+        response.setHeader(AuthenticationText,accessToken);
+        response.setHeader(refreshTokenHeaderName,refreshToken);
     }
     public static int LoginExceptionHandle(AuthenticationException failed) {
         int state = 0;
@@ -91,5 +80,24 @@ public class UtilService {
     }
     public static PrincipalDetails getPrincipalDetails(){
         return (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+    public static File convert(MultipartFile multipartFile) {
+        File file=new File(LocalDate.now().toString()+ UUID.randomUUID()+multipartFile.getOriginalFilename());
+        try(FileOutputStream fileOutputStream=new FileOutputStream(file)){
+            fileOutputStream.write(multipartFile.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+    public static List<File>getFiles(List<MultipartFile>multipartFiles){
+        List<File> files = new ArrayList<>();
+        if(multipartFiles.isEmpty()){
+            return files;
+        }
+        for(MultipartFile m:multipartFiles){
+            files.add(UtilService.convert(m));
+        }
+        return files;
     }
 }

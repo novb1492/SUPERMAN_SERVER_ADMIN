@@ -14,6 +14,37 @@ public class PropertiesText {
     public static int redisPort;
     public static String redisHost;
     public static String refreshTokenSign;
+    public static String awsAccessKey;
+    public static String awsSecret;
+    public static String awsUrl;
+    public static String coolSmsKey;
+    public static String coolSmsSecret;
+    public static String companyNum;
+
+    @Value("${cool.apikey}")
+    public void setCoolSmsKey(String value){
+        coolSmsKey = value;
+    }
+    @Value("${cool.apiSecret}")
+    public void setCoolSmsSecret(String value){
+        coolSmsSecret = value;
+    }
+    @Value("${company.num}")
+    public void setCompanyNum(String value){
+        companyNum = value;
+    }
+    @Value("${aws.s3.url}")
+    public void setAwsUrl(String value){
+        awsUrl = value;
+    }
+    @Value("${cloud.aws.credentials.access-key}")
+    public void setAwsAccessKey(String value){
+        awsAccessKey = value;
+    }
+    @Value("${cloud.aws.credentials.secret-key}")
+    public void setAwsSecret(String value){
+        awsSecret = value;
+    }
 
     @Value("${spring.redis.host}")
     public void setRedisHost(String value){

@@ -52,7 +52,7 @@ public class SecurityConfig  {
                 .addFilter(new LoginFilter(loginService,authenticationManager(authenticationConfiguration)))
                 .addFilter(new AuthorizationFilter(authenticationManager(authenticationConfiguration), authorizationService))
                 .formLogin().disable().httpBasic().disable()
-                .authorizeRequests().antMatchers("/auth/**").authenticated()
+                .authorizeRequests().antMatchers("/auths/**").authenticated()
                 .anyRequest().permitAll();
 
         return http.build();
