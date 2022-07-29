@@ -20,6 +20,12 @@ public class PropertiesText {
     public static String coolSmsKey;
     public static String coolSmsSecret;
     public static String companyNum;
+    public static String sqsPhoneEndPoint;
+
+    @Value("${sqs.phone.endpoint}")
+    public void setSqsPhoneEndPoint(String value){
+        sqsPhoneEndPoint = value;
+    }
 
     @Value("${cool.apikey}")
     public void setCoolSmsKey(String value){
