@@ -4,6 +4,9 @@ import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.PrincipalDetails;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Text.PropertiesText;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +29,14 @@ import java.util.*;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 public class UtilService {
+
+    public static JSONObject stringToJson(String jsonString) throws  ParseException{
+        JSONParser parser = new JSONParser();
+        Object obj;
+        obj = parser.parse(jsonString);
+        JSONObject jsonObj = (JSONObject) obj;
+        return jsonObj;
+    }
 
     public static HttpServletResponse getHttpSerResponse() {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
