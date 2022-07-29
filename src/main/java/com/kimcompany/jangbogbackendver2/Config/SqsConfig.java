@@ -16,6 +16,12 @@ import org.springframework.context.annotation.Primary;
 
 import static com.kimcompany.jangbogbackendver2.Text.PropertiesText.awsAccessKey;
 
+/**
+ * sqs는 propertiesText.java보다 bean에 빨리 올라감
+ * propertiesText.java 가 static이여서 빈순서 지정 어노테이션도 안먹힘
+ * 방법은 propertiesText 에 Value어노테이션으로 해서 getter로 하는방법
+ * 아니면 여기서 직접 주입하는 방법이 있는데 직접 주입 선택 
+ */
 @Configuration
 public class SqsConfig {
     @Value("${cloud.aws.credentials.access-key}")
