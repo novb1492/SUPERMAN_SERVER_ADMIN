@@ -17,7 +17,7 @@ class SqsServiceTest {
     @Test
     @DisplayName("sqs 연동 테스트")
     public void test(){
-        queueMessagingTemplate.send(PropertiesText.sqsPhoneEndPoint, MessageBuilder.withPayload(makeTitleAndText("title","text","val")).build());
+        queueMessagingTemplate.send(PropertiesText.sqsPhoneEndPoint, MessageBuilder.withPayload(makeTitleAndText("title","text","emailorphone")).build());
     }
     private JSONObject makeTitleAndText(String title, String text, String val) {
         JSONObject jsonObject=new JSONObject();
