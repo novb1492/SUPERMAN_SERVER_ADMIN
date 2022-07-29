@@ -15,8 +15,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CoolSmsTest {
-
-
     @BeforeEach
     void setup() throws IllegalAccessException {
         /**
@@ -35,5 +33,4 @@ class CoolSmsTest {
             e.printStackTrace();
         }
     }
-
 }

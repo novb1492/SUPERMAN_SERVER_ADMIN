@@ -9,7 +9,6 @@ import java.util.HashMap;
 import static com.kimcompany.jangbogbackendver2.Text.PropertiesText.*;
 
 public class CoolSms {
-
     public static  void sendMessage(String phoneNum,String messege) throws CoolsmsException {
         Message coolsms = new Message(coolSmsKey, coolSmsSecret);
         HashMap<String, String> params = new HashMap<String, String>();
