@@ -56,8 +56,8 @@ public class SqsService {
             log.info("예상치 못한 이메일전송실패:{}",e.getMessage());
         }
     }
-    public void sendSqs(String endPoint) {
-        queueMessagingTemplate.send(endPoint, MessageBuilder.withPayload(makeTitleAndText("title","text","val")).build());
+    public void sendSqs(String endPoint,String title,String text,String val) {
+        queueMessagingTemplate.send(endPoint, MessageBuilder.withPayload(makeTitleAndText(title,text,val)).build());
     }
     private JSONObject makeTitleAndText(String title, String text, String val) {
         JSONObject jsonObject=new JSONObject();
