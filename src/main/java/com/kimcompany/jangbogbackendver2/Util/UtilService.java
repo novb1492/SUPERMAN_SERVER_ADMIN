@@ -30,17 +30,12 @@ import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 public class UtilService {
 
-    public static JSONObject stringToJson(String jsonString) {
+    public static JSONObject stringToJson(String jsonString) throws  ParseException{
         JSONParser parser = new JSONParser();
         Object obj;
-        try {
-            obj = parser.parse(jsonString);
-            JSONObject jsonObj = (JSONObject) obj;
-            return jsonObj;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
+        obj = parser.parse(jsonString);
+        JSONObject jsonObj = (JSONObject) obj;
+        return jsonObj;
     }
 
     public static HttpServletResponse getHttpSerResponse() {

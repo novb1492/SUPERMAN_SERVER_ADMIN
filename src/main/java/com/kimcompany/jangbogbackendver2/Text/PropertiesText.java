@@ -21,6 +21,12 @@ public class PropertiesText {
     public static String coolSmsSecret;
     public static String companyNum;
     public static String sqsPhoneEndPoint;
+    public static String sqsEmailEndPoint;
+
+    @Value("${sqs.email.endpoint}")
+    public void setSqsEmailEndPoint(String value){
+        sqsEmailEndPoint = value;
+    }
 
     @Value("${sqs.phone.endpoint}")
     public void setSqsPhoneEndPoint(String value){
