@@ -2,7 +2,7 @@ package com.kimcompany.jangbogbackendver2.Store.Model;
 
 import com.kimcompany.jangbogbackendver2.Common.AddressColumn;
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
-import com.kimcompany.jangbogbackendver2.Company.Model.CompanyEntity;
+import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,20 +24,29 @@ public class StoreEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COMPANY_ID",referencedColumnName = "COMPANY_ID")
-    private CompanyEntity companyEntity;
+    @JoinColumn(name = "ADMIN_ID",referencedColumnName = "ADMIN_ID")
+    private MemberEntity memberEntity;
 
     @Column(name = "MIN_ORDER_PRICE",nullable = false)
     private Integer minOrderPrice;
 
     @Column(name = "MAX_DELIVER_RADIUS",nullable = false)
-    private Integer maxDeliverRadius;
+    private Double maxDeliverRadius;
 
-    @Column(name = "OPEN_TIME",nullable = false,length = 4)
+    @Column(name = "OPEN_TIME",nullable = false,length = 6)
     private String openTime;
 
-    @Column(name = "CLOSE_TIME",nullable = false,length = 4)
+    @Column(name = "CLOSE_TIME",nullable = false,length = 6)
     private String closeTime;
+
+    @Column(name = "TEL",nullable = false,length = 20)
+    private String tel;
+
+    @Column(name = "TEXT",length = 3500)
+    private String text;
+
+    @Column(name = "NAME",nullable = false,length = 20)
+    private String name;
 
     @Embedded
     private CommonColumn commonColumn;

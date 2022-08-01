@@ -92,6 +92,10 @@ public class UtilService {
     public static PrincipalDetails getPrincipalDetails(){
         return (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+    public static Long getLoginUserId(){
+        PrincipalDetails principalDetails= (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principalDetails.getMemberEntity().getId();
+    }
     public static File convert(MultipartFile multipartFile) {
         File file=new File(LocalDate.now().toString()+ UUID.randomUUID()+multipartFile.getOriginalFilename());
         try(FileOutputStream fileOutputStream=new FileOutputStream(file)){
