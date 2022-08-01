@@ -23,4 +23,9 @@ public class AddressColumn {
 
     @Column(name = "DETAIL_ADDRESS",length = 50,nullable = false)
     private String detailAddress;
+
+    public static AddressColumn set(String postCode,String address,String detailAddress){
+        return AddressColumn.builder().postCode(postCode).address(address).detailAddress(detailAddress).build();
+    }
+
 }

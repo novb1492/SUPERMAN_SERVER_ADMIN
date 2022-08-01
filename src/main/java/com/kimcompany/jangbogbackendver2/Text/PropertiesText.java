@@ -23,6 +23,12 @@ public class PropertiesText {
     public static String sqsPhoneEndPoint;
     public static String sqsEmailEndPoint;
 
+    public static String kakaoRestKey;
+
+    @Value("${kakao.rest.key}")
+    public void setKakaoRestKey(String value){
+        kakaoRestKey = value;
+    }
     @Value("${sqs.email.endpoint}")
     public void setSqsEmailEndPoint(String value){
         sqsEmailEndPoint = value;

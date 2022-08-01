@@ -25,4 +25,8 @@ public class CommonColumn {
     @Column(name = "CREATED")
     @CreatedDate
     private LocalDateTime created;
+
+    public static CommonColumn set(int state){
+        return CommonColumn.builder().state(state).build();
+    }
 }

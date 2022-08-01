@@ -1,7 +1,6 @@
 package com.kimcompany.jangbogbackendver2.Flyer.Model;
 
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
-import com.kimcompany.jangbogbackendver2.Company.Model.CompanyEntity;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

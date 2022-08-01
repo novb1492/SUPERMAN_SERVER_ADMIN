@@ -28,5 +28,12 @@ public class ExceptionController {
         response.put("message", "파일은 최대 1048576 bytes입니다 ");
         return ResponseEntity.status(BAD_REQUEST).body(response);
     }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> IllegalArgumentException(IllegalArgumentException exception) {
+        log.info("IllegalArgumentException:{}",exception.getMessage());
+        JSONObject response = new JSONObject();
+        response.put("message", exception.getMessage());
+        return ResponseEntity.status(BAD_REQUEST).body(response);
+    }
 
 }
