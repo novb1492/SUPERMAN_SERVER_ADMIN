@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "STORE")
+@Table(name = "STORE",indexes = {@Index(name = "NAME", columnList = "NAME")})
 @Entity
 public class StoreEntity {
 
