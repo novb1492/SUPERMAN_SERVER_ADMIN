@@ -15,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "EMPLOYEE",indexes = {@Index(name = "EMPLOYEE_NAME", columnList = "EMPLOYEE_NAME"),@Index(name = "EMPLOYEE_PHONE", columnList = "EMPLOYEE_PHONE"),@Index(name = "EMPLOYEE_EMAIL", columnList = "EMPLOYEE_EMAIL")})
+@Table(name = "EMPLOYEE",indexes = {@Index(name = "ADMIN_ID", columnList = "ADMIN_ID")})
 @Entity
 public class EmployeeEntity {
 
@@ -28,14 +28,12 @@ public class EmployeeEntity {
     @JoinColumn(name = "STORE_ID",referencedColumnName = "STORE_ID")
     private StoreEntity storeEntity;
 
-    @Column(name = "EMPLOYEE_NAME",length = 20,nullable = false)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ADMIN_ID",referencedColumnName = "ADMIN_ID")
+    private MemberEntity memberEntity;
 
-    @Column(name = "EMPLOYEE_PHONE",length = 11,nullable = false)
-    private String phone;
-
-    @Column(name = "EMPLOYEE_EMAIL",length = 50,nullable = false)
-    private String email;
+    @Column(name = "EMPLOYEE_ROLE",nullable = false,length = 10)
+    private String role;
 
     @Embedded
     private CommonColumn commonColumn;
