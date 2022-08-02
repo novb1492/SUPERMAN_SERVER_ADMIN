@@ -52,7 +52,10 @@ public class SecurityConfig  {
                 .addFilter(new LoginFilter(loginService,authenticationManager(authenticationConfiguration)))
                 .addFilter(new AuthorizationFilter(authenticationManager(authenticationConfiguration), authorizationService))
                 .formLogin().disable().httpBasic().disable()
-                .authorizeRequests().antMatchers("/auths/**").authenticated()
+                .authorizeRequests()
+                .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                .antMatchers("/manage/**").hasAnyAuthority("MANAGE")
+                .antMatchers("/auths/**").authenticated()
                 .anyRequest().permitAll();
 
         return http.build();
