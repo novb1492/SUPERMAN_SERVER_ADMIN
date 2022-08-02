@@ -54,7 +54,7 @@ public class SecurityConfig  {
                 .formLogin().disable().httpBasic().disable()
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
-                .antMatchers("/manage/**").hasAnyAuthority("MANAGE")
+                .antMatchers("/manage/**").hasAnyAuthority("MANAGE","ADMIN")
                 .antMatchers("/auths/**").authenticated()
                 .anyRequest().permitAll();
 
