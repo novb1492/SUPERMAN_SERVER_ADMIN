@@ -31,7 +31,6 @@ class StoreServiceTest {
         TryInsertDto tryInsertDto = set("한국2", "서울 송파구 올림픽로 240");
         assertThrows(IllegalArgumentException.class, () -> storeService.save(tryInsertDto));
     }
-
     private TryInsertDto set(String storeName,String storeAddress){
         TryInsertDto tryInsertDto=new TryInsertDto();
         tryInsertDto.setAddress(storeAddress);

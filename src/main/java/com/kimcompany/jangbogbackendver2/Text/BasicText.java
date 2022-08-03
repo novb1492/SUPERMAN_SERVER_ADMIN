@@ -22,6 +22,7 @@ public class BasicText {
     public static String ROLE_MANAGE="MANAGE";
     public static String ROLE_USER="USER";
 
+    public static int regiEmployeePageSize=3;
 
 
 }
