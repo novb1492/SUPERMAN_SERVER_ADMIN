@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * 권한은 회원가입시 선택 하면 되게 하였고
+ * 권한은 수저은 어드민권한에 넣을 예정입니다
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -31,9 +35,6 @@ public class EmployeeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ADMIN_ID",referencedColumnName = "ADMIN_ID")
     private MemberEntity memberEntity;
-
-    @Column(name = "EMPLOYEE_ROLE",nullable = false,length = 10)
-    private String role;
 
     @Embedded
     private CommonColumn commonColumn;

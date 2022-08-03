@@ -46,7 +46,7 @@ public class StoreService {
         }
     }
     private void confirmExist(String address,String name){
-        if(storeSelectService.checkExist(address,name, UtilService.getLoginUserId())){
+        if(storeSelectService.checkExist(address,name)){
             throw new IllegalArgumentException("이미 존재하는 매장입니다");
         }
     }

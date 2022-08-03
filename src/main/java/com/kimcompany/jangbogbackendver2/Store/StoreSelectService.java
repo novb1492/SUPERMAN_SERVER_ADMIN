@@ -12,7 +12,10 @@ public class StoreSelectService {
 
     private final StoreRepo storeRepo;
 
-    public boolean checkExist(String address,String storeName,long adminId){
-        return storeRepo.exist(address, storeName, adminId);
+    public boolean checkExist(String address,String storeName){
+        return storeRepo.exist(address, storeName);
+    }
+    public boolean checkExist(long storeId,long adminId){
+        return storeRepo.exist(storeId, adminId);
     }
 }
