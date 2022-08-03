@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Employee;
 
 import com.kimcompany.jangbogbackendver2.Employee.Dto.TryInsertDto;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +17,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RestController
 @RequiredArgsConstructor
 public class EmployeeController {
-
+    private final EmployeeService employeeService;
     @RequestMapping(value = "/manage/employee/save",method = POST)
     public ResponseEntity<?>save(@Valid @RequestBody TryInsertDto tryInsertDto){
-        return null;
+        employeeService.save(tryInsertDto);
+        JSONObject response = new JSONObject();
+        response.put("message","종업원 등록에 성공했습니다");
+        return ResponseEntity.ok().body(response);
     }
+
 }
