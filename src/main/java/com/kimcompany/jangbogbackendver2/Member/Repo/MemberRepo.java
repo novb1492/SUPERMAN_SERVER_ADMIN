@@ -13,8 +13,8 @@ import java.util.Optional;
 
 public interface MemberRepo extends JpaRepository<MemberEntity,Long>, MemberSupport {
 
-    @Query("SELECT m from MemberEntity  m where m.userId=:userId")
-    Optional<MemberEntity> findByUserId(@Param("userId") String userId);
+    @Query("SELECT m from MemberEntity  m where m.userId=:userId and m.commonColumn.state<>:state")
+    Optional<MemberEntity> findByUserId(@Param("userId") String userId,@Param("state")int state);
 
     @Modifying
     @Transactional

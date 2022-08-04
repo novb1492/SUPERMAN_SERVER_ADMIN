@@ -15,11 +15,11 @@ public class MemberSupportImpl implements MemberSupport {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public boolean exist(long userId) {
+    public boolean exist(long userId,int state) {
         Integer fetchFirst = jpaQueryFactory
                 .selectOne()
                 .from(memberEntity)
-                .where(memberEntity.id.eq(userId))
+                .where(memberEntity.id.eq(userId),memberEntity.commonColumn.state.ne(state))
                 .fetchFirst();
 
         return fetchFirst != null;
