@@ -18,7 +18,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequiredArgsConstructor
 public class EmployeeController {
     private final EmployeeService employeeService;
-    @RequestMapping(value = "/manage/employee/save",method = POST)
+    @RequestMapping(value = "/admin/employee/save",method = POST)
     public ResponseEntity<?>save(@Valid @RequestBody TryInsertDto tryInsertDto){
         employeeService.save(tryInsertDto);
         JSONObject response = new JSONObject();

@@ -46,7 +46,7 @@ public class EmployeeService {
         }
     }
     private void confirmExist(long storeId,long userId){
-        if(employeeSelectService.exist(storeId,userId)){
+        if(employeeSelectService.exist(storeId,userId,1)){
             throw new IllegalArgumentException("해당 매장에 이미 등록 되어있는 직원입니다");
         }
     }

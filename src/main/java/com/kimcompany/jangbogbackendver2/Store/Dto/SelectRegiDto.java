@@ -14,9 +14,12 @@ public class SelectRegiDto {
     private String name;
     private String address;
 
+    private Long id;
+
     @QueryProjection
     public SelectRegiDto(StoreEntity storeEntity){
         this.name = storeEntity.getName();
         this.address = storeEntity.getAddressColumn().getAddress();
+        this.id = storeEntity.getId();
     }
 }

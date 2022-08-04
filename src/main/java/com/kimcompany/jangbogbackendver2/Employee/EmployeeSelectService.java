@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmployeeSelectService {
 
     private final EmployeeRepo employeeRepo;
-    public boolean exist(long storeId,long userId){
-        return employeeRepo.exist(storeId, userId);
+    public boolean exist(long storeId,long userId,int state){
+        return employeeRepo.exist(storeId, userId,state);
     }
 }

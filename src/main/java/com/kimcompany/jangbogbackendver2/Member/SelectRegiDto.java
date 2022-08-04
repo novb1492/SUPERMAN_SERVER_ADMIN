@@ -12,6 +12,7 @@ public class SelectRegiDto {
     private String firstName;
     private String lastName;
     private String role;
+    private long id;
 
     public static SelectRegiDto entityToDto(MemberEntity memberEntity){
         SelectRegiDto selectDto = new SelectRegiDto();
@@ -19,6 +20,7 @@ public class SelectRegiDto {
         selectDto.setFirstName(memberEntity.getFirstName());
         selectDto.setLastName(memberEntity.getLastName());
         selectDto.setRole(memberEntity.getRole());
+        selectDto.setId(memberEntity.getId());
         return selectDto;
     }
 

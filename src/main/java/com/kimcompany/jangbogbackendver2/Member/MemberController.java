@@ -19,8 +19,6 @@ public class MemberController {
 
     @RequestMapping(value = "/admin/member/info/{userId}",method = GET)
     public ResponseEntity<?>selectInfo(@PathVariable String userId){
-        JSONObject response = new JSONObject();
-        response.put("data", memberService.selectForRegi(userId));
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body( memberService.selectForRegi(userId));
     }
 }

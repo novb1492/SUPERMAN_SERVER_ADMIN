@@ -32,8 +32,7 @@ public class StoreController {
     public ResponseEntity<?>selectList(HttpServletRequest request){
         int page = Integer.parseInt(request.getParameter("page"));
         JSONObject response = new JSONObject();
-        response.put("data",storeService.selectForRegi(page));
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(storeService.selectForRegi(page));
     }
 
 

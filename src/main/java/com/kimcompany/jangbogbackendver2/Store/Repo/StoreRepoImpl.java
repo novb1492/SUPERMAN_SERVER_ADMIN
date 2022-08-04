@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Store.Repo;
 
 import com.kimcompany.jangbogbackendver2.Store.Dto.QSelectRegiDto;
 import com.kimcompany.jangbogbackendver2.Store.Dto.SelectRegiDto;
+import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.util.List;
 
 import static com.kimcompany.jangbogbackendver2.Store.Model.QStoreEntity.storeEntity;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.closingOfBusinessState;
 
 @RequiredArgsConstructor
 public class StoreRepoImpl implements StoreRepoCustom{
@@ -22,7 +24,7 @@ public class StoreRepoImpl implements StoreRepoCustom{
         Integer fetchFirst = jpaQueryFactory
                 .selectOne()
                 .from(storeEntity)
-                .where(storeEntity.name.eq(storeName),storeEntity.addressColumn.address.eq(address))
+                .where(storeEntity.name.eq(storeName),storeEntity.addressColumn.address.eq(address),storeEntity.commonColumn.state.ne(closingOfBusinessState))
                 .fetchFirst();
 
         return fetchFirst != null;
@@ -33,7 +35,7 @@ public class StoreRepoImpl implements StoreRepoCustom{
         Integer fetchFirst = jpaQueryFactory
                 .selectOne()
                 .from(storeEntity)
-                .where(storeEntity.id.eq(storeId),storeEntity.memberEntity.id.eq(adminId))
+                .where(storeEntity.id.eq(storeId),storeEntity.memberEntity.id.eq(adminId),storeEntity.commonColumn.state.ne(closingOfBusinessState))
                 .fetchFirst();
         return fetchFirst != null;
     }
@@ -44,7 +46,7 @@ public class StoreRepoImpl implements StoreRepoCustom{
         List<SelectRegiDto> selectRegiDtos= jpaQueryFactory
                 .select(new QSelectRegiDto(storeEntity))
                 .from(storeEntity)
-                .where(storeEntity.memberEntity.id.eq(adminId))
+                .where(storeEntity.memberEntity.id.eq(adminId),storeEntity.commonColumn.state.ne(closingOfBusinessState))
                 .orderBy(storeEntity.id.desc())
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
@@ -53,7 +55,7 @@ public class StoreRepoImpl implements StoreRepoCustom{
         JPAQuery<Long> count = jpaQueryFactory
                 .select(storeEntity.count())
                 .from(storeEntity)
-                .where(storeEntity.memberEntity.id.eq(adminId));
+                .where(storeEntity.memberEntity.id.eq(adminId),storeEntity.commonColumn.state.ne(closingOfBusinessState));
 
         // Result
         Page<SelectRegiDto> SelectRegiDto = PageableExecutionUtils.getPage(selectRegiDtos, pageRequest, count::fetchOne);
