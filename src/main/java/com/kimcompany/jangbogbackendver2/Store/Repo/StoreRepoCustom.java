@@ -9,4 +9,5 @@ public interface StoreRepoCustom {
 
     Page<SelectRegiDto> selectForRegi(int page, long adminId,int pageSize);
 
+
 }

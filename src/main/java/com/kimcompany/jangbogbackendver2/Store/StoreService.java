@@ -1,6 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Store;
 
 import com.kimcompany.jangbogbackendver2.Api.KakaoMapService;
+import com.kimcompany.jangbogbackendver2.Store.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Store.Dto.SelectRegiDto;
 import com.kimcompany.jangbogbackendver2.Store.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.regiEmployeePageSize;
+import static com.kimcompany.jangbogbackendver2.Util.UtilService.confirmNull;
 
 /**
  * 매장 로직 관려 서비스 class입니다
@@ -75,5 +77,14 @@ public class StoreService {
     }
     public Page<SelectRegiDto> selectForRegi(int page){
         return storeSelectService.selectForRegi(page, regiEmployeePageSize);
+    }
+    public Page<?> selectForList(SearchCondition searchCondition){
+        confirmCategory(searchCondition.getCategory());
+        return null;
+    }
+    private void confirmCategory(String category){
+        if(confirmNull(category)){
+            throw new IllegalArgumentException("검색 종류를 선택해 주세요");
+        }
     }
 }
