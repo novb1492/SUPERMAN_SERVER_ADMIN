@@ -18,5 +18,12 @@ public class BasicText {
     public static String notEqualPwdMessage = "비밀번호가 일치하지 않습니다";
     public static String accountLockMessage = "사용자 계정이 잠겨있습니다 본인인증 후 진행해주세요";
     public static String notFoundByUserid = "일치하는 아이디가 없습니다";
+    public static String ROLE_ADMIN="ADMIN";
+    public static String ROLE_MANAGE="MANAGE";
+    public static String ROLE_USER="USER";
+    public static int closingOfBusinessState=40;
+    public static int withdrawalMemberState=40;
+    public static int regiEmployeePageSize=3;
+
 
 }

@@ -7,13 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface MemberRepo extends JpaRepository<MemberEntity,Long>, MemberSupport {
 
-    @Query("SELECT m from MemberEntity  m where m.userId=:userId")
-    Optional<MemberEntity> findByUserId(@Param("userId") String userId);
+    @Query("SELECT m from MemberEntity  m where m.userId=:userId and m.commonColumn.state<>:state")
+    Optional<MemberEntity> findByUserId(@Param("userId") String userId,@Param("state")int state);
 
     @Modifying
     @Transactional

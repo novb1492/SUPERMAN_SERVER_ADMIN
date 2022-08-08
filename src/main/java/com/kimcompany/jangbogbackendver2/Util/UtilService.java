@@ -7,6 +7,8 @@ import com.kimcompany.jangbogbackendver2.Text.PropertiesText;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -114,5 +116,15 @@ public class UtilService {
             files.add(UtilService.convert(m));
         }
         return files;
+    }
+    public void confirmRole(String role){
+        if(role.equals(ROLE_ADMIN.equals(role)||ROLE_MANAGE.equals(role)||ROLE_USER.equals(role))){
+            return;
+        }
+        throw new IllegalArgumentException("존재 하지 않는 직급입니다");
+    }
+    public static void ExceptionValue(String toSTRING,Class c){
+        Logger logger= LoggerFactory.getLogger(c.getClass());
+        logger.warn("예외발생 변수:{}",toSTRING);
     }
 }

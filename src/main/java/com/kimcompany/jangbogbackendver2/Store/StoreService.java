@@ -1,17 +1,26 @@
 package com.kimcompany.jangbogbackendver2.Store;
 
 import com.kimcompany.jangbogbackendver2.Api.KakaoMapService;
+import com.kimcompany.jangbogbackendver2.Store.Dto.SelectRegiDto;
 import com.kimcompany.jangbogbackendver2.Store.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import com.kimcompany.jangbogbackendver2.Store.Repo.StoreRepo;
+import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.sql.Select;
 import org.json.simple.JSONObject;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.regiEmployeePageSize;
 
 /**
  * 매장 로직 관려 서비스 class입니다
@@ -46,7 +55,7 @@ public class StoreService {
         }
     }
     private void confirmExist(String address,String name){
-        if(storeSelectService.checkExist(address,name, UtilService.getLoginUserId())){
+        if(storeSelectService.checkExist(address,name)){
             throw new IllegalArgumentException("이미 존재하는 매장입니다");
         }
     }
@@ -63,5 +72,8 @@ public class StoreService {
             return true;
         }
         return false;
+    }
+    public Page<SelectRegiDto> selectForRegi(int page){
+        return storeSelectService.selectForRegi(page, regiEmployeePageSize);
     }
 }

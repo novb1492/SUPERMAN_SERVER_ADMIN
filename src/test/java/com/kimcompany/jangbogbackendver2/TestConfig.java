@@ -1,5 +1,6 @@
 package com.kimcompany.jangbogbackendver2;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -7,6 +8,9 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @TestConfiguration
 public class TestConfig {
@@ -22,5 +26,12 @@ public class TestConfig {
         redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;
+    }
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Bean
+    public JPAQueryFactory jpaQueryFactory() {
+        return new JPAQueryFactory(entityManager);
     }
 }
