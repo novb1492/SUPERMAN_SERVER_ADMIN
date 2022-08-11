@@ -68,9 +68,13 @@ public class EmployeeService {
 
     }
     private void confirmExistStore(long storeId){
-        if(!storeSelectService.checkExist(storeId, getLoginUserId())){
-            throw new IllegalArgumentException("존재 하지 않는 매장이거나 본인 소유 매장이 아닙니다");
+        long adminId = getLoginUserId();
+        if(storeSelectService.checkExist(storeId, adminId)){
+            return;
+        }else if(employeeSelectService.exist(storeId,adminId,1)){
+            return;
         }
+        throw new IllegalArgumentException("존재 하지 않는 매장이거나 본인 소유 매장이 아닙니다");
     }
     private void confirmExist(long storeId,long userId){
         if(employeeSelectService.exist(storeId,userId,1)){
