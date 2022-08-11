@@ -20,5 +20,6 @@ public class SelectListDto {
         name=storeEntity.getName();
         imgPath=storeEntity.getThumbNail();
         address=storeEntity.getAddressColumn().getAddress();
+        state=storeEntity.getCommonColumn().getState();
     }
 }
