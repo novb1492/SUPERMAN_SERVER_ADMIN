@@ -12,14 +12,12 @@ public class SearchCondition {
 
     private int page;
     private String keyword;
-    private String role;
     private String category;
 
-    public static SearchCondition set(int page,String keyword,String role,String category){
+    public static SearchCondition set(int page,String keyword,String category){
         SearchCondition searchCondition = new SearchCondition();
         searchCondition.setKeyword(keyword);
         searchCondition.setPage(page);
-        searchCondition.setRole(role);
         searchCondition.setCategory(category);
         return searchCondition;
     }

@@ -38,12 +38,12 @@ public class StoreController {
         return ResponseEntity.ok().body(storeService.selectForRegi(page));
     }
 
-    @RequestMapping(value = "/{role}/store/list",method = GET)
-    public ResponseEntity<?>selectList(HttpServletRequest request, @PathVariable String role){
+    @RequestMapping(value = "/store/list",method = GET)
+    public ResponseEntity<?>selectListForStore(HttpServletRequest request){
         int page = Integer.parseInt(request.getParameter("page"));
         String category=request.getParameter("category");
         String keyword=request.getParameter("keyword");
-        return ResponseEntity.ok().body(storeService.selectForList(SearchCondition.set(page,keyword,role,category)));
+        return ResponseEntity.ok().body(storeService.selectForList(SearchCondition.set(page,keyword,category)));
     }
 
 }

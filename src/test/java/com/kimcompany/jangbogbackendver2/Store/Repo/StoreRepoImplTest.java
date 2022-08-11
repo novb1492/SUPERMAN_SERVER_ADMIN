@@ -145,7 +145,6 @@ class StoreRepoImplTest {
     private SearchCondition get(String role,String category,String keyword,int page){
         SearchCondition searchCondition = new SearchCondition();
         searchCondition.setCategory(category);
-        searchCondition.setRole(role);
         searchCondition.setPage(page);
         searchCondition.setKeyword(keyword);
         return searchCondition;
