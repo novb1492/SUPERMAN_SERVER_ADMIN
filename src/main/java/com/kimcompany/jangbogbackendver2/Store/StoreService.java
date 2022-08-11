@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Store;
 
 import com.kimcompany.jangbogbackendver2.Api.KakaoMapService;
 import com.kimcompany.jangbogbackendver2.Store.Dto.SearchCondition;
+import com.kimcompany.jangbogbackendver2.Store.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.Store.Dto.SelectRegiDto;
 import com.kimcompany.jangbogbackendver2.Store.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
@@ -21,8 +22,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.regiEmployeePageSize;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 import static com.kimcompany.jangbogbackendver2.Util.UtilService.confirmNull;
+import static com.kimcompany.jangbogbackendver2.Util.UtilService.getLoginUserRole;
 
 /**
  * 매장 로직 관려 서비스 class입니다
@@ -76,15 +78,34 @@ public class StoreService {
         return false;
     }
     public Page<SelectRegiDto> selectForRegi(int page){
-        return storeSelectService.selectForRegi(page, regiEmployeePageSize);
+        String role = getLoginUserRole();
+        if(role.equals(ROLE_ADMIN)){
+            return storeSelectService.selectForRegi(page, regiEmployeePageSize);
+        }else if(role.equals(ROLE_MANAGE)){
+            return storeSelectService.selectForRegiManage(page, regiEmployeePageSize);
+        }
+        throw new IllegalArgumentException("권한이 없는 행위입니다");
     }
-    public Page<?> selectForList(SearchCondition searchCondition){
-        confirmCategory(searchCondition.getCategory());
-        return null;
+    public Page<SelectListDto> selectForList(SearchCondition searchCondition){
+        log.info(searchCondition.toString());
+        confirmRole(searchCondition.getRole());
+        confirmCategory(searchCondition.getCategory(),searchCondition.getKeyword());
+        if(searchCondition.getRole().equals(BasicText.ROLE_ADMIN)){
+            return storeSelectService.selectForListAdmin(searchCondition, storeListPageSize);
+        }
+        return storeSelectService.selectForListOther(searchCondition, storeListPageSize);
     }
-    private void confirmCategory(String category){
-        if(confirmNull(category)){
-            throw new IllegalArgumentException("검색 종류를 선택해 주세요");
+    private void confirmRole(String requestRole){
+        String role = UtilService.getPrincipalDetails().getMemberEntity().getRole();
+        if(!role.equals(requestRole)){
+            throw new IllegalArgumentException("허가되지 않은 접근입니다");
+        }
+    }
+    private void confirmCategory(String category,String val){
+        if(!confirmNull(val)){
+            if(confirmNull(category)){
+                throw new IllegalArgumentException("검색 종류를 선택해 주세요");
+            }
         }
     }
 }

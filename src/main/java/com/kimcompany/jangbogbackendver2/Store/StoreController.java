@@ -32,7 +32,7 @@ public class StoreController {
         response.put("message","매장등록이 완료 되었습니다");
         return ResponseEntity.ok().body(response);
     }
-    @RequestMapping(value = "/admin/store/regi/list",method = GET)
+    @RequestMapping(value = "/manage/store/regi/list",method = GET)
     public ResponseEntity<?>selectList(HttpServletRequest request){
         int page = Integer.parseInt(request.getParameter("page"));
         return ResponseEntity.ok().body(storeService.selectForRegi(page));
@@ -42,7 +42,8 @@ public class StoreController {
     public ResponseEntity<?>selectList(HttpServletRequest request, @PathVariable String role){
         int page = Integer.parseInt(request.getParameter("page"));
         String category=request.getParameter("category");
-        return ResponseEntity.ok().body(storeService.selectForList(SearchCondition.set(page,request.getParameter("keyword"),role,category)));
+        String keyword=request.getParameter("keyword");
+        return ResponseEntity.ok().body(storeService.selectForList(SearchCondition.set(page,keyword,role,category)));
     }
 
 }
