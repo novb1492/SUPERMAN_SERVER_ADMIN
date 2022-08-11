@@ -12,11 +12,13 @@ public class SelectListDto {
     private String name;
     private int state;
     private String imgPath;
+    private String address;
 
     @QueryProjection
     public SelectListDto(StoreEntity storeEntity) {
         id=storeEntity.getId();
         name=storeEntity.getName();
         imgPath=storeEntity.getThumbNail();
+        address=storeEntity.getAddressColumn().getAddress();
     }
 }
