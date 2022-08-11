@@ -1,5 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Store;
 
+import com.kimcompany.jangbogbackendver2.Store.Dto.SearchCondition;
+import com.kimcompany.jangbogbackendver2.Store.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.Store.Dto.SelectRegiDto;
 import com.kimcompany.jangbogbackendver2.Store.Repo.StoreRepo;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
@@ -30,6 +32,15 @@ public class StoreSelectService {
 
     public Page<SelectRegiDto> selectForRegi(int page,int pageSize){
         return storeRepo.selectForRegi(page, getLoginUserId(), pageSize);
+    }
+    public Page<SelectRegiDto> selectForRegiManage(int page,int pageSize){
+        return storeRepo.selectForRegiManage(page, getLoginUserId(), pageSize);
+    }
+    public Page<SelectListDto>selectForListAdmin(SearchCondition searchCondition,int pageSize){
+        return storeRepo.selectForList(getLoginUserId(),pageSize,searchCondition);
+    }
+    public Page<SelectListDto>selectForListOther(SearchCondition searchCondition,int pageSize){
+        return storeRepo.selectForListOther(getLoginUserId(),pageSize,searchCondition);
     }
 
 }

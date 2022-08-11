@@ -48,7 +48,7 @@ public class TryInsertDto {
                 .addressColumn(AddressColumn.set(tryInsertDto.getPostcode(), tryInsertDto.getAddress(), tryInsertDto.getDetailAddress()))
                 .closeTime(tryInsertDto.getCloseTime()).openTime(tryInsertDto.getOpenTime()).maxDeliverRadius(Double.parseDouble(tryInsertDto.getRadius()))
                 .name(tryInsertDto.getName()).tel(tryInsertDto.getTel()).text(tryInsertDto.getText()).commonColumn(CommonColumn.set(1))
-                .minOrderPrice(tryInsertDto.getMinPrice()).build();
+                .minOrderPrice(tryInsertDto.getMinPrice()).thumbNail(tryInsertDto.getThumbnail()).build();
     }
 
 }

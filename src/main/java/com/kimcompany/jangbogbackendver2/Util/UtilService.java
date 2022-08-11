@@ -127,4 +127,11 @@ public class UtilService {
         Logger logger= LoggerFactory.getLogger(c.getClass());
         logger.warn("예외발생 변수:{}",toSTRING);
     }
+    public static String getLoginUserRole(){
+        try {
+            return getPrincipalDetails().getMemberEntity().getRole();
+        }catch (Exception e){
+            throw new RuntimeException("로그인 정보 찾기 실패");
+        }
+    }
 }

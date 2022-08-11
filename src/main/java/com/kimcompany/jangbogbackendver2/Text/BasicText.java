@@ -25,5 +25,7 @@ public class BasicText {
     public static int withdrawalMemberState=40;
     public static int regiEmployeePageSize=3;
 
+    public static int storeListPageSize=10;
+
 
 }
