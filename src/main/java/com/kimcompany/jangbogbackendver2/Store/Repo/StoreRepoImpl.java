@@ -136,7 +136,7 @@ public class StoreRepoImpl implements StoreRepoCustom{
     private BooleanExpression eqName(String category, String val) {
         if (category.equals("addr")) {
             return storeEntity.addressColumn.address.contains(val);
-        }else if(category.equals("addr")){
+        }else if(category.equals("name")){
             return storeEntity.name.contains(val);
         }
         return null;
