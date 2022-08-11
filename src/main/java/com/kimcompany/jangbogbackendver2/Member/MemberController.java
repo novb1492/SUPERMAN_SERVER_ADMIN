@@ -17,7 +17,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @RequestMapping(value = "/admin/member/info/{userId}",method = GET)
+    @RequestMapping(value = "/manage/member/info/{userId}",method = GET)
     public ResponseEntity<?>selectInfo(@PathVariable String userId){
         return ResponseEntity.ok().body( memberService.selectForRegi(userId));
     }
