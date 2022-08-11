@@ -45,5 +45,9 @@ public class StoreController {
         String keyword=request.getParameter("keyword");
         return ResponseEntity.ok().body(storeService.selectForList(SearchCondition.set(page,keyword,category)));
     }
+    @RequestMapping(value = "/store/{id}",method = GET)
+    public ResponseEntity<?>selectStoreInfo(@PathVariable String id){
+        return ResponseEntity.ok().body(storeService.selectStoreInfo(Long.parseLong(id)));
+    }
 
 }

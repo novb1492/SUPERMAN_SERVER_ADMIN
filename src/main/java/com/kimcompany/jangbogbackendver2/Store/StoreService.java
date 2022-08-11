@@ -1,10 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Store;
 
 import com.kimcompany.jangbogbackendver2.Api.KakaoMapService;
-import com.kimcompany.jangbogbackendver2.Store.Dto.SearchCondition;
-import com.kimcompany.jangbogbackendver2.Store.Dto.SelectListDto;
-import com.kimcompany.jangbogbackendver2.Store.Dto.SelectRegiDto;
-import com.kimcompany.jangbogbackendver2.Store.Dto.TryInsertDto;
+import com.kimcompany.jangbogbackendver2.Store.Dto.*;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import com.kimcompany.jangbogbackendver2.Store.Repo.StoreRepo;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
@@ -23,8 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
-import static com.kimcompany.jangbogbackendver2.Util.UtilService.confirmNull;
-import static com.kimcompany.jangbogbackendver2.Util.UtilService.getLoginUserRole;
+import static com.kimcompany.jangbogbackendver2.Util.UtilService.*;
 
 /**
  * 매장 로직 관려 서비스 class입니다
@@ -100,5 +96,8 @@ public class StoreService {
                 throw new IllegalArgumentException("검색 종류를 선택해 주세요");
             }
         }
+    }
+    public SelectInfo selectStoreInfo(long storeId){
+        return storeSelectService.selectStoreInfo(storeId,getLoginUserId()).orElseThrow(()->new IllegalArgumentException("존재 하지 않는 매장이거나 본인 소속 매장이아닙니다"));
     }
 }
