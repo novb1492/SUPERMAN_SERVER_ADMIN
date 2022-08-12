@@ -24,8 +24,9 @@ public class BasicText {
     public static int closingOfBusinessState=40;
     public static int withdrawalMemberState=40;
     public static int regiEmployeePageSize=3;
-
-    public static int storeListPageSize=10;
+    public static int trueStateNum = 1;
+    public static int storeListPageSize = 10;
+    public static String cantFindStoreMessage = "본인 소속 매장이 아니거나 존재하지 않는 매장입니다";
 
 
 }

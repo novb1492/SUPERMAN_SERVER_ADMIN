@@ -71,13 +71,13 @@ public class EmployeeService {
         long adminId = getLoginUserId();
         if(storeSelectService.checkExist(storeId, adminId)){
             return;
-        }else if(employeeSelectService.exist(storeId,adminId,1)){
+        }else if(employeeSelectService.exist(storeId,adminId,trueStateNum)){
             return;
         }
-        throw new IllegalArgumentException("존재 하지 않는 매장이거나 본인 소유 매장이 아닙니다");
+        throw new IllegalArgumentException(cantFindStoreMessage);
     }
     private void confirmExist(long storeId,long userId){
-        if(employeeSelectService.exist(storeId,userId,1)){
+        if(employeeSelectService.exist(storeId,userId, trueStateNum)){
             throw new IllegalArgumentException("해당 매장에 이미 등록 되어있는 직원입니다");
         }
     }

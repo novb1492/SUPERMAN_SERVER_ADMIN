@@ -148,4 +148,10 @@ public class StoreRepoImpl implements StoreRepoCustom{
                 .where(storeEntity.id.eq(store),storeEntity.memberEntity.id.eq(adminId),storeEntity.commonColumn.state.ne(closingOfBusinessState)).fetchOne();
         return Optional.ofNullable(selectInfo);
     }
+    public Optional<SelectInfo>selectById(long storeId){
+        SelectInfo selectInfo = jpaQueryFactory.select(new QSelectInfo(storeEntity))
+                .from(storeEntity)
+                .where(storeEntity.id.eq(storeId), storeEntity.commonColumn.state.ne(closingOfBusinessState)).fetchOne();
+        return Optional.ofNullable(selectInfo);
+    }
 }
