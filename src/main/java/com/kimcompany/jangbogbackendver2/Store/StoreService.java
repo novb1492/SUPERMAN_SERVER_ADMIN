@@ -40,8 +40,14 @@ public class StoreService {
         confirmTime(tryInsertDto.getOpenTime(),tryInsertDto.getCloseTime());
         //주소검사
         confirmAddress(tryInsertDto.getAddress());
+        //사업자 번호 검사
+        confirmCompanyNum(tryInsertDto.getCompanyNum());
         StoreEntity storeEntity = TryInsertDto.dtoToEntity(tryInsertDto);
         storeRepo.save(storeEntity);
+    }
+    private void confirmCompanyNum(String companyNum){
+        //해당 어드민 계정  소유 사업자 번호 맞는지 검사
+        //사업자 번호가 유효한지 api호출검사
     }
     private void confirmAddress(String address){
         JSONObject response = kakaoMapService.getAddress(address);
