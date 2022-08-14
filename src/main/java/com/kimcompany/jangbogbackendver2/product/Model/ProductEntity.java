@@ -1,6 +1,7 @@
 package com.kimcompany.jangbogbackendver2.product.Model;
 
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
+import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,6 +44,10 @@ public class ProductEntity {
 
     @Column(name = "PRODUCT_NAME",nullable = false)
     private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STORE_ID",referencedColumnName = "STORE_ID")
+    private StoreEntity storeEntity;
 
 
 
