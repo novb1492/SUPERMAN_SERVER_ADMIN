@@ -27,6 +27,8 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.3'
     // AWS-SQS-MESSAGE
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-aws-messaging', version: '2.2.6.RELEASE'
     // https://mvnrepository.com/artifact/net.nurigo/javaSDK

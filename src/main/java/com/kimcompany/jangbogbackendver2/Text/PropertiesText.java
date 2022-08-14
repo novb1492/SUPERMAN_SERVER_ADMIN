@@ -24,7 +24,12 @@ public class PropertiesText {
     public static String sqsEmailEndPoint;
 
     public static String kakaoRestKey;
+    public static String homeTaxApiKey;
 
+    @Value("${tax.decoding.apikey}")
+    public void setHomeTaxApiKey(String value){
+        homeTaxApiKey = value;
+    }
     @Value("${kakao.rest.key}")
     public void setKakaoRestKey(String value){
         kakaoRestKey = value;

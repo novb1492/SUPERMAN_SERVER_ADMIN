@@ -23,6 +23,7 @@ public class BasicText {
     public static String ROLE_USER="USER";
     public static int closingOfBusinessState=40;
     public static int withdrawalMemberState=40;
+    public static int deleteState=40;
     public static int regiEmployeePageSize=3;
     public static int trueStateNum = 1;
     public static int storeListPageSize = 10;
