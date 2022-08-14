@@ -1,6 +1,7 @@
-package com.kimcompany.jangbogbackendver2.product.Model;
+package com.kimcompany.jangbogbackendver2.Product.Model;
 
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
+import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,15 +40,19 @@ public class ProductEntity {
     private String productImgPath;
 
 
-    @Column(name = "PRODUCT_PRICE",nullable = false)
+    @Column(name = "PRODUCT_PRICE",nullable = false,length = 20)
     private String price;
 
-    @Column(name = "PRODUCT_NAME",nullable = false)
+    @Column(name = "PRODUCT_NAME",nullable = false,length = 50)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STORE_ID",referencedColumnName = "STORE_ID")
     private StoreEntity storeEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ADMIN_ID",referencedColumnName = "ADMIN_ID")
+    private MemberEntity memberEntity;
 
 
 

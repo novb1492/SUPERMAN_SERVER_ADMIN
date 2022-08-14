@@ -1,14 +1,12 @@
-package com.kimcompany.jangbogbackendver2.product.Event.Model;
+package com.kimcompany.jangbogbackendver2.ProductEvent.Model;
 
-import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
-import com.kimcompany.jangbogbackendver2.product.Model.ProductEntity;
+import com.kimcompany.jangbogbackendver2.Product.Model.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 @NoArgsConstructor
@@ -28,8 +26,8 @@ public class ProductEventEntity {
     @JoinColumn(name = "PRODUCT_ID",referencedColumnName = "PRODUCT_ID")
     private ProductEntity productEntity;
 
-    @Column(name = "EVENT_PRICE",nullable = false)
-    private Integer eventPrice;
+    @Column(name = "EVENT_PRICE",nullable = false,length = 20)
+    private String eventPrice;
 
     @Column(name = "START_DATE",nullable = false)
     private Timestamp startDate;

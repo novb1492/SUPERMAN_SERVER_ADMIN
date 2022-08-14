@@ -1,7 +1,7 @@
-package com.kimcompany.jangbogbackendver2.product;
+package com.kimcompany.jangbogbackendver2.Product;
 
-import com.kimcompany.jangbogbackendver2.product.Dto.TryInsertDto;
-import com.kimcompany.jangbogbackendver2.product.Service.ProductService;
+import com.kimcompany.jangbogbackendver2.Product.Dto.TryInsertDto;
+import com.kimcompany.jangbogbackendver2.Product.Service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
