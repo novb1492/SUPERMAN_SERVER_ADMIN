@@ -18,7 +18,7 @@ class JungBuTest {
     private Logger logger = LoggerFactory.getLogger(JungBuTest.class);
     @Test
     void test(){
-        JSONObject companyNum = JungBu.getCompanyNum("1081159612","ㅜㅕㅣㅣ");
+        JSONObject companyNum = JungBu.getCompanyNum("108","ㅀㅇ");
         logger.info("정부 api 결과:{}",companyNum.toString());
     }
 }
