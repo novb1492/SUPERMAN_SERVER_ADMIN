@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "COMPANY",indexes = {@Index(name = "ADMIN_ID", columnList = "ADMIN_ID")})
+@Table(name = "COMPANY",indexes = {@Index(name = "ADMIN_ID", columnList = "ADMIN_ID"),@Index(name = "COMPANY_NUM", columnList = "COMPANY_NUM")})
 @Entity
 public class CompanyEntity {
 
