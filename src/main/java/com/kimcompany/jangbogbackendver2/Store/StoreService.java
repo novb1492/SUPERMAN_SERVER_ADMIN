@@ -1,10 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Store;
 
 import com.kimcompany.jangbogbackendver2.Api.KakaoMapService;
-import com.kimcompany.jangbogbackendver2.Store.Dto.SearchCondition;
-import com.kimcompany.jangbogbackendver2.Store.Dto.SelectListDto;
-import com.kimcompany.jangbogbackendver2.Store.Dto.SelectRegiDto;
-import com.kimcompany.jangbogbackendver2.Store.Dto.TryInsertDto;
+import com.kimcompany.jangbogbackendver2.Store.Dto.*;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import com.kimcompany.jangbogbackendver2.Store.Repo.StoreRepo;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
@@ -23,8 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
-import static com.kimcompany.jangbogbackendver2.Util.UtilService.confirmNull;
-import static com.kimcompany.jangbogbackendver2.Util.UtilService.getLoginUserRole;
+import static com.kimcompany.jangbogbackendver2.Util.UtilService.*;
 
 /**
  * 매장 로직 관려 서비스 class입니다
@@ -44,8 +40,14 @@ public class StoreService {
         confirmTime(tryInsertDto.getOpenTime(),tryInsertDto.getCloseTime());
         //주소검사
         confirmAddress(tryInsertDto.getAddress());
+        //사업자 번호 검사
+        confirmCompanyNum(tryInsertDto.getCompanyNum());
         StoreEntity storeEntity = TryInsertDto.dtoToEntity(tryInsertDto);
         storeRepo.save(storeEntity);
+    }
+    private void confirmCompanyNum(String companyNum){
+        //해당 어드민 계정  소유 사업자 번호 맞는지 검사
+        //사업자 번호가 유효한지 api호출검사
     }
     private void confirmAddress(String address){
         JSONObject response = kakaoMapService.getAddress(address);
@@ -100,5 +102,8 @@ public class StoreService {
                 throw new IllegalArgumentException("검색 종류를 선택해 주세요");
             }
         }
+    }
+    public SelectInfo selectStoreInfo(long storeId){
+        return storeSelectService.selectStoreInfo(storeId,getLoginUserId()).orElseThrow(()->new IllegalArgumentException("존재 하지 않는 매장이거나 본인 소속 매장이아닙니다"));
     }
 }

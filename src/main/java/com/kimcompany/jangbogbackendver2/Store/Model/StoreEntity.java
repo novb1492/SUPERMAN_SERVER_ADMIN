@@ -51,6 +51,9 @@ public class StoreEntity {
     @Column(name = "STORE_THUMBNAIL",nullable = false,length = 500)
     private String thumbNail;
 
+    @Column(name = "STORE_COMPANY_NUM",nullable = false,length = 30)
+    private String companyNum;
+
     @Embedded
     private CommonColumn commonColumn;
 

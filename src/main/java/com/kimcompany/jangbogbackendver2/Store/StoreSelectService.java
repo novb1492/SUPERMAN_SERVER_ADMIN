@@ -1,6 +1,8 @@
 package com.kimcompany.jangbogbackendver2.Store;
 
+import com.kimcompany.jangbogbackendver2.Employee.EmployeeSelectService;
 import com.kimcompany.jangbogbackendver2.Store.Dto.SearchCondition;
+import com.kimcompany.jangbogbackendver2.Store.Dto.SelectInfo;
 import com.kimcompany.jangbogbackendver2.Store.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.Store.Dto.SelectRegiDto;
 import com.kimcompany.jangbogbackendver2.Store.Repo.StoreRepo;
@@ -12,9 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.regiEmployeePageSize;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 import static com.kimcompany.jangbogbackendver2.Util.UtilService.getLoginUserId;
+import static com.kimcompany.jangbogbackendver2.Util.UtilService.getLoginUserRole;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,6 +26,7 @@ import static com.kimcompany.jangbogbackendver2.Util.UtilService.getLoginUserId;
 public class StoreSelectService {
 
     private final StoreRepo storeRepo;
+    private final EmployeeSelectService employeeSelectService;
 
     public boolean checkExist(String address,String storeName){
         return storeRepo.exist(address, storeName);
@@ -41,6 +46,15 @@ public class StoreSelectService {
     }
     public Page<SelectListDto>selectForListOther(SearchCondition searchCondition,int pageSize){
         return storeRepo.selectForListOther(getLoginUserId(),pageSize,searchCondition);
+    }
+    public Optional<SelectInfo>selectStoreInfo(long storeId,long adminId) {
+        if (getLoginUserRole().equals(ROLE_ADMIN)) {
+            return storeRepo.selectByIdAndAdminId(storeId, adminId);
+        }
+        if (employeeSelectService.exist(storeId, adminId, trueStateNum)) {
+            return storeRepo.selectById(storeId);
+        }
+        throw new IllegalArgumentException(cantFindStoreMessage);
     }
 
 }

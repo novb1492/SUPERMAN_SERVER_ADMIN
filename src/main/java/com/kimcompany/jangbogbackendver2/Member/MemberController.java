@@ -17,7 +17,12 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @RequestMapping(value = "/admin/member/info/{userId}",method = GET)
+    /**
+     * 직원등록을 위한 유저조회
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/manage/member/info/{userId}",method = GET)
     public ResponseEntity<?>selectInfo(@PathVariable String userId){
         return ResponseEntity.ok().body( memberService.selectForRegi(userId));
     }

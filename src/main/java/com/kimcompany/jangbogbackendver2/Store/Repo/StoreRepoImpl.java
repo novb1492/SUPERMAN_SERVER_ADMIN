@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.kimcompany.jangbogbackendver2.Employee.Model.QEmployeeEntity.employeeEntity;
 import static com.kimcompany.jangbogbackendver2.Store.Model.QStoreEntity.storeEntity;
@@ -140,5 +141,17 @@ public class StoreRepoImpl implements StoreRepoCustom{
             return storeEntity.name.contains(val);
         }
         return null;
+    }
+    public Optional<SelectInfo>selectByIdAndAdminId(long store,long adminId){
+        SelectInfo selectInfo=jpaQueryFactory.select(new QSelectInfo(storeEntity))
+                .from(storeEntity)
+                .where(storeEntity.id.eq(store),storeEntity.memberEntity.id.eq(adminId),storeEntity.commonColumn.state.ne(closingOfBusinessState)).fetchOne();
+        return Optional.ofNullable(selectInfo);
+    }
+    public Optional<SelectInfo>selectById(long storeId){
+        SelectInfo selectInfo = jpaQueryFactory.select(new QSelectInfo(storeEntity))
+                .from(storeEntity)
+                .where(storeEntity.id.eq(storeId), storeEntity.commonColumn.state.ne(closingOfBusinessState)).fetchOne();
+        return Optional.ofNullable(selectInfo);
     }
 }
