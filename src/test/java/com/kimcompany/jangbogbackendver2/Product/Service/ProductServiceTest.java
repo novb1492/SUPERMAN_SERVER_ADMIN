@@ -108,6 +108,16 @@ class ProductServiceTest {
         tryInsertDto.setEvents(events);
         assertThrows(IllegalArgumentException.class, () ->  productService.save(tryInsertDto));
     }
+    @Test
+    @DisplayName("사용불가 카테고리")
+    @WithUserDetails("kim")
+    void test10(){
+        TryInsertDto tryInsertDto=set("1","13,000","테스트고기12345");
+        tryInsertDto.setCategory("2");
+        List<Map<String, Object>> events = set("2022-08-15T11:31", "2022-08-17T11:32", "2022-08-16T11:33", "2022-08-16T11:34");
+        tryInsertDto.setEvents(events);
+        assertThrows(IllegalArgumentException.class, () ->  productService.save(tryInsertDto));
+    }
     private void setUser(long id ,String role){
         PrincipalDetails principalDetails=new PrincipalDetails(MemberEntity.builder().id(id).role(role).build());
         SecurityContext context = SecurityContextHolder.getContext();
