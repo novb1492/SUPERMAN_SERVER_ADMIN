@@ -15,6 +15,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -74,10 +79,42 @@ class ProductServiceTest {
         TryInsertDto tryInsertDto=set("1","13,000","테스트고기");
         assertThrows(IllegalArgumentException.class, () ->  productService.save(tryInsertDto));
     }
+    @Test
+    @DisplayName("전체롤백 테스트")
+    @WithUserDetails("kim")
+    void test7(){
+        TryInsertDto tryInsertDto=set("1","13,000","테스트고기123");
+        List<Map<String, Object>> events = set("2022-08-15T11:31", "2022-08-17T11:32", "2022-08-15T11:35", "2022-08-16T11:32");
+        tryInsertDto.setEvents(events);
+        productService.save(tryInsertDto);
+    }
+    @Test
+    @DisplayName("이벤트까지 저장 테스트")
+    @WithUserDetails("kim")
+    void test8(){
+        TryInsertDto tryInsertDto=set("1","13,000","테스트고기123");
+        List<Map<String, Object>> events = set("2022-08-15T11:31", "2022-08-17T11:32", "2022-08-16T11:33", "2022-08-16T11:34");
+        tryInsertDto.setEvents(events);
+        productService.save(tryInsertDto);
+    }
     private void setUser(long id ,String role){
         PrincipalDetails principalDetails=new PrincipalDetails(MemberEntity.builder().id(id).role(role).build());
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(new UsernamePasswordAuthenticationToken(principalDetails, principalDetails.getPassword(), principalDetails.getAuthorities()));
+    }
+    private  List<Map<String, Object>> set(String startDate,String endDate,String startDate2,String endDate2){
+        List<Map<String, Object>> events = new ArrayList<>();
+        Map<String,Object>event1=new HashMap<>();
+        event1.put("price","13,000");
+        event1.put("startDate",startDate);
+        event1.put("endDate",endDate);
+        Map<String,Object>event2=new HashMap<>();
+        event2.put("price","15,000");
+        event2.put("startDate",startDate2);
+        event2.put("endDate",endDate2);
+        events.add(event1);
+        events.add(event2);
+        return events;
     }
     private TryInsertDto set(String storeId,String price,String name){
         TryInsertDto tryInsertDto=new TryInsertDto();
