@@ -1,5 +1,7 @@
 package com.kimcompany.jangbogbackendver2.ProductEvent.Model;
 
+import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
+import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Product.Model.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,5 +36,12 @@ public class ProductEventEntity {
 
     @Column(name = "END_DATE",nullable = false)
     private Timestamp endDate;
+
+    @Embedded
+    private CommonColumn commonColumn;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "INSERT_USER",referencedColumnName = "ADMIN_ID")
+    private MemberEntity memberEntity;
 
 }

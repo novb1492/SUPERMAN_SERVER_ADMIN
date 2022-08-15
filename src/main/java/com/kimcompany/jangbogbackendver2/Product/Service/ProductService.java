@@ -32,6 +32,7 @@ public class ProductService {
         confirmExist(storeId, tryInsertDto.getName());
         ProductEntity productEntity = TryInsertDto.dtoToEntity(tryInsertDto);
         productRepo.save(productEntity);
+        productEventService.save(productEntity.getId(), tryInsertDto.getEvents());
     }
     private void confirmExist(long storeId,String productName){
         if(productSelectService.exist(productName,storeId)){
