@@ -83,19 +83,30 @@ class ProductServiceTest {
     @DisplayName("전체롤백 테스트")
     @WithUserDetails("kim")
     void test7(){
-        TryInsertDto tryInsertDto=set("1","13,000","테스트고기123");
-        List<Map<String, Object>> events = set("2022-08-15T11:31", "2022-08-17T11:32", "2022-08-15T11:35", "2022-08-16T11:32");
+        TryInsertDto tryInsertDto=set("1","13,000","테스트고기123789");
+        List<Map<String, Object>> events = set("2022-08-15T11:31", "2022-08-17T11:32", "2022-08-18T11:35", "2022-08-16T11:32");
         tryInsertDto.setEvents(events);
-        productService.save(tryInsertDto);
+        assertThrows(IllegalArgumentException.class, () ->  productService.save(tryInsertDto));
     }
     @Test
     @DisplayName("이벤트까지 저장 테스트")
     @WithUserDetails("kim")
+    @Transactional
     void test8(){
-        TryInsertDto tryInsertDto=set("1","13,000","테스트고기123");
+        TryInsertDto tryInsertDto=set("1","13,000","테스트고기1234");
         List<Map<String, Object>> events = set("2022-08-15T11:31", "2022-08-17T11:32", "2022-08-16T11:33", "2022-08-16T11:34");
         tryInsertDto.setEvents(events);
         productService.save(tryInsertDto);
+    }
+    @Test
+    @DisplayName("없는 카테고리")
+    @WithUserDetails("kim")
+    void test9(){
+        TryInsertDto tryInsertDto=set("1","13,000","테스트고기12345");
+        tryInsertDto.setCategory("100");
+        List<Map<String, Object>> events = set("2022-08-15T11:31", "2022-08-17T11:32", "2022-08-16T11:33", "2022-08-16T11:34");
+        tryInsertDto.setEvents(events);
+        assertThrows(IllegalArgumentException.class, () ->  productService.save(tryInsertDto));
     }
     private void setUser(long id ,String role){
         PrincipalDetails principalDetails=new PrincipalDetails(MemberEntity.builder().id(id).role(role).build());
@@ -118,7 +129,7 @@ class ProductServiceTest {
     }
     private TryInsertDto set(String storeId,String price,String name){
         TryInsertDto tryInsertDto=new TryInsertDto();
-        tryInsertDto.setCategory("정육");
+        tryInsertDto.setCategory("1");
         tryInsertDto.setId(storeId);
         tryInsertDto.setIntroduce("제품소개");
         tryInsertDto.setName(name);

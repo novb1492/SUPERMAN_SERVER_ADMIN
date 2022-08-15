@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Product.Dto;
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.ProductEvent.Model.ProductEventEntity;
+import com.kimcompany.jangbogbackendver2.ProductKind.Model.ProductCategoryEntity;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
@@ -44,16 +45,18 @@ public class TryInsertDto {
     @NotBlank(message = "매장정보를 유실했습니다")
     private String id;
 
+
     /**
      * 상품의 이벤트 내용 null가능
      */
     private List<Map<String,Object>> events;
 
     public static ProductEntity dtoToEntity(TryInsertDto tryInsertDto){
-        return ProductEntity.builder().category(tryInsertDto.getCategory()).commonColumn(CommonColumn.set(trueStateNum))
+        return ProductEntity.builder().productKindEntity(ProductCategoryEntity.builder().id(Long.parseLong(tryInsertDto.getCategory())).build()).commonColumn(CommonColumn.set(trueStateNum))
                 .introduce(tryInsertDto.getIntroduce()).name(tryInsertDto.getName()).origin(tryInsertDto.getOrigin())
                 .price(tryInsertDto.getPrice()).productImgPath(tryInsertDto.getProductImgPath()).memberEntity(MemberEntity.builder().id(getLoginUserId())
-                        .build()).storeEntity(StoreEntity.builder().id(Long.parseLong(tryInsertDto.getId())).build()).build();
+                        .build()).storeEntity(StoreEntity.builder().id(Long.parseLong(tryInsertDto.getId())).build())
+                .build();
     }
     public static ProductEventEntity dtoToEntity(Map<String,Object>event, long productId){
         return ProductEventEntity.builder().productEntity(ProductEntity.builder().id(productId).build())

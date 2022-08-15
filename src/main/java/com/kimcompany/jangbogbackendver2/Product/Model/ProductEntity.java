@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Product.Model;
 
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
+import com.kimcompany.jangbogbackendver2.ProductKind.Model.ProductCategoryEntity;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,9 +26,6 @@ public class ProductEntity {
 
     @Embedded
     private CommonColumn commonColumn;
-
-    @Column(name = "CATEGORY",nullable = false,length = 20)
-    private String category;
 
     @Column(name = "ORIGIN",nullable = false,length = 30)
     private String origin;
@@ -54,6 +52,8 @@ public class ProductEntity {
     @JoinColumn(name = "ADMIN_ID",referencedColumnName = "ADMIN_ID")
     private MemberEntity memberEntity;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PRODUCT_CATEGORY_ID",referencedColumnName ="PRODUCT_CATEGORY_ID" )
+    private ProductCategoryEntity productKindEntity;
 
 }
