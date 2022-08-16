@@ -31,7 +31,7 @@ class ProductEventServiceTest2 {
     @WithUserDetails("kim")
     @Transactional
     void test2(){
-        List<Map<String, Object>> events = set("2022-08-15T11:32", "2022-08-17T11:32", "2022-08-16T11:32", "2022-08-16T11:32");
+        List<Map<String, Object>> events = set("2022-08-15T11:32", "2022-08-17T11:32", "2022-08-16T11:32", "2022-08-16T11:33");
         productEventService.save(1,events);
     }
     @Test
