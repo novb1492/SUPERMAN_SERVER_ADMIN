@@ -30,10 +30,15 @@ public class ProductEventService {
             confirmDate(event);
             confirmSame(event);
             confirmPrice(event);
+            confirmName(event);
             productEventRepo.save(TryInsertDto.dtoToEntity(event, productId));
         }
     }
-
+    private void confirmName(Map<String,Object>event){
+        if(event.get("name").toString().length()>20){
+            throw new IllegalArgumentException("이벤트 이름은 최대 20글자입니다\n"+event.get("name"));
+        }
+    }
     private void confirmPrice(Map<String,Object>event){
             String price = event.get("price").toString();
             if(UtilService.confirmPrice(price)){

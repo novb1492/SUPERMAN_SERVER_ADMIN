@@ -40,10 +40,12 @@ class ProductEventServiceTest {
         event1.put("price","13,000");
         event1.put("startDate",startDate);
         event1.put("endDate",endDate);
+        event1.put("name","test");
         Map<String,Object>event2=new HashMap<>();
         event2.put("price","15,000");
         event2.put("startDate",startDate2);
         event2.put("endDate",endDate2);
+        event2.put("name","test2");
         events.add(event1);
         events.add(event2);
         return events;

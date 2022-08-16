@@ -63,7 +63,7 @@ public class TryInsertDto {
                 .endDate(Timestamp.valueOf(event.get("endDate").toString().replace("T"," ")+":00"))
                 .startDate(Timestamp.valueOf(event.get("startDate").toString().replace("T"," ")+":00"))
                 .commonColumn(CommonColumn.set(trueStateNum)).memberEntity(MemberEntity.builder().id(getLoginUserId()).build())
-                .eventPrice(event.get("price").toString()).build();
+                .eventPrice(event.get("price").toString()).name(event.get("name").toString()).build();
     }
 
 }

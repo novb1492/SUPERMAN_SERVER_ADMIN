@@ -37,6 +37,9 @@ public class ProductEventEntity {
     @Column(name = "END_DATE",nullable = false)
     private Timestamp endDate;
 
+    @Column(name = "PRODUCT_EVENT_NAME",nullable = false,length = 20)
+    private String name;
+
     @Embedded
     private CommonColumn commonColumn;
 
