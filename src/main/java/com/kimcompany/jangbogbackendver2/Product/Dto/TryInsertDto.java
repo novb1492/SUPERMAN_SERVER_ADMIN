@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -27,6 +28,7 @@ public class TryInsertDto {
     @NotBlank(message = "상품 카테고리를 선택해주세요")
     private String category;
 
+    @Size(max = 30,message = "원산지는 최대 30자입니다")
     @NotBlank(message = "상품 원산지를 적어주세요")
     private String origin;
 
@@ -39,6 +41,7 @@ public class TryInsertDto {
     @NotBlank(message = "금액을 입력해주세요")
     private String  price;
 
+    @Size(message = "상품이름은 최대 30자입니다")
     @NotBlank(message = "상품 이름을 적어주세요")
     private String name;
 

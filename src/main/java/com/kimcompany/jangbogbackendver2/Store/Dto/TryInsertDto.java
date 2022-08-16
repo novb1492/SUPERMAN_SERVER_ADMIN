@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @NoArgsConstructor
 @Data
@@ -23,8 +24,12 @@ public class TryInsertDto {
     private String closeTime;
     @NotBlank(message = "우편번호를 입력해주세요")
     private String postcode;
+
+    @Size(message = "주소는 최대 30자입니다")
     @NotBlank(message = "주소를 입력해주세요")
     private String address;
+
+    @Size(message = "매장이름은 최대 20자입니다")
     @NotBlank(message = "매장이름을 입력해주세요")
     private String name;
 
@@ -33,9 +38,9 @@ public class TryInsertDto {
 
     private String text;
 
+    @Size(max = 50,message = "상세주소는 최대50자입니다")
     @NotBlank(message = "매장상세주소를 입력해주세요")
     private String detailAddress;
-
 
     @Min(value = 1,message = "최소 배달금액을 입력해주세요")
     private int minPrice;
@@ -43,6 +48,7 @@ public class TryInsertDto {
     @NotBlank(message = "최대 배달반경을 입력해주세요")
     private String radius;
 
+    @Size(max = 20,message = "전화번호는 최대 20자입니다")
     @NotBlank(message = "매장 전화번호를 입력해주세요")
     private String tel;
 

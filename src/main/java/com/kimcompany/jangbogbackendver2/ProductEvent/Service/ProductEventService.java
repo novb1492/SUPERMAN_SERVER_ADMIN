@@ -27,6 +27,9 @@ public class ProductEventService {
             return;
         }
         for(Map<String,Object>event:events){
+            if(event.isEmpty()){
+                return;
+            }
             confirmDate(event);
             confirmSame(event);
             confirmPrice(event);
