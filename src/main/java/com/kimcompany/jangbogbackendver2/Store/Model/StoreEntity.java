@@ -42,6 +42,7 @@ public class StoreEntity {
     @Column(name = "TEL",nullable = false,length = 20)
     private String tel;
 
+    @Lob
     @Column(name = "TEXT",length = 3500)
     private String text;
 

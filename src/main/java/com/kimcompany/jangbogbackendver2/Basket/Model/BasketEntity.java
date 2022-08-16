@@ -1,9 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Basket.Model;
 
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
-import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
-import com.kimcompany.jangbogbackendver2.product.Event.Model.ProductEventEntity;
-import com.kimcompany.jangbogbackendver2.product.Model.ProductEntity;
+import com.kimcompany.jangbogbackendver2.Product.Model.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +37,7 @@ public class BasketEntity {
     private LocalDateTime created;
 
     @Column(name = "PRICE",nullable = false)
-    private int price;
+    private String price;
 
     @Column(name = "TOTAL_COUNT",nullable = false)
     private int totalCount;

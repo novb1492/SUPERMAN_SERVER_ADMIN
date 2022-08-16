@@ -134,4 +134,16 @@ public class UtilService {
             throw new RuntimeException("로그인 정보 찾기 실패");
         }
     }
+    public static boolean confirmPrice(String price){
+        char [] arr=price.toCharArray();
+        for(char c:arr){
+            int cc = (int) c;
+            if(cc<48||cc>57){
+                if(cc!=44){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
