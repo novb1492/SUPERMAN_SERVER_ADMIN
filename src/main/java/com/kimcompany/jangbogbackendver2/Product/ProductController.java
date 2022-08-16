@@ -18,7 +18,7 @@ import javax.validation.Valid;
 public class ProductController {
     private final ProductService productService;
 
-    @RequestMapping(value = "/user/product/save",method = RequestMethod.POST)
+    @RequestMapping(value = "/manage/product/save",method = RequestMethod.POST)
     public ResponseEntity<?>save(@Valid @RequestBody TryInsertDto tryInsertDto){
         productService.save(tryInsertDto);
         JSONObject response = new JSONObject();

@@ -31,7 +31,6 @@ public class ProductEventService {
                 return;
             }
             confirmDate(event);
-            confirmSame(event);
             confirmPrice(event);
             confirmName(event);
             productEventRepo.save(TryInsertDto.dtoToEntity(event, productId));
@@ -59,13 +58,10 @@ public class ProductEventService {
             if(Timestamp.valueOf(startDate).toLocalDateTime().isEqual(Timestamp.valueOf(endDate).toLocalDateTime())){
                 throw new IllegalArgumentException("이벤트시작일은 이벤트 종료일보다 빨라야합니다\n"+startDate+","+endDate);
             }
-    }
-    private void confirmSame(Map<String,Object>event){
-        String[]date=event.get("startDate").toString().split("T");
-        if(dates.contains(date[0])){
-            throw new IllegalArgumentException("동일한 이벤트 시작일이 있습니다\n"+date[0]);
-        }else{
-            dates.add(date[0]);
-        }
+            if(dates.contains(startDate)){
+                throw new IllegalArgumentException("동일한 이벤트 시작일이 있습니다\n"+startDate);
+            }else {
+                dates.add(startDate);
+            }
     }
 }
