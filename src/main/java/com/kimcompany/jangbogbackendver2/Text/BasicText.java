@@ -28,6 +28,6 @@ public class BasicText {
     public static int trueStateNum = 1;
     public static int storeListPageSize = 10;
     public static String cantFindStoreMessage = "본인 소속 매장이 아니거나 존재하지 않는 매장입니다";
-
+    public static String cantFindProductCategory = "존재하지 않는 카테고리 이거나 더이상 사용할 수없는 카테고리입니다";
 
 }

@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Product.Service;
 import com.kimcompany.jangbogbackendver2.ProductEvent.Service.ProductEventService;
 import com.kimcompany.jangbogbackendver2.ProductKind.Service.ProductKindSelectService;
 import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
+import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import com.kimcompany.jangbogbackendver2.Product.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Product.Model.ProductEntity;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindProductCategory;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindStoreMessage;
 import static com.kimcompany.jangbogbackendver2.Util.UtilService.getLoginUserId;
 
@@ -42,7 +44,7 @@ public class ProductService {
     }
     private void confirmCategory(long categoryId){
         if(productKindSelectService.exist(categoryId)){
-            throw new IllegalArgumentException("존재하지 않는 카테고리 이거나 더이상 사용할 수없는 카테고리입니다");
+            throw new IllegalArgumentException(cantFindProductCategory);
         }
     }
 
