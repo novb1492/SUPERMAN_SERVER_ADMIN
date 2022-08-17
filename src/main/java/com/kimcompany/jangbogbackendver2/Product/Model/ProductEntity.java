@@ -15,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "PRODUCT")
+@Table(name = "PRODUCT",indexes = {@Index(name = "PRODUCT_CATEGORY_ID",columnList = "PRODUCT_CATEGORY_ID"),@Index(name = "PRODUCT_NAME",columnList = "PRODUCT_NAME")})
 @Entity
 public class ProductEntity {
 
@@ -49,7 +49,7 @@ public class ProductEntity {
     private StoreEntity storeEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ADMIN_ID",referencedColumnName = "ADMIN_ID")
+    @JoinColumn(name = "INSERT_USER",referencedColumnName = "ADMIN_ID")
     private MemberEntity memberEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)

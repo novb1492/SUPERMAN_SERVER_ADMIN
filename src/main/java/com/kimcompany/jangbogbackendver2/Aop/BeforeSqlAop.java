@@ -18,6 +18,9 @@ import java.lang.reflect.Method;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
+/**
+ * 해당 매장의 접근 권리가 있는지 확인하는 aop입니다
+ */
 @Service
 @RequiredArgsConstructor
 @Aspect
@@ -26,6 +29,12 @@ public class BeforeSqlAop {
     private final EmployeeSelectService employeeSelectService;
     private final StoreSelectService storeSelectService;
 
+    /**
+     * 상품/직원등록전 해당 매장에 대한
+     * 권리가 있는지 확인
+     * @param joinPoint
+     * @throws Throwable
+     */
     @Before("execution(* com.kimcompany.jangbogbackendver2.Employee.EmployeeService.save(..))"
             +"||execution(* com.kimcompany.jangbogbackendver2.Product.Service.ProductService.save(..))")
     public void beforeSaveCheck(JoinPoint joinPoint) throws Throwable {
@@ -46,6 +55,17 @@ public class BeforeSqlAop {
         }
         checkSave(storeId);
     }
+
+    /**
+     * 해당 매장의 주문/직원/상품/배달/매출 조회전
+     * 권한이있는지 확인
+     * @param joinPoint
+     * @throws Throwable
+     */
+//    @Before("")
+//    public void checkBelong(JoinPoint joinPoint) throws Throwable{
+//
+//    }
     private void checkSave(long storeId){
         long adminId= UtilService.getLoginUserId();
         String role = UtilService.getLoginUserRole();
@@ -59,4 +79,6 @@ public class BeforeSqlAop {
             }
         }
     }
+
+
 }
