@@ -28,7 +28,7 @@ class EmployeeServiceTest {
         employeeService.save(tryInsertDto);
     }
     @Test
-    @DisplayName("매장등록 실패 테스트")
+    @DisplayName("직원등록 실패 테스트")
     @WithUserDetails("kim")
     public void fail(){
         TryInsertDto tryInsertDto = set("!", "2");
@@ -37,6 +37,13 @@ class EmployeeServiceTest {
         TryInsertDto tryInsertDto2 = set("1", "3");
         assertThrows(IllegalArgumentException.class, () -> employeeService.save(tryInsertDto2));
         logger.info("매장등록 이미 있는 직원 등록 요청 테스트통과");
+    }
+    @Test
+    @DisplayName("직원등록 실패 테스트 소유매장아님")
+    @WithUserDetails("kim")
+    public void failToNotHave(){
+        TryInsertDto tryInsertDto = set("100", "3");
+        employeeService.save(tryInsertDto);
     }
     private TryInsertDto set(String storeId,String userId){
         TryInsertDto tryInsertDto = new TryInsertDto();

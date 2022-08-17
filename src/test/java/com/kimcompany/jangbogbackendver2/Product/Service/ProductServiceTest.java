@@ -118,15 +118,6 @@ class ProductServiceTest {
         tryInsertDto.setEvents(events);
         assertThrows(IllegalArgumentException.class, () ->  productService.save(tryInsertDto));
     }
-    @Test
-    @DisplayName("해당 매장 주인이 아닌 상품등록")
-    @WithUserDetails("kim3")
-    @Transactional
-    void test11(){
-        TryInsertDto tryInsertDto=set("1","13,000","테스트고기12345");
-        tryInsertDto.setId("2");
-        assertThrows(IllegalArgumentException.class, () ->  productService.save(tryInsertDto));
-    }
     private void setUser(long id ,String role){
         PrincipalDetails principalDetails=new PrincipalDetails(MemberEntity.builder().id(id).role(role).build());
         SecurityContext context = SecurityContextHolder.getContext();
