@@ -54,7 +54,7 @@ public class BeforeSqlAop {
                 throw new IllegalArgumentException(cantFindStoreMessage);
             }
         }else if(role.equals(ROLE_MANAGE)){
-            if(!employeeSelectService.exist(storeId, adminId, deleteState)){
+            if(!employeeSelectService.exist(storeId, adminId, trueStateNum)){
                 throw new IllegalArgumentException(cantFindStoreMessage);
             }
         }
