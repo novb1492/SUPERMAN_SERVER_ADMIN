@@ -12,11 +12,15 @@ public class SelectListDto {
     private long id;
     private String name;
     private int state;
+    private String imgPath;
+    private String price;
 
     @QueryProjection
     public SelectListDto(ProductEntity productEntity) {
         this.id = productEntity.getId();
         this.name = productEntity.getName();
         this.state = productEntity.getCommonColumn().getState();
+        this.imgPath = productEntity.getProductImgPath();
+        this.price = productEntity.getPrice();
     }
 }
