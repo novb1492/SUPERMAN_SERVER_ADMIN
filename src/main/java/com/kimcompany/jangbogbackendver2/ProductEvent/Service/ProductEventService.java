@@ -19,18 +19,18 @@ import java.util.Map;
 public class ProductEventService {
 
     private final ProductEventRepo productEventRepo;
-    private List<String> dates = new ArrayList<>();
 
     @Transactional
     public void save(long productId, List<Map<String,Object>>events){
         if(events.isEmpty()){
             return;
         }
+        List<String> dates = new ArrayList<>();
         for(Map<String,Object>event:events){
             if(event.isEmpty()){
                 return;
             }
-            confirmDate(event);
+            confirmDate(event,dates);
             confirmPrice(event);
             confirmName(event);
             productEventRepo.save(TryInsertDto.dtoToEntity(event, productId));
@@ -48,7 +48,7 @@ public class ProductEventService {
             }
 
     }
-    private void confirmDate(Map<String,Object>event){
+    private void confirmDate(Map<String,Object>event,List<String> dates){
             String startDate=event.get("startDate").toString().replace("T"," ")+":00";
             String endDate=event.get("endDate").toString().replace("T"," ")+":00";
             System.out.println(startDate+","+endDate);
