@@ -28,7 +28,7 @@ public class ProductEventService {
         List<String> dates = new ArrayList<>();
         for(Map<String,Object>event:events){
             if(event.isEmpty()){
-                return;
+                continue;
             }
             confirmDate(event,dates);
             confirmPrice(event);
