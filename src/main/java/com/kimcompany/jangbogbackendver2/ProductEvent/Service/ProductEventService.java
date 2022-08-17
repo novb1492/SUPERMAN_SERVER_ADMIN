@@ -52,7 +52,7 @@ public class ProductEventService {
             String startDate=event.get("startDate").toString().replace("T"," ")+":00";
             String endDate=event.get("endDate").toString().replace("T"," ")+":00";
             System.out.println(startDate+","+endDate);
-            if(Timestamp.valueOf(startDate).toLocalDateTime().isAfter(Timestamp.valueOf(endDate).toLocalDateTime())){
+            if(!Timestamp.valueOf(startDate).toLocalDateTime().isBefore(Timestamp.valueOf(endDate).toLocalDateTime())){
                 throw new IllegalArgumentException("이벤트시작일은 이벤트 종료일보다 빨라야합니다\n"+startDate+","+endDate);
             }
             if(Timestamp.valueOf(startDate).toLocalDateTime().isEqual(Timestamp.valueOf(endDate).toLocalDateTime())){
