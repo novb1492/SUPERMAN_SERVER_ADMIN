@@ -21,7 +21,6 @@ public class ProductService {
     private final ProductSelectService productSelectService;
     private final ProductRepo productRepo;
     private final ProductEventService productEventService;
-    private final StoreSelectService storeSelectService;
     private final ProductKindSelectService productKindSelectService;
 
     @Transactional(rollbackFor = Exception.class)
@@ -30,7 +29,6 @@ public class ProductService {
             throw new IllegalArgumentException("금액에 잘못된값이 있습니다");
         }
         long storeId = Long.parseLong(tryInsertDto.getId());
-        confirmExistStore(storeId);
         confirmExist(storeId, tryInsertDto.getName());
         confirmCategory(Long.parseLong(tryInsertDto.getCategory()));
         ProductEntity productEntity = TryInsertDto.dtoToEntity(tryInsertDto);
@@ -42,10 +40,6 @@ public class ProductService {
             throw new IllegalArgumentException("이미 등록 되어있는 상품입니다");
         }
     }
-    private void confirmExistStore(long storeId){
-        storeSelectService.selectStoreInfo(storeId, getLoginUserId()).orElseThrow(()->new IllegalArgumentException(cantFindStoreMessage));
-    }
-
     private void confirmCategory(long categoryId){
         if(productKindSelectService.exist(categoryId)){
             throw new IllegalArgumentException("존재하지 않는 카테고리 이거나 더이상 사용할 수없는 카테고리입니다");

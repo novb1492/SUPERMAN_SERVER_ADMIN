@@ -26,7 +26,6 @@ public class EmployeeService {
     private final EmployeeRepo employeeRepo;
     private final EmployeeSelectService employeeSelectService;
     private final MemberSelectService memberSelectService;
-    private final StoreSelectService storeSelectService;
     private final SqsService sqsService;
 
 
@@ -37,7 +36,6 @@ public class EmployeeService {
             userId = Long.parseLong(tryInsertDto.getUserId());
             storeId = Long.parseLong(tryInsertDto.getStoreId());
             confirmExistUser(userId);
-            confirmExistStore(storeId);
             confirmExist(storeId, userId);
         }catch (ClassCastException e){
             ExceptionValue(tryInsertDto.toString(), EmployeeService.class);
@@ -66,15 +64,6 @@ public class EmployeeService {
         sqsService.sendSqs(PropertiesText.sqsPhoneEndPoint,"SUPERMAN 직원 초대 알림",notyMessage,insertEmployNotyDto.getAdminPhone());
         sqsService.sendSqs(PropertiesText.sqsEmailEndPoint,"SUPERMAN 직원 초대 알림",notyMessage,insertEmployNotyDto.getAdminEmail());
 
-    }
-    private void confirmExistStore(long storeId){
-        long adminId = getLoginUserId();
-        if(storeSelectService.checkExist(storeId, adminId)){
-            return;
-        }else if(employeeSelectService.exist(storeId,adminId,trueStateNum)){
-            return;
-        }
-        throw new IllegalArgumentException(cantFindStoreMessage);
     }
     private void confirmExist(long storeId,long userId){
         if(employeeSelectService.exist(storeId,userId, trueStateNum)){
