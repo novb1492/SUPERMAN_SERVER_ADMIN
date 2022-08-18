@@ -5,6 +5,7 @@ import com.kimcompany.jangbogbackendver2.Product.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Product.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.ProductKind.Model.ProductCategoryEntity;
 import com.kimcompany.jangbogbackendver2.ProductKind.Repo.ProductCategoryEntityRepo;
+import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -58,7 +59,7 @@ public class ProductRepoImpl implements ProductRepoCustom {
     private BooleanExpression checkCondition(long categoryId, String val) {
         ProductCategoryEntity productCategoryEntity = productCategoryEntityRepo.findById(deleteState, categoryId).orElseGet(() -> null);
         if(productCategoryEntity!=null){
-            if(StringUtils.hasText(val)){
+            if(!UtilService.confirmNull(val)){
                 return productEntity.productKindEntity.id.eq(categoryId).and(productEntity.name.contains(val));
             }
             return productEntity.productKindEntity.id.eq(categoryId);
