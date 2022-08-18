@@ -1,6 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Product.Repo;
 
 import com.kimcompany.jangbogbackendver2.Product.Dto.QSelectListDto;
+import com.kimcompany.jangbogbackendver2.Product.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Product.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.ProductKind.Model.ProductCategoryEntity;
 import com.kimcompany.jangbogbackendver2.ProductKind.Repo.ProductCategoryEntityRepo;
@@ -33,12 +34,13 @@ public class ProductRepoImpl implements ProductRepoCustom {
         return fetchFirst != null;
     }
     @Override
-    public Page<SelectListDto>selectForList(int page, int pageSize, long storeId, Long categoryId, String val){
-        PageRequest pageRequest = PageRequest.of(page-1, pageSize);
+    public Page<SelectListDto>selectForList(int pageSize, long storeId, SearchCondition searchCondition){
+        PageRequest pageRequest = PageRequest.of(searchCondition.getPage()-1, pageSize);
+        long categoryId = Long.parseLong(searchCondition.getCategoryId());
         List<SelectListDto> selectListDtos= jpaQueryFactory
                 .select(new QSelectListDto(productEntity))
                 .from(productEntity)
-                .where(productEntity.storeEntity.id.eq(storeId),productEntity.commonColumn.state.ne(deleteState), checkCondition(categoryId, val))
+                .where(productEntity.storeEntity.id.eq(storeId),productEntity.commonColumn.state.ne(deleteState), checkCondition(categoryId, searchCondition.getValue()))
                 .orderBy(productEntity.id.desc())
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
@@ -47,7 +49,7 @@ public class ProductRepoImpl implements ProductRepoCustom {
         JPAQuery<Long> count = jpaQueryFactory
                 .select(productEntity.count())
                 .from(productEntity)
-                .where(productEntity.storeEntity.id.eq(storeId), productEntity.commonColumn.state.ne(deleteState), checkCondition(categoryId, val));
+                .where(productEntity.storeEntity.id.eq(storeId), productEntity.commonColumn.state.ne(deleteState), checkCondition(categoryId, searchCondition.getValue()));
 
         // Result
         Page<SelectListDto> selectListDtos2 = PageableExecutionUtils.getPage(selectListDtos, pageRequest, count::fetchOne);

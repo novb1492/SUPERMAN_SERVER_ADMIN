@@ -1,5 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Product.Service;
 
+import com.kimcompany.jangbogbackendver2.Product.Dto.SearchCondition;
+import com.kimcompany.jangbogbackendver2.Product.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.ProductEvent.Service.ProductEventService;
 import com.kimcompany.jangbogbackendver2.ProductKind.Service.ProductKindSelectService;
 import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
@@ -9,6 +11,7 @@ import com.kimcompany.jangbogbackendver2.Product.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Product.Model.ProductEntity;
 import com.kimcompany.jangbogbackendver2.Product.Repo.ProductRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +49,9 @@ public class ProductService {
         if(productKindSelectService.exist(categoryId)){
             throw new IllegalArgumentException(cantFindProductCategory);
         }
+    }
+    public Page<SelectListDto>selectForList(long storeId, SearchCondition searchCondition){
+        return productSelectService.selectForList(storeId, searchCondition);
     }
 
 }
