@@ -18,6 +18,11 @@ import java.util.Optional;
 public class ProductController {
     private final ProductService productService;
 
+    /**
+     * 상품등록
+     * @param tryInsertDto
+     * @return
+     */
     @RequestMapping(value = "/manage/product/save",method = RequestMethod.POST)
     public ResponseEntity<?>save(@Valid @RequestBody TryInsertDto tryInsertDto){
         productService.save(tryInsertDto);
@@ -25,6 +30,13 @@ public class ProductController {
         response.put("message", "상품 저장완료");
         return ResponseEntity.ok().body(response);
     }
+
+    /**
+     * 상품리스트조회
+     * @param storeId
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/user/product/list/{storeId}",method = RequestMethod.GET)
     public ResponseEntity<?>selectForList(@PathVariable String storeId, HttpServletRequest request){
         SearchCondition searchCondition = new SearchCondition(Integer.parseInt(request.getParameter("page").toString())
