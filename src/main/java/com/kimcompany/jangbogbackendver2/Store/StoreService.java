@@ -1,6 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Store;
 
 import com.kimcompany.jangbogbackendver2.Api.KakaoMapService;
+import com.kimcompany.jangbogbackendver2.Company.Service.CompanyService;
 import com.kimcompany.jangbogbackendver2.Store.Dto.*;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import com.kimcompany.jangbogbackendver2.Store.Repo.StoreRepo;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.sql.Select;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +34,9 @@ public class StoreService {
     private final StoreRepo storeRepo;
     private final StoreSelectService storeSelectService;
     private final KakaoMapService kakaoMapService;
+    private final CompanyService companyService;
     @Transactional
-    public void save(TryInsertDto tryInsertDto){
+    public void save(TryInsertDto tryInsertDto) throws ParseException {
         //중복검사
         confirmExist(tryInsertDto.getAddress(), tryInsertDto.getName());
         //매장 오픈 시간 검사
@@ -45,9 +48,8 @@ public class StoreService {
         StoreEntity storeEntity = TryInsertDto.dtoToEntity(tryInsertDto);
         storeRepo.save(storeEntity);
     }
-    private void confirmCompanyNum(String companyNum){
-        //해당 어드민 계정  소유 사업자 번호 맞는지 검사
-        //사업자 번호가 유효한지 api호출검사
+    private void confirmCompanyNum(String companyNum) throws ParseException {
+        companyService.confirmNumOwn(companyNum);
     }
     private void confirmAddress(String address){
         JSONObject response = kakaoMapService.getAddress(address);

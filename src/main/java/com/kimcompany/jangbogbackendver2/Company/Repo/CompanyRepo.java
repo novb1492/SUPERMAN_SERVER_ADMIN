@@ -11,4 +11,7 @@ public interface CompanyRepo extends JpaRepository<CompanyEntity,Long> {
 
     @Query("select c from CompanyEntity c where  c.companyNum=:num and c.commonColumn.state<>:state")
     Optional<CompanyEntity>findByCompanyNum(@Param("num")String num,@Param("state")int state);
+
+    @Query("select c from CompanyEntity c where  c.companyNum=:num and c.commonColumn.state<>:state and c.memberEntity.id=:adminId")
+    Optional<CompanyEntity>findByCompanyNum(@Param("num")String num,@Param("state")int state,@Param("adminId")long adminId);
 }
