@@ -14,6 +14,11 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RestControllerAdvice
 @Slf4j
 public class ExceptionController {
+    /**
+     * 토큰 만료 예외
+     * @param exception
+     * @return
+     */
     @ExceptionHandler(TokenException.class)
     public ResponseEntity<?> tokenException(TokenException exception) {
         log.info("tokenException");
@@ -21,6 +26,12 @@ public class ExceptionController {
         response.put("message", exception.getDetail());
         return ResponseEntity.status(exception.getHttpStatus().value()).body(response);
     }
+
+    /**
+     * 유효성검사 실패 예외 @vaild
+     * @param exception
+     * @return
+     */
     @ExceptionHandler(FileSizeLimitExceededException.class)
     public ResponseEntity<?> tooBigFile(Exception exception) {
         log.info("tooBigFile:{}",exception.getMessage());
@@ -28,6 +39,12 @@ public class ExceptionController {
         response.put("message", "파일은 최대 1048576 bytes입니다 ");
         return ResponseEntity.status(BAD_REQUEST).body(response);
     }
+
+    /**
+     * 400error예외
+     * @param exception
+     * @return
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> IllegalArgumentException(IllegalArgumentException exception) {
         log.info("IllegalArgumentException:{}",exception.getMessage());
