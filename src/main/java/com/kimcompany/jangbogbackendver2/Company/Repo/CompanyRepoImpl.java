@@ -45,7 +45,7 @@ public class CompanyRepoImpl implements CompanyRepoCustom {
     }
     private BooleanExpression checkCondition(SearchCondition searchConditionDto) {
         if(searchConditionDto.getCategory().equals("name")){
-            if(UtilService.confirmNull(searchConditionDto.getKeyword())){
+            if(!UtilService.confirmNull(searchConditionDto.getKeyword())){
                 return companyEntity.name.contains(searchConditionDto.getKeyword());
             }
         }
