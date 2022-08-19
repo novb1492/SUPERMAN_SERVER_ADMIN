@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Store.Dto;
 
 import com.kimcompany.jangbogbackendver2.Common.AddressColumn;
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
+import com.kimcompany.jangbogbackendver2.Company.Model.CompanyEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
@@ -33,7 +34,7 @@ public class TryInsertDto {
     @NotBlank(message = "매장이름을 입력해주세요")
     private String name;
 
-    @NotBlank(message = "사업자 번호를 입력해주세요")
+    @NotBlank(message = "사업자 번호를 선택해주세요")
     private String companyNum;
 
     private String text;
@@ -57,7 +58,8 @@ public class TryInsertDto {
                 .addressColumn(AddressColumn.set(tryInsertDto.getPostcode(), tryInsertDto.getAddress(), tryInsertDto.getDetailAddress()))
                 .closeTime(tryInsertDto.getCloseTime()).openTime(tryInsertDto.getOpenTime()).maxDeliverRadius(Double.parseDouble(tryInsertDto.getRadius()))
                 .name(tryInsertDto.getName()).tel(tryInsertDto.getTel()).text(tryInsertDto.getText()).commonColumn(CommonColumn.set(1))
-                .minOrderPrice(tryInsertDto.getMinPrice()).thumbNail(tryInsertDto.getThumbnail()).companyNum(tryInsertDto.getCompanyNum()).build();
+                .minOrderPrice(tryInsertDto.getMinPrice()).thumbNail(tryInsertDto.getThumbnail())
+                .companyEntity(CompanyEntity.builder().id(Long.parseLong(tryInsertDto.getCompanyNum())).build()).build();
     }
 
 }

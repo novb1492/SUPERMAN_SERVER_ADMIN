@@ -28,4 +28,11 @@ public class CompanyController {
         response.put("message","등록성공");
         return ResponseEntity.ok().body(response);
     }
+    /**
+     * 사업자번호 조회
+     */
+    @RequestMapping(value = "/admin/company/list/all",method = RequestMethod.GET)
+    public ResponseEntity<?>selectAll() {
+        return ResponseEntity.ok().body(companyService.selectForListNotPaging());
+    }
 }

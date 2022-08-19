@@ -30,4 +30,5 @@ public class BasicText {
     public static String cantFindStoreMessage = "본인 소속 매장이 아니거나 존재하지 않는 매장입니다";
     public static String cantFindProductCategory = "존재하지 않는 카테고리 이거나 더이상 사용할 수없는 카테고리입니다";
     public static int productListPageSize = 3;
+    public static String cantFindCompanyNum="등록한 사업자번호가 없습니다";
 }

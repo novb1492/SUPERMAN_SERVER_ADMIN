@@ -1,5 +1,6 @@
 package com.kimcompany.jangbogbackendver2.Company.Service;
 
+import com.kimcompany.jangbogbackendver2.Company.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.Company.Model.CompanyEntity;
 import com.kimcompany.jangbogbackendver2.Company.Repo.CompanyRepo;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.deleteState;
@@ -25,11 +27,15 @@ public class CompanySelectService {
         }
         return false;
     }
-    public boolean existByAdminId(String companyNum){
-        CompanyEntity companyEntity = companyRepo.findByCompanyNum(companyNum, deleteState, UtilService.getLoginUserId()).orElseGet(()->null);
+    public CompanyEntity existByAdminId(long id){
+        CompanyEntity companyEntity = companyRepo.findByIdAndAdminId(id, deleteState, UtilService.getLoginUserId()).orElseGet(()->null);
         if(companyEntity==null){
-            return true;
+            return null;
         }
-        return false;
+        return companyEntity;
     }
+    public List<SelectListDto>selectForListNotPaging(long adminId){
+        return companyRepo.findByAdminIdForList(adminId, deleteState);
+    }
+
 }

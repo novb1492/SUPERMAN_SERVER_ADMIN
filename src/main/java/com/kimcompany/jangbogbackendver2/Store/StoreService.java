@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Store;
 
 import com.kimcompany.jangbogbackendver2.Api.KakaoMapService;
 import com.kimcompany.jangbogbackendver2.Company.Service.CompanyService;
+import com.kimcompany.jangbogbackendver2.Noty.NotyService;
 import com.kimcompany.jangbogbackendver2.Store.Dto.*;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import com.kimcompany.jangbogbackendver2.Store.Repo.StoreRepo;
@@ -48,8 +49,8 @@ public class StoreService {
         StoreEntity storeEntity = TryInsertDto.dtoToEntity(tryInsertDto);
         storeRepo.save(storeEntity);
     }
-    private void confirmCompanyNum(String companyNum) throws ParseException {
-        companyService.confirmNumOwn(companyNum);
+    private void confirmCompanyNum(String companyId) throws ParseException {
+        companyService.confirmNumOwn(Long.parseLong(companyId));
     }
     private void confirmAddress(String address){
         JSONObject response = kakaoMapService.getAddress(address);
@@ -106,6 +107,9 @@ public class StoreService {
         }
     }
     public SelectInfo selectStoreInfo(long storeId){
-        return storeSelectService.selectStoreInfo(storeId,getLoginUserId()).orElseThrow(()->new IllegalArgumentException("존재 하지 않는 매장이거나 본인 소속 매장이아닙니다"));
+        SelectInfo selectInfo = storeSelectService.selectStoreInfo(storeId, getLoginUserId()).orElseThrow(() -> new IllegalArgumentException(cantFindStoreMessage));
+        selectInfo.setCompanyNums(companyService.selectForListNotPaging());
+        return selectInfo;
     }
+
 }

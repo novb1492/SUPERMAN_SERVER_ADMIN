@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Store.Dto;
 
 import com.kimcompany.jangbogbackendver2.Common.AddressColumn;
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
+import com.kimcompany.jangbogbackendver2.Company.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import com.querydsl.core.annotations.QueryProjection;
@@ -9,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -28,7 +30,8 @@ public class SelectInfo {
     private String address;
     private String postcode;
     private String detailAddress;
-    private String companyNum;
+    private long companyNum;
+    private List<SelectListDto> companyNums;
 
     @QueryProjection
     public SelectInfo(StoreEntity storeEntity) {
@@ -45,6 +48,6 @@ public class SelectInfo {
         address=storeEntity.getAddressColumn().getAddress();
         postcode=storeEntity.getAddressColumn().getPostCode();
         detailAddress=storeEntity.getAddressColumn().getDetailAddress();
-        companyNum=storeEntity.getCompanyNum();
+        companyNum=storeEntity.getCompanyEntity().getId();
     }
 }

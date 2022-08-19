@@ -12,6 +12,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,7 @@ import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 /**
  * 해당 매장의 접근 권리가 있는지 확인하는 aop입니다
  */
-@Service
+@Component
 @RequiredArgsConstructor
 @Aspect
 @Slf4j
