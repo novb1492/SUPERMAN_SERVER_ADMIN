@@ -27,7 +27,7 @@ public class CompanyRepoImpl implements CompanyRepoCustom {
         List<SelectListDetailDto> selectListDtos= jpaQueryFactory
                 .select(new QSelectListDetailDto(companyEntity))
                 .from(companyEntity)
-                .where(companyEntity.memberEntity.id.eq(adminId),productEntity.commonColumn.state.ne(deleteState), checkCondition(searchCondition))
+                .where(companyEntity.memberEntity.id.eq(adminId),companyEntity.commonColumn.state.ne(deleteState), checkCondition(searchCondition))
                 .orderBy(companyEntity.id.desc())
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
@@ -36,7 +36,7 @@ public class CompanyRepoImpl implements CompanyRepoCustom {
         JPAQuery<Long> count = jpaQueryFactory
                 .select(companyEntity.count())
                 .from(companyEntity)
-                .where(companyEntity.memberEntity.id.eq(adminId),productEntity.commonColumn.state.ne(deleteState), checkCondition(searchCondition));
+                .where(companyEntity.memberEntity.id.eq(adminId),companyEntity.commonColumn.state.ne(deleteState), checkCondition(searchCondition));
 
         // Result
         Page<SelectListDetailDto> selectListDtos2 = PageableExecutionUtils.getPage(selectListDtos, pageRequest, count::fetchOne);
