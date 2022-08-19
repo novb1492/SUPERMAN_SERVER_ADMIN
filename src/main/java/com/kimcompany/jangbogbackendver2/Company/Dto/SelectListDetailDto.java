@@ -12,11 +12,14 @@ public class SelectListDetailDto {
     private String name;
     private String openDate;
     private long id;
+    private String num;
+
 
     @QueryProjection
     public SelectListDetailDto(CompanyEntity companyEntity) {
         this.name = companyEntity.getName();
         this.openDate = companyEntity.getOpenDate();
         this.id = companyEntity.getId();
+        this.num= companyEntity.getCompanyNum();
     }
 }
