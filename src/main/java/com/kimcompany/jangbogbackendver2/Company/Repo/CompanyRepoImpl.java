@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Company.Repo;
 import com.kimcompany.jangbogbackendver2.Company.Dto.QSelectListDetailDto;
 import com.kimcompany.jangbogbackendver2.Company.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Company.Dto.SelectListDetailDto;
+import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -44,7 +45,9 @@ public class CompanyRepoImpl implements CompanyRepoCustom {
     }
     private BooleanExpression checkCondition(SearchCondition searchConditionDto) {
         if(searchConditionDto.getCategory().equals("name")){
-            return companyEntity.name.contains(searchConditionDto.getKeyword());
+            if(UtilService.confirmNull(searchConditionDto.getKeyword())){
+                return companyEntity.name.contains(searchConditionDto.getKeyword());
+            }
         }
         return null;
     }
