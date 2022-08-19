@@ -28,7 +28,7 @@ public class SelectInfo {
     private String address;
     private String postcode;
     private String detailAddress;
-    private String companyNum;
+    private long companyNum;
 
     @QueryProjection
     public SelectInfo(StoreEntity storeEntity) {
@@ -45,6 +45,6 @@ public class SelectInfo {
         address=storeEntity.getAddressColumn().getAddress();
         postcode=storeEntity.getAddressColumn().getPostCode();
         detailAddress=storeEntity.getAddressColumn().getDetailAddress();
-        companyNum=storeEntity.getCompanyNum();
+        companyNum=storeEntity.getCompanyEntity().getId();
     }
 }

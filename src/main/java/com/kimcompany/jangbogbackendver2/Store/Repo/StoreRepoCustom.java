@@ -20,7 +20,7 @@ public interface StoreRepoCustom {
 
     public Optional<SelectInfo> selectByIdAndAdminId(long store, long adminId);
 
-    public Optional<SelectInfo> selectById(long stor);
+    public Optional<SelectInfo> selectById(long storeId);
 
 
 }

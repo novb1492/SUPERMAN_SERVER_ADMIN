@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Store.Model;
 
 import com.kimcompany.jangbogbackendver2.Common.AddressColumn;
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
+import com.kimcompany.jangbogbackendver2.Company.Model.CompanyEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,8 +53,9 @@ public class StoreEntity {
     @Column(name = "STORE_THUMBNAIL",nullable = false,length = 500)
     private String thumbNail;
 
-    @Column(name = "STORE_COMPANY_NUM",nullable = false,length = 30)
-    private String companyNum;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STORE_COMPANY_NUM",referencedColumnName = "COMPANY_ID")
+    private CompanyEntity companyEntity;
 
     @Embedded
     private CommonColumn commonColumn;
