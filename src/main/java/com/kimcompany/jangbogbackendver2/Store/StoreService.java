@@ -36,7 +36,6 @@ public class StoreService {
     private final StoreSelectService storeSelectService;
     private final KakaoMapService kakaoMapService;
     private final CompanyService companyService;
-    private final NotyService notyService;
     @Transactional
     public void save(TryInsertDto tryInsertDto) throws ParseException {
         //중복검사
@@ -108,6 +107,9 @@ public class StoreService {
         }
     }
     public SelectInfo selectStoreInfo(long storeId){
-        return storeSelectService.selectStoreInfo(storeId,getLoginUserId()).orElseThrow(()->new IllegalArgumentException(cantFindStoreMessage));
+        SelectInfo selectInfo = storeSelectService.selectStoreInfo(storeId, getLoginUserId()).orElseThrow(() -> new IllegalArgumentException(cantFindStoreMessage));
+        selectInfo.setCompanyNums(companyService.selectForListNotPaging());
+        return selectInfo;
     }
+
 }
