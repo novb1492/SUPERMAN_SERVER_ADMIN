@@ -4,6 +4,7 @@ import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.PrincipalDetails;
 import com.kimcompany.jangbogbackendver2.Store.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Text.PropertiesText;
+import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ class StoreServiceTest {
     @Test
     @DisplayName("정상적인 테스트")
     @Transactional
-    void suc(){
+    void suc() throws ParseException {
         TryInsertDto tryInsertDto = set("test", "서울 송파구 올림픽로 240");
         storeService.save(tryInsertDto);
     }

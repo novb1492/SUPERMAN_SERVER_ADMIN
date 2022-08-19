@@ -1,10 +1,13 @@
 package com.kimcompany.jangbogbackendver2.Employee;
 
+import com.kimcompany.jangbogbackendver2.Employee.Dto.NotyEmployeeDto;
 import com.kimcompany.jangbogbackendver2.Employee.Repo.EmployeeRepo;
 import com.kimcompany.jangbogbackendver2.Store.Dto.InsertEmployNotyDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,4 +22,8 @@ public class EmployeeSelectService {
     public InsertEmployNotyDto selectToInsertEmployeeNoty(long storeId,long userId){
         return employeeRepo.selectStoreAndUser(storeId,userId);
     }
+    public List<NotyEmployeeDto>selectForNoty(long storeId){
+        return employeeRepo.selectEmployeeByStoreId(storeId);
+    }
+
 }

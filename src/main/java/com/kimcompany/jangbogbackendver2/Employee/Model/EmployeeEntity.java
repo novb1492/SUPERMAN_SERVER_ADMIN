@@ -36,6 +36,10 @@ public class EmployeeEntity {
     @JoinColumn(name = "ADMIN_ID",referencedColumnName = "ADMIN_ID")
     private MemberEntity memberEntity;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "INVITE_USER",referencedColumnName = "ADMIN_ID")
+    private MemberEntity insertUser;
+
     @Embedded
     private CommonColumn commonColumn;
 }

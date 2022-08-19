@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductCategoryController {
     private final ProductKindSelectService productKindSelectService;
 
+    /**
+     * 상품 카테고리 전부조회
+     * @return
+     */
     @RequestMapping(value = "/user/category/list",method = RequestMethod.GET)
     public ResponseEntity<?> getCategorys(){
         return ResponseEntity.ok().body(productKindSelectService.selectAll());

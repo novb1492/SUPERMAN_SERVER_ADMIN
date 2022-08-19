@@ -1,16 +1,22 @@
 package com.kimcompany.jangbogbackendver2.Employee.Repo;
 
+import com.kimcompany.jangbogbackendver2.Employee.Dto.NotyEmployeeDto;
+import com.kimcompany.jangbogbackendver2.Employee.Dto.QNotyEmployeeDto;
 import com.kimcompany.jangbogbackendver2.Employee.Model.QEmployeeEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.QMemberEntity;
 import com.kimcompany.jangbogbackendver2.Store.Dto.InsertEmployNotyDto;
 import com.kimcompany.jangbogbackendver2.Store.Dto.QInsertEmployNotyDto;
 import com.kimcompany.jangbogbackendver2.Store.Model.QStoreEntity;
+import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 import static com.kimcompany.jangbogbackendver2.Employee.Model.QEmployeeEntity.employeeEntity;
 import static com.kimcompany.jangbogbackendver2.Member.Model.QMemberEntity.memberEntity;
 import static com.kimcompany.jangbogbackendver2.Store.Model.QStoreEntity.storeEntity;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 @RequiredArgsConstructor
 public class EmployeeCustomImpl implements EmployeeCustom{
@@ -36,4 +42,17 @@ public class EmployeeCustomImpl implements EmployeeCustom{
                 .where(storeEntity.id.eq(storeId),memberEntity.id.eq(userId))
                 .fetchFirst();
     }
+
+    @Override
+    public List<NotyEmployeeDto> selectEmployeeByStoreId(long storeId) {
+
+        return jpaQueryFactory.select(new QNotyEmployeeDto(memberEntity.phone, memberEntity.email))
+                .from(memberEntity)
+                .innerJoin(employeeEntity)
+                .on(employeeEntity.memberEntity.id.eq(memberEntity.id))
+                .where(employeeEntity.commonColumn.state.eq(trueStateNum), employeeEntity.storeEntity.id.eq(storeId)
+                        , memberEntity.role.eq(ROLE_ADMIN).or(memberEntity.role.eq(ROLE_MANAGE)))
+                .fetch();
+    }
+
 }

@@ -4,6 +4,7 @@ import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
 import com.kimcompany.jangbogbackendver2.Employee.Model.EmployeeEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
+import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +23,7 @@ public class TryInsertDto {
     public static EmployeeEntity dtoToEntity(TryInsertDto tryInsertDto){
         return EmployeeEntity.builder().memberEntity(MemberEntity.builder().id(Long.parseLong(tryInsertDto.getUserId())).build())
                 .storeEntity(StoreEntity.builder().id(Long.parseLong(tryInsertDto.getStoreId())).build())
-                .commonColumn(CommonColumn.set(1))
+                .commonColumn(CommonColumn.set(1)).insertUser(MemberEntity.builder().id(UtilService.getLoginUserId()).build())
                 .build();
     }
 }

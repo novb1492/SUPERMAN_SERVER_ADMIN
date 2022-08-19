@@ -1,16 +1,33 @@
 package com.kimcompany.jangbogbackendver2.Product.Service;
 
+import com.kimcompany.jangbogbackendver2.Aws.SqsService;
+import com.kimcompany.jangbogbackendver2.Employee.Dto.NotyEmployeeDto;
+import com.kimcompany.jangbogbackendver2.Employee.EmployeeSelectService;
+import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
+import com.kimcompany.jangbogbackendver2.Noty.NotyService;
+import com.kimcompany.jangbogbackendver2.Product.Dto.SearchCondition;
+import com.kimcompany.jangbogbackendver2.Product.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.ProductEvent.Service.ProductEventService;
 import com.kimcompany.jangbogbackendver2.ProductKind.Service.ProductKindSelectService;
+import com.kimcompany.jangbogbackendver2.Store.Dto.InsertEmployNotyDto;
+import com.kimcompany.jangbogbackendver2.Store.Dto.SelectNotyDto;
 import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
+import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.kimcompany.jangbogbackendver2.Text.PropertiesText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import com.kimcompany.jangbogbackendver2.Product.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Product.Model.ProductEntity;
 import com.kimcompany.jangbogbackendver2.Product.Repo.ProductRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindProductCategory;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindStoreMessage;
 import static com.kimcompany.jangbogbackendver2.Util.UtilService.getLoginUserId;
 
@@ -22,6 +39,8 @@ public class ProductService {
     private final ProductRepo productRepo;
     private final ProductEventService productEventService;
     private final ProductKindSelectService productKindSelectService;
+    private final NotyService notyService;
+
 
     @Transactional(rollbackFor = Exception.class)
     public void save(TryInsertDto tryInsertDto){
@@ -34,6 +53,7 @@ public class ProductService {
         ProductEntity productEntity = TryInsertDto.dtoToEntity(tryInsertDto);
         productRepo.save(productEntity);
         productEventService.save(productEntity.getId(), tryInsertDto.getEvents());
+        notyService.doneInsert(tryInsertDto,UtilService.getPrincipalDetails().getMemberEntity());
     }
     private void confirmExist(long storeId,String productName){
         if(productSelectService.exist(productName,storeId)){
@@ -42,8 +62,11 @@ public class ProductService {
     }
     private void confirmCategory(long categoryId){
         if(productKindSelectService.exist(categoryId)){
-            throw new IllegalArgumentException("존재하지 않는 카테고리 이거나 더이상 사용할 수없는 카테고리입니다");
+            throw new IllegalArgumentException(cantFindProductCategory);
         }
+    }
+    public Page<SelectListDto>selectForList(long storeId, SearchCondition searchCondition){
+        return productSelectService.selectForList(storeId, searchCondition);
     }
 
 }

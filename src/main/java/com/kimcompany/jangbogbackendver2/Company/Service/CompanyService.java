@@ -28,6 +28,9 @@ public class CompanyService {
         if(!companySelectService.existByNum(num)){
             throw new IllegalArgumentException("이미 등록되어있는 사업자 번호입니다");
         }
+        confirmToJungBu(num);
+    }
+    public void confirmToJungBu(String num) throws ParseException {
         JSONObject response = JungBu.getCompanyNum(num, PropertiesText.homeTaxApiKey);
         if(response==null){
             throw new InternalError("알 수 없는 에러 발생");
@@ -39,6 +42,12 @@ public class CompanyService {
         }else if(!data.get("b_stt_cd").equals("01")){
             throw new IllegalArgumentException(data.get("b_stt").toString());
         }
+    }
+    public void confirmNumOwn(String num) throws ParseException {
+        if(!companySelectService.existByAdminId(num)){
+            throw new IllegalArgumentException("본인 소유의 사업자 번호가 아니거나 해당계정에 등록된 번호가 아닙니다");
+        }
+        confirmToJungBu(num);
     }
 
 }

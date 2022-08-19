@@ -6,6 +6,7 @@ import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +32,7 @@ public class StoreController {
      * @return
      */
     @RequestMapping(value = "/admin/store/save",method = POST)
-    public ResponseEntity<?> regiStore(@Valid @RequestBody TryInsertDto tryInsertDto){
+    public ResponseEntity<?> regiStore(@Valid @RequestBody TryInsertDto tryInsertDto) throws ParseException {
         storeService.save(tryInsertDto);
         JSONObject response = new JSONObject();
         response.put("message","매장등록이 완료 되었습니다");
