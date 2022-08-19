@@ -27,7 +27,7 @@ public class MemberEntity {
 
     @Column(name = "ID",nullable = false,length = 50)
     private String userId;
-    @Column(name = "EMAIL",nullable = false,length = 50,unique = true)
+    @Column(name = "EMAIL",nullable = false,length = 50)
     private String email;
 
     @Column(name = "PWD",nullable = false,length = 1000)
@@ -39,7 +39,7 @@ public class MemberEntity {
     @Column(name = "LAST_NAME",nullable = false,length = 20)
     private String lastName;
 
-    @Column(name = "PHONE",nullable = false,length = 20,unique = true)
+    @Column(name = "PHONE",nullable = false,length = 20)
     private String phone;
 
     @Column(name = "ROLE",nullable = false,length = 20)

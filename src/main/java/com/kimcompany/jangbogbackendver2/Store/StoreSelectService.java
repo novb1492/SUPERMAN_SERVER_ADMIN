@@ -1,10 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Store;
 
 import com.kimcompany.jangbogbackendver2.Employee.EmployeeSelectService;
-import com.kimcompany.jangbogbackendver2.Store.Dto.SearchCondition;
-import com.kimcompany.jangbogbackendver2.Store.Dto.SelectInfo;
-import com.kimcompany.jangbogbackendver2.Store.Dto.SelectListDto;
-import com.kimcompany.jangbogbackendver2.Store.Dto.SelectRegiDto;
+import com.kimcompany.jangbogbackendver2.Store.Dto.*;
 import com.kimcompany.jangbogbackendver2.Store.Repo.StoreRepo;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
@@ -56,5 +53,7 @@ public class StoreSelectService {
         }
         throw new IllegalArgumentException(cantFindStoreMessage);
     }
-
+    public Optional<SelectNotyDto>selectForNoty(long storeId){
+        return storeRepo.findByIdForNoty(storeId, deleteState);
+    }
 }

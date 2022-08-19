@@ -6,6 +6,7 @@ import com.kimcompany.jangbogbackendver2.Employee.Model.EmployeeEntity;
 import com.kimcompany.jangbogbackendver2.Employee.Repo.EmployeeRepo;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Member.Service.MemberSelectService;
+import com.kimcompany.jangbogbackendver2.Noty.NotyService;
 import com.kimcompany.jangbogbackendver2.Store.Dto.InsertEmployNotyDto;
 import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
@@ -27,6 +28,7 @@ public class EmployeeService {
     private final EmployeeSelectService employeeSelectService;
     private final MemberSelectService memberSelectService;
     private final SqsService sqsService;
+    private final NotyService notyService;
 
 
     public void save(TryInsertDto tryInsertDto){
@@ -43,7 +45,7 @@ public class EmployeeService {
         }
         EmployeeEntity employeeEntity = TryInsertDto.dtoToEntity(tryInsertDto);
         employeeRepo.save(employeeEntity);
-        doneInsert(userId,storeId);
+        notyService.doneInsert(userId,storeId,UtilService.getPrincipalDetails().getMemberEntity());
     }
     private void doneInsert(long userId, long storeId){
         InsertEmployNotyDto insertEmployNotyDto=employeeSelectService.selectToInsertEmployeeNoty(storeId,userId);
