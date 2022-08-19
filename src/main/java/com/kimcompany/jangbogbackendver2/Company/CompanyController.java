@@ -43,8 +43,8 @@ public class CompanyController {
     @RequestMapping(value = "/admin/company/list",method = RequestMethod.GET)
     public ResponseEntity<?>selectAll(HttpServletRequest request) {
         SearchCondition searchCondition = SearchCondition.set(Integer.parseInt(request.getParameter("page"))
-                , request.getParameter("category")
-                , request.getParameter("keyword"));
+                , request.getParameter("keyword")
+                , request.getParameter("category"));
         return ResponseEntity.ok().body(companyService.selectForList(searchCondition));
     }
 }
