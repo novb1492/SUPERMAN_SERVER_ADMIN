@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface CompanyRepo extends JpaRepository<CompanyEntity,Long> {
+public interface CompanyRepo extends JpaRepository<CompanyEntity,Long> ,CompanyRepoCustom{
 
     @Query("select c from CompanyEntity c where  c.companyNum=:num and c.commonColumn.state<>:state")
     Optional<CompanyEntity>findByCompanyNum(@Param("num")String num,@Param("state")int deleteState);

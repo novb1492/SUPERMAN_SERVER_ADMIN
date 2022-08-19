@@ -1,5 +1,6 @@
 package com.kimcompany.jangbogbackendver2.Company;
 
+import com.kimcompany.jangbogbackendver2.Company.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Company.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Company.Service.CompanyService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -34,5 +36,15 @@ public class CompanyController {
     @RequestMapping(value = "/admin/company/list/all",method = RequestMethod.GET)
     public ResponseEntity<?>selectAll() {
         return ResponseEntity.ok().body(companyService.selectForListNotPaging());
+    }
+    /**
+     * 사업자 번호 조회 페이징
+     */
+    @RequestMapping(value = "/admin/company/list",method = RequestMethod.GET)
+    public ResponseEntity<?>selectAll(HttpServletRequest request) {
+        SearchCondition searchCondition = SearchCondition.set(Integer.parseInt(request.getParameter("page"))
+                , request.getParameter("category")
+                , request.getParameter("keyword"));
+        return ResponseEntity.ok().body(companyService.selectForList(searchCondition));
     }
 }

@@ -1,20 +1,21 @@
 package com.kimcompany.jangbogbackendver2.Company.Service;
 
 import com.kimcompany.jangbogbackendver2.Api.JungBu;
+import com.kimcompany.jangbogbackendver2.Company.Dto.SearchCondition;
+import com.kimcompany.jangbogbackendver2.Company.Dto.SelectListDetailDto;
 import com.kimcompany.jangbogbackendver2.Company.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.Company.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Company.Model.CompanyEntity;
 import com.kimcompany.jangbogbackendver2.Company.Repo.CompanyRepo;
-import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Text.PropertiesText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindCompanyNum;
@@ -61,6 +62,9 @@ public class CompanyService {
             throw new IllegalArgumentException(cantFindCompanyNum);
         }
         return selectListDtos;
+    }
+    public Page<SelectListDetailDto>selectForList(SearchCondition searchConditionDto){
+        return companySelectService.selectForList(searchConditionDto);
     }
 
 }
