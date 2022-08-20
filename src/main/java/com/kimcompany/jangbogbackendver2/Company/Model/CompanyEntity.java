@@ -29,6 +29,12 @@ public class CompanyEntity {
     @JoinColumn(name = "ADMIN_ID",referencedColumnName = "ADMIN_ID")
     private MemberEntity memberEntity;
 
+    @Column(name = "COMPANY_NUM_NAME",nullable = false,length = 10)
+    private String name;
+
+    @Column(name = "COMPANY_NUM_OPEN_DATE",nullable = false,length = 20)
+    private String openDate;
+
     @Embedded
     private CommonColumn commonColumn;
 }

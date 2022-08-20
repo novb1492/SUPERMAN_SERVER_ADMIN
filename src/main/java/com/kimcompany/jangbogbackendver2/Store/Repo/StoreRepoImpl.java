@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Store.Repo;
 import com.kimcompany.jangbogbackendver2.Employee.Model.QEmployeeEntity;
 import com.kimcompany.jangbogbackendver2.Store.Dto.*;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -136,9 +137,13 @@ public class StoreRepoImpl implements StoreRepoCustom{
 
     private BooleanExpression eqName(String category, String val) {
         if (category.equals("addr")) {
-            return storeEntity.addressColumn.address.contains(val);
+            if(!UtilService.confirmNull(val)){
+                return storeEntity.addressColumn.address.contains(val);
+            }
         }else if(category.equals("name")){
-            return storeEntity.name.contains(val);
+            if(!UtilService.confirmNull(val)){
+                return storeEntity.name.contains(val);
+            }
         }
         return null;
     }

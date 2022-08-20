@@ -29,6 +29,7 @@ public class TryInsertDto {
     public static CompanyEntity dtoToEntity(TryInsertDto tryInsertDto){
         return CompanyEntity.builder().companyNum(tryInsertDto.getCompanyNum())
                 .memberEntity(MemberEntity.builder().id(getLoginUserId()).build())
+                .name(tryInsertDto.getName()).openDate(tryInsertDto.getDate())
                 .commonColumn(CommonColumn.set(trueStateNum)).companyNum(tryInsertDto.getCompanyNum())
                 .build();
     }

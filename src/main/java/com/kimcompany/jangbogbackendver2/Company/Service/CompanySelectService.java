@@ -1,17 +1,19 @@
 package com.kimcompany.jangbogbackendver2.Company.Service;
 
+import com.kimcompany.jangbogbackendver2.Company.Dto.SearchCondition;
+import com.kimcompany.jangbogbackendver2.Company.Dto.SelectListDetailDto;
 import com.kimcompany.jangbogbackendver2.Company.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.Company.Model.CompanyEntity;
 import com.kimcompany.jangbogbackendver2.Company.Repo.CompanyRepo;
-import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.companyPageSize;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.deleteState;
 
 @Service
@@ -36,6 +38,9 @@ public class CompanySelectService {
     }
     public List<SelectListDto>selectForListNotPaging(long adminId){
         return companyRepo.findByAdminIdForList(adminId, deleteState);
+    }
+    public Page<SelectListDetailDto> selectForList(SearchCondition searchConditionDto){
+        return companyRepo.selectForList(companyPageSize, UtilService.getLoginUserId(), searchConditionDto);
     }
 
 }
