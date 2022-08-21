@@ -38,12 +38,17 @@ public class CommonPaymentEntity {
     @Column(name = "P_USER_ID",nullable = false)
     private Long pUserId;
 
-    @Column(name = "prtcCnt",nullable = false)
-    private Integer prtcCnt;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STORE_ID",referencedColumnName = "STORE_ID")
     private StoreEntity storeEntity;
 
+    /**
+     * 취소 관련 변수들
+     */
+    @Column(name = "prtcCnt",nullable = false)
+    private Integer prtcCnt;
+
+    @Column(name = "prtcRemains")
+    private Integer prtcRemains;
 
 }
