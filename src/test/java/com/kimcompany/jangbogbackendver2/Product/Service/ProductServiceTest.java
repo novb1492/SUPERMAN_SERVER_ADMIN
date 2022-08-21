@@ -144,7 +144,7 @@ class ProductServiceTest {
         tryInsertDto.setIntroduce("제품소개");
         tryInsertDto.setName(name);
         tryInsertDto.setOrigin("국내산");
-        tryInsertDto.setPrice(price);
+        tryInsertDto.setPrice(Integer.parseInt(price));
         tryInsertDto.setProductImgPath("테스트이미지");
         return tryInsertDto;
     }
