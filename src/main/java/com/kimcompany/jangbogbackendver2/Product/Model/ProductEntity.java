@@ -45,15 +45,15 @@ public class ProductEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "STORE_ID",referencedColumnName = "STORE_ID")
+    @JoinColumn(name = "STORE_ID",referencedColumnName = "STORE_ID",nullable = false)
     private StoreEntity storeEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INSERT_USER",referencedColumnName = "ADMIN_ID")
+    @JoinColumn(name = "INSERT_USER",referencedColumnName = "ADMIN_ID",nullable = false)
     private MemberEntity memberEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_CATEGORY_ID",referencedColumnName ="PRODUCT_CATEGORY_ID" )
+    @JoinColumn(name = "PRODUCT_CATEGORY_ID",referencedColumnName ="PRODUCT_CATEGORY_ID" ,nullable = false)
     private ProductCategoryEntity productKindEntity;
 
 }

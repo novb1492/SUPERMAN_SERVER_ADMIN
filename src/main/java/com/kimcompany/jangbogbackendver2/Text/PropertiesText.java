@@ -26,6 +26,31 @@ public class PropertiesText {
     public static String kakaoRestKey;
     public static String homeTaxApiKey;
 
+
+    public static String kgKey;
+
+    public static String mid;
+
+    public static String cancelUrl;
+    public static String serverIp;
+    @Value("${back.ip}")
+    public void setServerIp(String value) {
+        this.serverIp = value;
+    }
+
+    @Value("${kg.key}")
+    public void setKgKey(String value) {
+        this.kgKey = value;
+    }
+    @Value("${kg.mid}")
+    public void setMid(String value) {
+        this.mid = value;
+    }
+
+    @Value("${kg.cancel.url}")
+    public void setCancelUrl(String value) {
+        this.cancelUrl = value;
+    }
     @Value("${tax.decoding.apikey}")
     public void setHomeTaxApiKey(String value){
         homeTaxApiKey = value;

@@ -25,7 +25,7 @@ public class StoreEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ADMIN_ID",referencedColumnName = "ADMIN_ID")
+    @JoinColumn(name = "ADMIN_ID",referencedColumnName = "ADMIN_ID",nullable = false)
     private MemberEntity memberEntity;
 
     @Column(name = "MIN_ORDER_PRICE",nullable = false)
@@ -54,7 +54,7 @@ public class StoreEntity {
     private String thumbNail;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "STORE_COMPANY_NUM",referencedColumnName = "COMPANY_ID")
+    @JoinColumn(name = "STORE_COMPANY_NUM",referencedColumnName = "COMPANY_ID",nullable = false)
     private CompanyEntity companyEntity;
 
     @Embedded
