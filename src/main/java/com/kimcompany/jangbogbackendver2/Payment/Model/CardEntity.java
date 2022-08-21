@@ -1,6 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Payment.Model;
 
 
+import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -98,4 +99,7 @@ public class CardEntity {
 
     @Embedded
     private CommonPaymentEntity commonPaymentEntity;
+
+    @Embedded
+    private CommonColumn commonColumn;
 }

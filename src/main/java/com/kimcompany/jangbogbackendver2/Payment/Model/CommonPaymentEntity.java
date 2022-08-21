@@ -1,11 +1,15 @@
 package com.kimcompany.jangbogbackendver2.Payment.Model;
 
+import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Builder
 @Getter
@@ -33,5 +37,13 @@ public class CommonPaymentEntity {
 
     @Column(name = "P_USER_ID",nullable = false)
     private Long pUserId;
+
+    @Column(name = "prtcCnt",nullable = false)
+    private Integer prtcCnt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STORE_ID",referencedColumnName = "STORE_ID")
+    private StoreEntity storeEntity;
+
 
 }

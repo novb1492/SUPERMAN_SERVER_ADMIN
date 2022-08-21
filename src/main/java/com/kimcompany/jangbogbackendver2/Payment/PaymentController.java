@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Payment;
 import com.kimcompany.jangbogbackendver2.Api.Kg.Dto.RequestCancelPartialDto;
 import com.kimcompany.jangbogbackendver2.Api.Kg.Service.KgService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
@@ -92,7 +93,7 @@ public class PaymentController {
             } finally {
                 method.releaseConnection();
             }
-//            UtilService.doRedirect(UtilService.getHttpSerResponse(), "http://"+ AboutPropertiesText.frontDomain +":5500/html/test?tid="+P_TID);
+            UtilService.goForward( "https://localhost:3030/html/test?tid="+P_TID,request,response);
         }
     }
     @RequestMapping("/payment/cancle/all/{testTid}")
