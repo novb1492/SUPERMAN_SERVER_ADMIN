@@ -5,6 +5,7 @@ import com.kimcompany.jangbogbackendver2.Api.Kg.Dto.RequestCancelPartialDto;
 import com.kimcompany.jangbogbackendver2.Api.Kg.Service.KgService;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CommonPaymentEntity;
+import com.kimcompany.jangbogbackendver2.Payment.Repo.CardRepo;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 @Slf4j
 public class PaymentController {
     private final KgService KgService;
+    private final CardRepo cardRepo;
 
     /**
      * 어드민 페이지 환불요청 테스트위해 임시 구축한 결제 api컨트롤러
@@ -85,19 +87,7 @@ public class PaymentController {
                 byte[] responseBody = method.getResponseBody();
                 String[] values = new String(responseBody).split("&");
                 CardResultDto cardResultDto = CardResultDto.set(values);
-//                for (String value : values) {
-//                    if(value.contains("P_TID")){
-//                        P_TID = value.split("=")[1];
-//                        cardResultDto.setP_TID(P_TID);
-//                    }else if(value.contains("P_AUTH_DT")){
-//                        cardResultDto.setPAuthDt(value);
-//                    }else if(value.contains("P_AUTH_NO")){
-//                        cardResultDto.setP_AUTH_NO(value);
-//                    }else if(value.contains("P_FN_CD1")){
-//                        cardResultDto.setP_FN_CD1(value);
-//                    }else
-//                    log.info("val:{}", value);
-//                }
+                cardRepo.save(CardResultDto.dtoToEntity(cardResultDto));
             } catch (HttpException e) {
                 log.info("Fatal protocol violation: {}", e.getMessage());
                 e.printStackTrace();

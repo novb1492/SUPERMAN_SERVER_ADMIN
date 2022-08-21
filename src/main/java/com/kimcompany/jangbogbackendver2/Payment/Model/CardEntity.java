@@ -22,79 +22,79 @@ public class CardEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "P_CARD_ISSUER_CODE",nullable = false,length = 2)
+    @Column(name = "P_CARD_ISSUER_CODE")
     private String P_CARD_ISSUER_CODE;
 
-    @Column(name = "P_CARD_MEMBER_NUM",length = 9)
+    @Column(name = "P_CARD_MEMBER_NUM")
     private String P_CARD_MEMBER_NUM;
 
-    @Column(name = "P_CARD_PURCHASE_CODE",length = 2)
+    @Column(name = "P_CARD_PURCHASE_CODE")
     private String P_CARD_PURCHASE_CODE;
 
-    @Column(name = "P_CARD_PRTC_CODE",nullable = false,length = 1)
+    @Column(name = "P_CARD_PRTC_CODE")
     private String P_CARD_PRTC_CODE;
 
-    @Column(name = "P_CARD_INTEREST",length = 1)
+    @Column(name = "P_CARD_INTEREST")
     private String P_CARD_INTEREST;
 
-    @Column(name = "CARD_CorpFlag",nullable = false,length = 1)
+    @Column(name = "CARD_CorpFlag")
     private String CARD_CorpFlag;
 
-    @Column(name = "P_CARD_CHECKFLAG",nullable = false,length = 1)
+    @Column(name = "P_CARD_CHECKFLAG")
     private String P_CARD_CHECKFLAG;
 
     @Column(name = "P_RMESG2",length = 500)
     private String P_RMESG2;
 
-    @Column(name = "P_FN_CD1",nullable = false,length = 4)
+    @Column(name = "P_FN_CD1")
     private String P_FN_CD1;
 
-    @Column(name = "P_FN_NM",nullable = false,length = 50)
+    @Column(name = "P_FN_NM")
     private String P_FN_NM;
 
-    @Column(name = "P_CARD_NUM",nullable = false,length = 16)
+    @Column(name = "P_CARD_NUM")
     private String P_CARD_NUM;
 
-    @Column(name = "P_AUTH_NO",length = 30)
+    @Column(name = "P_AUTH_NO")
     private String P_AUTH_NO;
 
-    @Column(name = "P_ISP_CARDCODE",length = 15)
+    @Column(name = "P_ISP_CARDCODE")
     private String P_ISP_CARDCODE;
 
-    @Column(name = "P_COUPONFLAG",length = 1)
+    @Column(name = "P_COUPONFLAG")
     private String P_COUPONFLAG;
 
-    @Column(name = "P_COUPON_DISCOUNT",length = 100)
+    @Column(name = "P_COUPON_DISCOUNT")
     private String P_COUPON_DISCOUNT;
 
-    @Column(name = "P_CARD_APPLPRICE",length = 100)
+    @Column(name = "P_CARD_APPLPRICE")
     private String P_CARD_APPLPRICE;
 
-    @Column(name = "P_CARD_COUPON_PRICE",nullable = false,length = 50)
+    @Column(name = "P_CARD_COUPON_PRICE")
     private String P_CARD_COUPON_PRICE;
 
-    @Column(name = "P_SRC_CODE",length = 1)
+    @Column(name = "P_SRC_CODE")
     private String P_SRC_CODE;
 
-    @Column(name = "P_CARD_USEPOINT",length = 12)
+    @Column(name = "P_CARD_USEPOINT")
     private String P_CARD_USEPOINT;
 
-    @Column(name = "NAVERPOINT_UseFreePoint",length = 12)
+    @Column(name = "NAVERPOINT_UseFreePoint")
     private String NAVERPOINT_UseFreePoint;
 
-    @Column(name = "NAVERPOINT_CSHRApplYN",length = 1)
+    @Column(name = "NAVERPOINT_CSHRApplYN")
     private String NAVERPOINT_CSHRApplYN;
 
-    @Column(name = "NAVERPOINT_CSHRApplAmt",length = 12)
+    @Column(name = "NAVERPOINT_CSHRApplAmt")
     private String NAVERPOINT_CSHRApplAmt;
 
-    @Column(name = "PCO_OrderNo",length = 500)
+    @Column(name = "PCO_OrderNo")
     private String PCO_OrderNo;
 
-    @Column(name = "CARD_EmpPrtnCode",length = 1)
+    @Column(name = "CARD_EmpPrtnCode")
     private String CARD_EmpPrtnCode;
 
-    @Column(name = "CARD_NomlMobPrtnCode",length = 1)
+    @Column(name = "CARD_NomlMobPrtnCode")
     private String CARD_NomlMobPrtnCode;
 
     @Embedded

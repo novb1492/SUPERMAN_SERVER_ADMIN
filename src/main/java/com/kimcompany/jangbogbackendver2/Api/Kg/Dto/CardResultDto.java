@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Api.Kg.Dto;
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CommonPaymentEntity;
+import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -57,7 +58,40 @@ public class CardResultDto {
                 .CARD_EmpPrtnCode(cardResultDto.getCARD_EmpPrtnCode())
                 .CARD_NomlMobPrtnCode(cardResultDto.getCARD_NomlMobPrtnCode())
                 .commonColumn(CommonColumn.builder().state(trueStateNum).build())
-                .commonPaymentEntity(CommonPaymentEntity.builder().pAmt(cardResultDto.getPAmt()).build()).build();
+                .commonPaymentEntity(CommonPaymentEntity.builder().pAmt(cardResultDto.getPAmt()).pAuthDt(cardResultDto.getPAuthDt())
+                        .pMid(cardResultDto.pMid).pOid(cardResultDto.P_OID).prtcCnt(0).prtcRemains(0)
+                        .pTid(cardResultDto.getP_TID())
+                        .pType(cardResultDto.getPType())
+                        .pUserEmail(cardResultDto.getPUserEmail())
+                        .pUserId("test")
+                        .pUserName("fdsfs")
+                        .storeEntity(StoreEntity.builder().id(1L).build()).build()).NAVERPOINT_CSHRApplAmt(cardResultDto.getNAVERPOINT_CSHRApplAmt())
+                .NAVERPOINT_CSHRApplYN(cardResultDto.getNAVERPOINT_CSHRApplYN())
+                .P_CARD_APPLPRICE(cardResultDto.getP_CARD_APPLPRICE())
+                .P_CARD_CHECKFLAG(cardResultDto.getP_CARD_CHECKFLAG())
+                .NAVERPOINT_UseFreePoint(cardResultDto.getNAVERPOINT_UseFreePoint())
+                .P_CARD_COUPON_PRICE(cardResultDto.getP_CARD_COUPON_PRICE())
+                .P_CARD_INTEREST(cardResultDto.getP_CARD_INTEREST())
+                .P_CARD_ISSUER_CODE(cardResultDto.getP_CARD_ISSUER_CODE())
+                .P_CARD_NUM(cardResultDto.getP_CARD_NUM())
+                .P_CARD_MEMBER_NUM(cardResultDto.getP_CARD_NUM())
+                .P_CARD_PRTC_CODE(cardResultDto.getP_CARD_PRTC_CODE())
+                .P_CARD_PURCHASE_CODE(cardResultDto.getP_CARD_PURCHASE_CODE())
+                .P_CARD_USEPOINT(cardResultDto.getP_CARD_USEPOINT())
+                .P_AUTH_NO(cardResultDto.getP_AUTH_NO())
+                .P_COUPON_DISCOUNT(cardResultDto.getP_COUPON_DISCOUNT())
+                .P_COUPONFLAG(cardResultDto.getP_COUPONFLAG())
+                .P_FN_CD1(cardResultDto.getP_FN_CD1())
+                .P_FN_NM(cardResultDto.getP_FN_NM())
+                .P_ISP_CARDCODE(cardResultDto.getP_ISP_CARDCODE())
+                .P_RMESG2(cardResultDto.getP_RMESG2())
+                .CARD_NomlMobPrtnCode(cardResultDto.getCARD_NomlMobPrtnCode())
+                .P_SRC_CODE(cardResultDto.getP_SRC_CODE())
+                .PCO_OrderNo(cardResultDto.getPCO_OrderNo())
+                .P_SRC_CODE(cardResultDto.getP_SRC_CODE())
+                .PCO_OrderNo(cardResultDto.getPCO_OrderNo())
+                .P_RMESG2(cardResultDto.getP_RMESG2())
+                .build();
     }
     /**
      * 결제 결과 dto변환
@@ -71,41 +105,41 @@ public class CardResultDto {
             if (value.contains("P_TID")) {
                 cardResultDto.setP_TID(value.split("=")[1]);
             } else if (value.contains("P_AUTH_DT")) {
-                cardResultDto.setPAuthDt(value);
+                cardResultDto.setPAuthDt(value.split("=")[1]);
             } else if (value.contains("P_AUTH_NO")) {
-                cardResultDto.setP_AUTH_NO(value);
+                cardResultDto.setP_AUTH_NO(value.split("=")[1]);
             } else if (value.contains("P_FN_CD1")) {
-                cardResultDto.setP_FN_CD1(value);
+                cardResultDto.setP_FN_CD1(value.split("=")[1]);
             } else if (value.contains("P_AMT")) {
-                cardResultDto.setPAmt(value);
+                cardResultDto.setPAmt(value.split("=")[1]);
             } else if (value.contains("P_UNAME")) {
-                cardResultDto.setPUserName(value);
+                cardResultDto.setPUserName(value.split("=")[1]);
             } else if (value.contains("P_MID")) {
-                cardResultDto.setPMid(value);
+                cardResultDto.setPMid(value.split("=")[1]);
             } else if (value.contains("P_OID")) {
-                cardResultDto.setP_OID(value);
+                cardResultDto.setP_OID(value.split("=")[1]);
             } else if (value.contains("P_CARD_NUM")) {
-                cardResultDto.setP_CARD_NUM(value);
+                cardResultDto.setP_CARD_NUM(value.split("=")[1]);
             } else if (value.contains("P_CARD_ISSUER_CODE")) {
-                cardResultDto.setP_CARD_ISSUER_CODE(value);
+                cardResultDto.setP_CARD_ISSUER_CODE(value.split("=")[1]);
             } else if (value.contains("P_CARD_PURCHASE_CODE")) {
-                cardResultDto.setP_CARD_PURCHASE_CODE(value);
+                cardResultDto.setP_CARD_PURCHASE_CODE(value.split("=")[1]);
             } else if (value.contains("P_CARD_PRTC_CODE")) {
-                cardResultDto.setP_CARD_PRTC_CODE(value);
+                cardResultDto.setP_CARD_PRTC_CODE(value.split("=")[1]);
             } else if (value.contains("P_CARD_INTEREST")) {
-                cardResultDto.setP_CARD_INTEREST(value);
+                cardResultDto.setP_CARD_INTEREST(value.split("=")[1]);
             } else if (value.contains("P_CARD_CHECKFLAG")) {
-                cardResultDto.setP_CARD_CHECKFLAG(value);
+                cardResultDto.setP_CARD_CHECKFLAG(value.split("=")[1]);
             }else if (value.contains("P_CARD_ISSUER_NAME")) {
-                cardResultDto.setP_CARD_ISSUER_CODE(value);
+                cardResultDto.setP_CARD_ISSUER_CODE(value.split("=")[1]);
             }else if(value.contains("P_FN_NM")){
-                cardResultDto.setP_FN_NM(value);
+                cardResultDto.setP_FN_NM(value.split("=")[1]);
             }else if(value.contains("CARD_CorpFlag")){
-                cardResultDto.setCARD_CorpFlag(value);
+                cardResultDto.setCARD_CorpFlag(value.split("=")[1]);
             }else if(value.contains("P_SRC_CODE")){
-                cardResultDto.setP_SRC_CODE(value);
+                cardResultDto.setP_SRC_CODE(value.split("=")[1]);
             }else if(value.contains("P_CARD_APPLPRICE")){
-                cardResultDto.setP_CARD_APPLPRICE(value);
+                cardResultDto.setP_CARD_APPLPRICE(value.split("=")[1]);
             }
                 log.info("val:{}", value);
             }

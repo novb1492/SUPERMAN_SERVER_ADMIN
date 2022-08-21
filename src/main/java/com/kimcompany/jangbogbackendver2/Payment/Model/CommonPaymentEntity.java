@@ -17,31 +17,31 @@ import javax.persistence.ManyToOne;
 @AllArgsConstructor
 public class CommonPaymentEntity {
 
-    @Column(name = "P_TID",nullable = false,length = 40)
+    @Column(name = "P_TID")
     private String pTid;
 
-    @Column(name = "P_OID",nullable = false,length = 40)
+    @Column(name = "P_OID")
     private String pOid;
 
-    @Column(name = "P_AMT",nullable = false,length = 8)
+    @Column(name = "P_AMT")
     private String pAmt;
 
-    @Column(name = "P_TYPE",nullable = false,length = 20)
+    @Column(name = "P_TYPE")
     private String pType;
 
-    @Column(name = "P_MID",nullable = false,length = 10)
+    @Column(name = "P_MID")
     private String pMid;
 
-    @Column(name = "P_AUTH_DT",nullable = false,length = 14)
+    @Column(name = "P_AUTH_DT")
     private String pAuthDt;
 
-    @Column(name = "P_USER_NAME",nullable = false,length = 30)
+    @Column(name = "P_USER_NAME")
     private String pUserName;
 
-    @Column(name = "P_USER_EMAIL",nullable = false,length = 50)
+    @Column(name = "P_USER_EMAIL")
     private String pUserEmail;
 
-    @Column(name = "P_USER_ID",nullable = false)
+    @Column(name = "P_USER_ID")
     private String pUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,7 +51,7 @@ public class CommonPaymentEntity {
     /**
      * 취소 관련 변수들
      */
-    @Column(name = "prtcCnt",nullable = false)
+    @Column(name = "prtcCnt")
     private Integer prtcCnt;
 
     @Column(name = "prtcRemains")
