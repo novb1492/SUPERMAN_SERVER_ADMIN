@@ -29,7 +29,7 @@ public class EmployeeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "STORE_ID",referencedColumnName = "STORE_ID")
+    @JoinColumn(name = "STORE_ID",referencedColumnName = "STORE_ID",nullable = false)
     private StoreEntity storeEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,7 +37,7 @@ public class EmployeeEntity {
     private MemberEntity memberEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INVITE_USER",referencedColumnName = "ADMIN_ID")
+    @JoinColumn(name = "INVITE_USER",referencedColumnName = "ADMIN_ID",nullable = false)
     private MemberEntity insertUser;
 
     @Embedded
