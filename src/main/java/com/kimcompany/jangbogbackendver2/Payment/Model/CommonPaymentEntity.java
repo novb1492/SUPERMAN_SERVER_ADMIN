@@ -1,29 +1,17 @@
 package com.kimcompany.jangbogbackendver2.Payment.Model;
 
-import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "PAYMENT")
-@Entity
-public class PaymentEntity {
-
-    @EmbeddedId
-    private PaymentPk paymentPk;
-
-    @Embedded
-    private CommonColumn commonColumn;
-
-    @Column(name = "GOOD_NAME",nullable = false,length = 40)
-    private String goodName;
+@NoArgsConstructor
+@AllArgsConstructor
+public class CommonPaymentEntity {
 
     @Column(name = "P_AMT",nullable = false,length = 8)
     private Integer pAmt;
@@ -45,9 +33,5 @@ public class PaymentEntity {
 
     @Column(name = "P_USER_ID",nullable = false)
     private Long pUserId;
-
-
-
-
 
 }

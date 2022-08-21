@@ -1,6 +1,6 @@
-package com.kimcompany.jangbogbackendver2.Payment.Model.Card.Model;
+package com.kimcompany.jangbogbackendver2.Payment.Model;
 
-import com.kimcompany.jangbogbackendver2.Payment.Model.PaymentEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +16,10 @@ import javax.persistence.*;
 @Entity
 public class CardEntity {
 
-    @EmbeddedId
-    private CardEntityPk cardEntityPk;
+    @Id
+    @Column(name = "CARD_ID",nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "P_CARD_ISSUER_CODE",nullable = false,length = 2)
     private String P_CARD_ISSUER_CODE;
@@ -93,4 +95,7 @@ public class CardEntity {
 
     @Column(name = "CARD_NomlMobPrtnCode",length = 1)
     private String CARD_NomlMobPrtnCode;
+
+    @Embedded
+    private CommonPaymentEntity commonPaymentEntity;
 }
