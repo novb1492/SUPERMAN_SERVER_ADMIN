@@ -17,8 +17,14 @@ import javax.persistence.ManyToOne;
 @AllArgsConstructor
 public class CommonPaymentEntity {
 
+    @Column(name = "P_TID",nullable = false,length = 40)
+    private String pTid;
+
+    @Column(name = "P_OID",nullable = false,length = 40)
+    private String pOid;
+
     @Column(name = "P_AMT",nullable = false,length = 8)
-    private Integer pAmt;
+    private String pAmt;
 
     @Column(name = "P_TYPE",nullable = false,length = 20)
     private String pType;
@@ -36,7 +42,7 @@ public class CommonPaymentEntity {
     private String pUserEmail;
 
     @Column(name = "P_USER_ID",nullable = false)
-    private Long pUserId;
+    private String pUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STORE_ID",referencedColumnName = "STORE_ID")

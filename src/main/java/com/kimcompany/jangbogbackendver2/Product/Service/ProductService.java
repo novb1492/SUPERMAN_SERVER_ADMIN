@@ -44,9 +44,9 @@ public class ProductService {
 
     @Transactional(rollbackFor = Exception.class)
     public void save(TryInsertDto tryInsertDto){
-        if(UtilService.confirmPrice(tryInsertDto.getPrice())){
-            throw new IllegalArgumentException("금액에 잘못된값이 있습니다");
-        }
+        //가격 검증 다시 클라이언트는 숫자만 입력 서버에서 ,추가
+        String price=UtilService.confirmPrice(tryInsertDto.getPrice());
+        tryInsertDto.setPricePLusChar(price);
         long storeId = Long.parseLong(tryInsertDto.getId());
         confirmExist(storeId, tryInsertDto.getName());
         confirmCategory(Long.parseLong(tryInsertDto.getCategory()));

@@ -11,6 +11,7 @@ import com.kimcompany.jangbogbackendver2.Product.Model.ProductEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -38,8 +39,8 @@ public class TryInsertDto {
     @NotBlank(message = "상품 이미지를 올려주세요")
     private String productImgPath;
 
-    @NotBlank(message = "금액을 입력해주세요")
-    private String  price;
+    @Min(value = 100,message = "최소 가격은 100원입니다")
+    private Integer  price;
 
     @Size(message = "상품이름은 최대 30자입니다")
     @NotBlank(message = "상품 이름을 적어주세요")
@@ -54,10 +55,13 @@ public class TryInsertDto {
      */
     private List<Map<String,Object>> events;
 
+    //가격에 , 문자 붙힌뒤 db에 저장될때 사용하는
+    private String pricePLusChar;
+
     public static ProductEntity dtoToEntity(TryInsertDto tryInsertDto){
         return ProductEntity.builder().productKindEntity(ProductCategoryEntity.builder().id(Long.parseLong(tryInsertDto.getCategory())).build()).commonColumn(CommonColumn.set(trueStateNum))
                 .introduce(tryInsertDto.getIntroduce()).name(tryInsertDto.getName()).origin(tryInsertDto.getOrigin())
-                .price(tryInsertDto.getPrice()).productImgPath(tryInsertDto.getProductImgPath()).memberEntity(MemberEntity.builder().id(getLoginUserId())
+                .price(tryInsertDto.getPricePLusChar()).productImgPath(tryInsertDto.getProductImgPath()).memberEntity(MemberEntity.builder().id(getLoginUserId())
                         .build()).storeEntity(StoreEntity.builder().id(Long.parseLong(tryInsertDto.getId())).build())
                 .build();
     }

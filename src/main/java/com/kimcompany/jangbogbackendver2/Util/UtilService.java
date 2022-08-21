@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -134,16 +135,12 @@ public class UtilService {
             throw new RuntimeException("로그인 정보 찾기 실패");
         }
     }
-    public static boolean confirmPrice(String price){
-        char [] arr=price.toCharArray();
-        for(char c:arr){
-            int cc = (int) c;
-            if(cc<48||cc>57){
-                if(cc!=44){
-                    return true;
-                }
-            }
+    public static String confirmPrice(int price){
+        try {
+            DecimalFormat decimalFormat = new DecimalFormat("###,###");
+            return decimalFormat.format(price);
+        }catch (Exception e){
+            throw new IllegalArgumentException("가격은 숫자만 입력해주세요");
         }
-        return false;
     }
 }

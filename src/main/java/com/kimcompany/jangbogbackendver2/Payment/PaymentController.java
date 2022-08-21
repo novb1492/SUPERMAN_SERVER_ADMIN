@@ -1,7 +1,10 @@
 package com.kimcompany.jangbogbackendver2.Payment;
 
+import com.kimcompany.jangbogbackendver2.Api.Kg.Dto.CardResultDto;
 import com.kimcompany.jangbogbackendver2.Api.Kg.Dto.RequestCancelPartialDto;
 import com.kimcompany.jangbogbackendver2.Api.Kg.Service.KgService;
+import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
+import com.kimcompany.jangbogbackendver2.Payment.Model.CommonPaymentEntity;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,11 @@ import java.util.HashMap;
 public class PaymentController {
     private final KgService KgService;
 
+    /**
+     * 어드민 페이지 환불요청 테스트위해 임시 구축한 결제 api컨트롤러
+     * @param request
+     * @param response
+     */
     @RequestMapping(value = "/kg", method = RequestMethod.POST)
     public void kgtest(HttpServletRequest request, HttpServletResponse response) {
         String P_STATUS = request.getParameter("P_STATUS");       // 인증 상태
@@ -76,14 +84,20 @@ public class PaymentController {
 
                 byte[] responseBody = method.getResponseBody();
                 String[] values = new String(responseBody).split("&");
-
-                for (String value : values) {
-                    if(value.contains("P_TID")){
-                        P_TID = value.split("=")[1];
-                    }
-                    log.info("val:{}", value);
-                }
-
+                CardResultDto cardResultDto = CardResultDto.set(values);
+//                for (String value : values) {
+//                    if(value.contains("P_TID")){
+//                        P_TID = value.split("=")[1];
+//                        cardResultDto.setP_TID(P_TID);
+//                    }else if(value.contains("P_AUTH_DT")){
+//                        cardResultDto.setPAuthDt(value);
+//                    }else if(value.contains("P_AUTH_NO")){
+//                        cardResultDto.setP_AUTH_NO(value);
+//                    }else if(value.contains("P_FN_CD1")){
+//                        cardResultDto.setP_FN_CD1(value);
+//                    }else
+//                    log.info("val:{}", value);
+//                }
             } catch (HttpException e) {
                 log.info("Fatal protocol violation: {}", e.getMessage());
                 e.printStackTrace();

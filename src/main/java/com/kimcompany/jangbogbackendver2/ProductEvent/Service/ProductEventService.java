@@ -43,9 +43,13 @@ public class ProductEventService {
     }
     private void confirmPrice(Map<String,Object>event){
             String price = event.get("price").toString();
-            if(UtilService.confirmPrice(price)){
-                throw new IllegalArgumentException("가격에 문제가있습니다\n"+price);
-            }
+            //가격 검증 다시 클라이언트는 숫자만 입력 서버에서 ,추가
+        try{
+            price=UtilService.confirmPrice(Integer.parseInt(price));
+            event.put("price",price);
+        }catch (Exception e){
+            throw new IllegalArgumentException("잘못된 가격입니다 \n" + price);
+        }
 
     }
     private void confirmDate(Map<String,Object>event,List<String> dates){
