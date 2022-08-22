@@ -39,9 +39,8 @@ public class OrderRepoImpl implements OrderRepoCustom{
                 .limit(pageRequest.getPageSize())
                 .groupBy(orderEntity.cardEntity.id)
                 .fetch();
-        // FetchCount
         JPAQuery<Long> count = jpaQueryFactory
-                .select(orderEntity.count())
+                .select(orderEntity.cardEntity.id.countDistinct())
                 .from(orderEntity)
                 .where(orderEntity.commonColumn.state.eq(searchCondition.getState()), whereDate(searchCondition), whereCategory(searchCondition));
         // Result
