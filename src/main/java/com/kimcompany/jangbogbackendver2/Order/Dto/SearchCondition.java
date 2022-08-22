@@ -22,8 +22,10 @@ public class SearchCondition {
         searchCondition.setStoreId(storeId);
         searchCondition.setState(state);
         searchCondition.setPeriodFlag(periodFlag);
-        searchCondition.setStartDate(startDate.replace("T"," "));
-        searchCondition.setEndDate(endDate.replace("T"," "));
+        if(periodFlag.equals("true")){
+            searchCondition.setStartDate(startDate.replace("T"," "));
+            searchCondition.setEndDate(endDate.replace("T"," "));
+        }
         return searchCondition;
     }
 
