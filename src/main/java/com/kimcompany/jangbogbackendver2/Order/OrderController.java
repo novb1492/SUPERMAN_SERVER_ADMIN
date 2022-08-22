@@ -20,10 +20,11 @@ public class OrderController {
         SearchCondition searchCondition = SearchCondition.set(Long.parseLong(storeId)
                 , request.getParameter("category")
                 , request.getParameter("keyword")
-                ,Integer.parseInt(state)
-                ,request.getParameter("periodFlag")
-                ,request.getParameter("startDate")
-                ,request.getParameter("endDate"));
+                , Integer.parseInt(state)
+                , request.getParameter("periodFlag")
+                , request.getParameter("startDate")
+                , request.getParameter("endDate")
+                , Integer.parseInt(request.getParameter("page")));
         return ResponseEntity.ok().body(orderService.selectForList(searchCondition));
     }
 }

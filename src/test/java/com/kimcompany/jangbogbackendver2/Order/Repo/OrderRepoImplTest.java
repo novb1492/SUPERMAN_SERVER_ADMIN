@@ -71,19 +71,19 @@ class OrderRepoImplTest {
     @Test
     @DisplayName("일반 조회 테스트")
     void test(){
-        SearchCondition searchCondition = SearchCondition.set(1L, "null", null,1,"false","2022-08-21T10:12:30","2022-08-22T11:12:30");
+        SearchCondition searchCondition = SearchCondition.set(1L, "null", null,1,"false","2022-08-21T10:12:30","2022-08-22T11:12:30",1);
         query(searchCondition);
     }
     @Test
     @DisplayName("검색 조회 테스트")
     void test2(){
-        SearchCondition searchCondition = SearchCondition.set(1L, "addr", "흑",1,"false","2022-08-21T10:12:30","2022-08-22T11:12:30");
+        SearchCondition searchCondition = SearchCondition.set(1L, "addr", "흑",1,"false","2022-08-21T10:12:30","2022-08-22T11:12:30",1);
         query(searchCondition);
     }
     @Test
     @DisplayName("검색 +기간 조회 테스트")
     void test3(){
-        SearchCondition searchCondition = SearchCondition.set(1L, "name", "kim",1,"true","2022-08-21T10:12:30","2022-08-21T11:11:00");
+        SearchCondition searchCondition = SearchCondition.set(1L, "name", "kim",1,"true","2022-08-21T10:12:30","2022-08-21T11:11:00",1);
         query(searchCondition);
     }
     private void query(SearchCondition searchCondition){

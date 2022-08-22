@@ -25,11 +25,13 @@ public class OrderRepoImpl implements OrderRepoCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     public Page<SelectListDto> selectForList(SearchCondition searchCondition){
-        PageRequest pageRequest = PageRequest.of(0, orderListPageSize);
+        PageRequest pageRequest = PageRequest.of(searchCondition.getPage()-1, orderListPageSize);
         List<SelectListDto> fetch = jpaQueryFactory.select(new QSelectListDto(orderEntity, clientEntity, cardEntity))
                 .from(orderEntity)
                 .leftJoin(clientEntity)
                 .on(orderEntity.clientEntity.id.eq(clientEntity.id))
+                .leftJoin(cardEntity)
+                .on(cardEntity.id.eq(orderEntity.cardEntity.id))
                 .fetchJoin()
                 .where(orderEntity.commonColumn.state.eq(searchCondition.getState()), whereDate(searchCondition), whereCategory(searchCondition))
                 .orderBy(orderEntity.id.desc())
