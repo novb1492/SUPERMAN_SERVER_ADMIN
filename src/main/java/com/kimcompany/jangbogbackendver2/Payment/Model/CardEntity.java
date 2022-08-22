@@ -97,6 +97,9 @@ public class CardEntity {
     @Column(name = "CARD_NomlMobPrtnCode")
     private String CARD_NomlMobPrtnCode;
 
+    @Column(name = "CARD_prtcRemains")
+    private String prtcRemains;
+
     @Embedded
     private CommonPaymentEntity commonPaymentEntity;
 

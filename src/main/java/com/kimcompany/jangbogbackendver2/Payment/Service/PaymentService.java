@@ -10,8 +10,10 @@ import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -33,6 +35,7 @@ public class PaymentService {
 //                RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card", testTid, msg, BasicText.RefundText)).build();
 //        kgService.cancelAllService(dto);
     }
+    @Transactional(rollbackFor = Exception.class)
     public void refund(TryRefundDto tryRefundDto) throws NoSuchAlgorithmException {
         long orderId = Long.parseLong(tryRefundDto.getOrderId());
         RefundDto refundDto = orderSelectService.selectForRefund(orderId).orElseThrow(() -> new IllegalArgumentException("찾을 수없는 주문정보 입니다"));
@@ -40,12 +43,18 @@ public class PaymentService {
         confirmOwn(refundDto.getOrderEntity().getStoreEntity().getId());
         confirmCount(tryRefundDto.getCount(),refundDto.getOrderEntity().getTotalCount());
         int cancelPrice= tryRefundDto.getCount()*refundDto.getOrderEntity().getPrice();
+        int cardPrice = Integer.parseInt(refundDto.getCardEntity().getP_CARD_APPLPRICE());
         confirmPrice(cancelPrice,refundDto.getOrderEntity().getPrice()*refundDto.getOrderEntity().getTotalCount());
-        confirmPriceAll(cancelPrice, Integer.parseInt(refundDto.getCardEntity().getP_CARD_APPLPRICE()));
-//        RequestCancelPartialDto dto =
-//                RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card", testTid, msg, BasicText.PartialRefundText))
-//                        .price("500").confirmPrice("504").build();
-//        kgService.cancelAllService(dto);
+        confirmPriceAll(cancelPrice,cardPrice);
+        RequestCancelPartialDto dto =
+                RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card"
+                                , refundDto.getCardEntity().getCommonPaymentEntity().getPTid(), "매장에서 직접환불", PartialRefundText))
+                        .price(Integer.toString(cancelPrice)).confirmPrice(Integer.toString(cardPrice-cancelPrice)).build();
+        JSONObject jsonObject = kgService.cancelAllService(dto);
+        if(!jsonObject.get("resultCode").equals("00")){
+            throw new IllegalArgumentException("환불에 실패했습니다 사유:" + jsonObject.get("resultMsg"));
+        }
+
 
     }
     private void confirmPriceAll(int cancelPrice,int cardPrice){
