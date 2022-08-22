@@ -3,11 +3,11 @@ package com.kimcompany.jangbogbackendver2.Order.Repo;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.PrincipalDetails;
 import com.kimcompany.jangbogbackendver2.Member.Model.QClientEntity;
-import com.kimcompany.jangbogbackendver2.Order.Dto.QSelectListDto;
-import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
-import com.kimcompany.jangbogbackendver2.Order.Dto.SelectListDto;
+import com.kimcompany.jangbogbackendver2.Order.Dto.*;
 import com.kimcompany.jangbogbackendver2.Order.Model.QOrderEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity;
+import com.kimcompany.jangbogbackendver2.Product.Model.QProductEntity;
+import com.kimcompany.jangbogbackendver2.ProductEvent.Model.QProductEventEntity;
 import com.kimcompany.jangbogbackendver2.Store.Repo.StoreRepo;
 import com.kimcompany.jangbogbackendver2.TestConfig;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
@@ -40,9 +40,10 @@ import java.util.List;
 import static com.kimcompany.jangbogbackendver2.Member.Model.QClientEntity.clientEntity;
 import static com.kimcompany.jangbogbackendver2.Order.Model.QOrderEntity.orderEntity;
 import static com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity.cardEntity;
+import static com.kimcompany.jangbogbackendver2.Product.Model.QProductEntity.productEntity;
+import static com.kimcompany.jangbogbackendver2.ProductEvent.Model.QProductEventEntity.productEventEntity;
 import static com.kimcompany.jangbogbackendver2.Store.Model.QStoreEntity.storeEntity;
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.closingOfBusinessState;
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.orderListPageSize;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -126,6 +127,20 @@ class OrderRepoImplTest {
         }
         return null;
     }
+    @Test
+    @DisplayName("주문조회 ")
+    void test4(){
+        List<SelectDto> fetch = jpaQueryFactory.select(new QSelectDto(orderEntity, productEntity, productEventEntity))
+                .from(orderEntity)
+                .leftJoin(productEntity)
+                .on(productEntity.id.eq(orderEntity.productEntity.id))
+                .leftJoin(productEventEntity)
+                .on(productEventEntity.id.eq(orderEntity.productEventEntity.id))
+                .fetchJoin()
+                .where(orderEntity.commonColumn.state.ne(deleteState),orderEntity.cardEntity.id.eq(1L),orderEntity.storeEntity.id.eq(1L))
+                .orderBy(orderEntity.id.desc())
+                .fetch();
 
+    }
 
 }

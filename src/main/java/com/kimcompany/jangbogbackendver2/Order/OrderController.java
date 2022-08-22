@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public class OrderController {
     private final OrderService orderService;
 
-    @RequestMapping("/order/list/{storeId}/{state}")
+    @RequestMapping(value = "/order/list/{storeId}/{state}",method = RequestMethod.GET)
     public ResponseEntity<?>selectForList(HttpServletRequest request, @PathVariable String storeId, @PathVariable String state){
         SearchCondition searchCondition = SearchCondition.set(Long.parseLong(storeId)
                 , request.getParameter("category")
@@ -27,4 +28,10 @@ public class OrderController {
                 , Integer.parseInt(request.getParameter("page")));
         return ResponseEntity.ok().body(orderService.selectForList(searchCondition));
     }
+    @RequestMapping(value = "/order/{storeId}/{cardId}",method = RequestMethod.GET)
+    public ResponseEntity<?>selectForList( @PathVariable String storeId, @PathVariable String cardId){
+        return ResponseEntity.ok().body(orderService.selectForDetail(Long.parseLong(storeId),Long.parseLong(cardId)));
+
+    }
+
 }
