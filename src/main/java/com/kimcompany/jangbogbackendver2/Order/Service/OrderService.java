@@ -1,12 +1,15 @@
 package com.kimcompany.jangbogbackendver2.Order.Service;
 
 import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
+import com.kimcompany.jangbogbackendver2.Order.Dto.SelectDto;
 import com.kimcompany.jangbogbackendver2.Order.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.deleteState;
 
@@ -21,5 +24,7 @@ public class OrderService {
         }
         return orderSelectService.selectForList(searchCondition);
     }
-
+    public List<SelectDto> selectForDetail(long storeId, long cardId){
+        return orderSelectService.selectForDetail(storeId, cardId);
+    }
 }

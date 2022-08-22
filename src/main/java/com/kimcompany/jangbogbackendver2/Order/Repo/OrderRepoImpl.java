@@ -1,8 +1,6 @@
 package com.kimcompany.jangbogbackendver2.Order.Repo;
 
-import com.kimcompany.jangbogbackendver2.Order.Dto.QSelectListDto;
-import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
-import com.kimcompany.jangbogbackendver2.Order.Dto.SelectListDto;
+import com.kimcompany.jangbogbackendver2.Order.Dto.*;
 import com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -18,6 +16,9 @@ import java.util.List;
 import static com.kimcompany.jangbogbackendver2.Member.Model.QClientEntity.clientEntity;
 import static com.kimcompany.jangbogbackendver2.Order.Model.QOrderEntity.orderEntity;
 import static com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity.cardEntity;
+import static com.kimcompany.jangbogbackendver2.Product.Model.QProductEntity.productEntity;
+import static com.kimcompany.jangbogbackendver2.ProductEvent.Model.QProductEventEntity.productEventEntity;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.deleteState;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.orderListPageSize;
 
 @RequiredArgsConstructor
@@ -62,6 +63,18 @@ public class OrderRepoImpl implements OrderRepoCustom{
             return orderEntity.addressColumn.address.contains(searchCondition.getKeyword());
         }
         return null;
+    }
+    public List<SelectDto>selectByStoreIdAndCardId(long storeId,long cardId){
+        return   jpaQueryFactory.select(new QSelectDto(orderEntity, productEntity, productEventEntity))
+                .from(orderEntity)
+                .leftJoin(productEntity)
+                .on(productEntity.id.eq(orderEntity.productEntity.id))
+                .leftJoin(productEventEntity)
+                .on(productEventEntity.id.eq(orderEntity.productEventEntity.id))
+                .fetchJoin()
+                .where(orderEntity.commonColumn.state.ne(deleteState),orderEntity.cardEntity.id.eq(cardId),orderEntity.storeEntity.id.eq(storeId))
+                .orderBy(orderEntity.id.desc())
+                .fetch();
     }
 
 }
