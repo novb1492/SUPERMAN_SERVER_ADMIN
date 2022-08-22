@@ -32,6 +32,9 @@ public class ClientEntity {
     @Column(name = "CLIENT_LAST_NAME",nullable = false,length = 20)
     private String lastName;
 
+    @Column(name = "CLIENT_FULL_NAME",nullable = false,length = 40)
+    private String fullName;
+
     @Column(name = "CLIENT_PHONE",nullable = false,length = 20)
     private String phone;
 }

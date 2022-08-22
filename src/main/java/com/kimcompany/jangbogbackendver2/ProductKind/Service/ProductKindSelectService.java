@@ -6,6 +6,7 @@ import com.kimcompany.jangbogbackendver2.ProductKind.Repo.ProductCategoryEntityR
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import static com.kimcompany.jangbogbackendver2.Text.BasicText.deleteState;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductKindSelectService {
 
     private final ProductCategoryEntityRepo productKindRepo;
