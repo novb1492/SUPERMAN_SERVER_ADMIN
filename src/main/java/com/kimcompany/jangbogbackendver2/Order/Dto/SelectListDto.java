@@ -19,6 +19,7 @@ public class SelectListDto {
     private String destinationAddr;
     private String destinationDetailAddr;
     private String orderOwnPhone;
+    private String price;
 
     @QueryProjection
     public SelectListDto(OrderEntity orderEntity, ClientEntity clientEntity) {

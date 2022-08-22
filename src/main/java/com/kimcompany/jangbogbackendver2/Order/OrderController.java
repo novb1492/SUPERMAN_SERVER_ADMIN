@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 public class OrderController {
     private final OrderService orderService;
 
-    @RequestMapping("/user/order/list/{storeId}/{state}")
+    @RequestMapping("/order/list/{storeId}/{state}")
     public ResponseEntity<?>selectForList(HttpServletRequest request, @PathVariable String storeId, @PathVariable String state){
         SearchCondition searchCondition = SearchCondition.set(Long.parseLong(storeId)
                 , request.getParameter("category")

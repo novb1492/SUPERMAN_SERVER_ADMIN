@@ -95,6 +95,7 @@ class OrderRepoImplTest {
                 .orderBy(orderEntity.id.desc())
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
+                .groupBy(orderEntity.cardEntity.id)
                 .fetch();
         // FetchCount
         JPAQuery<Long> count = jpaQueryFactory
