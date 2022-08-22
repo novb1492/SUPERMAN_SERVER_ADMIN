@@ -96,7 +96,7 @@ class OrderRepoImplTest {
                 .leftJoin(cardEntity)
                 .on(cardEntity.id.eq(orderEntity.cardEntity.id))
                 .fetchJoin()
-                .where(orderEntity.commonColumn.state.eq(searchCondition.getState()), whereDate(searchCondition), whereCategory(searchCondition))
+                .where(whereState(searchCondition), whereDate(searchCondition), whereCategory(searchCondition))
                 .orderBy(orderEntity.id.desc())
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
@@ -106,10 +106,16 @@ class OrderRepoImplTest {
         JPAQuery<Long> count = jpaQueryFactory
                 .select(orderEntity.cardEntity.id.countDistinct())
                 .from(orderEntity)
-                .where(orderEntity.commonColumn.state.eq(searchCondition.getState()), whereDate(searchCondition), whereCategory(searchCondition));
+                .where(whereState(searchCondition), whereDate(searchCondition), whereCategory(searchCondition));
         // Result
         Page<SelectListDto> SelectListDtos = PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
         logger.info("결과 사이즈:{}",SelectListDtos.getTotalElements());
+    }
+    private BooleanExpression whereState(SearchCondition searchCondition) {
+        if (searchCondition.getState()== trueStateNum) {
+            return orderEntity.commonColumn.state.eq(trueStateNum).or(orderEntity.commonColumn.state.eq(refundNum));
+        }
+        return orderEntity.commonColumn.state.eq(searchCondition.getState());
     }
     private BooleanExpression whereDate( SearchCondition searchCondition) {
         if (searchCondition.getPeriodFlag().equals("true")) {
