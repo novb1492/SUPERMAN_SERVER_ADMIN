@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Aop;
 
 import com.kimcompany.jangbogbackendver2.Employee.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Employee.EmployeeSelectService;
+import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Product.Service.ProductSelectService;
 import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
@@ -65,13 +66,18 @@ public class BeforeSqlAop {
      * @param joinPoint
      * @throws Throwable
      */
-    @Before("execution(* com.kimcompany.jangbogbackendver2.Product.Service.ProductService.selectForList(..))")
+    @Before("execution(* com.kimcompany.jangbogbackendver2.Product.Service.ProductService.selectForList(..))"
+            +"||execution(* com.kimcompany.jangbogbackendver2.Order.Service.OrderService.selectForList(..))")
     public void checkBelong(JoinPoint joinPoint) throws Throwable{
         log.info("select전 소유 검사");
         long storeId = 0;
         for (Object obj : joinPoint.getArgs()) {
             if (obj instanceof Long) {
                 storeId =  (long) obj;
+                break;
+            }else if(obj instanceof SearchCondition){
+                SearchCondition searchCondition=(SearchCondition)obj;
+                storeId = searchCondition.getStoreId();
                 break;
             }
         }
