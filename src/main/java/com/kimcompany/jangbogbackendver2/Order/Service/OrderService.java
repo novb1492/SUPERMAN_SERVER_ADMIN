@@ -2,7 +2,10 @@ package com.kimcompany.jangbogbackendver2.Order.Service;
 
 import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Order.Dto.SelectDto;
+import com.kimcompany.jangbogbackendver2.Order.Dto.SelectDtoAndCard;
 import com.kimcompany.jangbogbackendver2.Order.Dto.SelectListDto;
+import com.kimcompany.jangbogbackendver2.Payment.Dto.SelectForOrderDto;
+import com.kimcompany.jangbogbackendver2.Payment.Service.CardSelectService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import static com.kimcompany.jangbogbackendver2.Text.BasicText.deleteState;
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderSelectService orderSelectService;
+    private final CardSelectService cardSelectService;
 
     public Page<SelectListDto>selectForList(SearchCondition searchCondition){
         if(searchCondition.getState()== deleteState){
@@ -24,7 +28,8 @@ public class OrderService {
         }
         return orderSelectService.selectForList(searchCondition);
     }
-    public List<SelectDto> selectForDetail(long storeId, long cardId){
-        return orderSelectService.selectForDetail(storeId, cardId);
+    public SelectDtoAndCard selectForDetail(long storeId, long cardId){
+        SelectForOrderDto selectForOrderDto = cardSelectService.selectForOrder(storeId, cardId).orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 거래 내역입니다"));
+        return new SelectDtoAndCard(orderSelectService.selectForDetail(storeId, cardId),selectForOrderDto);
     }
 }

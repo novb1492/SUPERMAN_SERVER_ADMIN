@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Order.Dto;
 
 import com.kimcompany.jangbogbackendver2.Member.Model.ClientEntity;
 import com.kimcompany.jangbogbackendver2.Order.Model.OrderEntity;
+import com.kimcompany.jangbogbackendver2.Payment.Dto.SelectForOrderDto;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
 import com.kimcompany.jangbogbackendver2.Product.Model.ProductEntity;
 import com.kimcompany.jangbogbackendver2.ProductEvent.Model.ProductEventEntity;
@@ -33,7 +34,6 @@ public class SelectDto {
      * 제품이벤트 정보
      */
     private String eventName;
-
     @QueryProjection
     public SelectDto(OrderEntity orderEntity, ProductEntity productEntity,ProductEventEntity productEventEntity) {
         id = orderEntity.getId();
