@@ -1,6 +1,8 @@
 package com.kimcompany.jangbogbackendver2.Order.Model;
 
+import com.kimcompany.jangbogbackendver2.Common.AddressColumn;
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
+import com.kimcompany.jangbogbackendver2.Member.Model.ClientEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
 import com.kimcompany.jangbogbackendver2.Product.Model.ProductEntity;
@@ -43,6 +45,13 @@ public class OrderEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDERS_PRODUCT_ID",referencedColumnName = "PRODUCT_ID",nullable = false)
     private ProductEntity productEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ORDERS_CLIENT_ID",referencedColumnName = "CLIENT_ID",nullable = false)
+    private ClientEntity clientEntity;
+
+    @Embedded
+    private AddressColumn addressColumn;
 
     @Embedded
     private CommonColumn commonColumn;

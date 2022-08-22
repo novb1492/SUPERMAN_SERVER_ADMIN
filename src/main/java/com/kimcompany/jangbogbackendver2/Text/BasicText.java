@@ -34,4 +34,5 @@ public class BasicText {
     public static int companyPageSize=3;
     public static String RefundText = "Refund";
     public static String PartialRefundText = "PartialRefund";
+    public static int orderListPageSize = 10;
 }
