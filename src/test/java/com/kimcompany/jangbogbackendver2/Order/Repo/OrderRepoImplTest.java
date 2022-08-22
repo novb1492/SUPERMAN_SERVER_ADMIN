@@ -148,5 +148,17 @@ class OrderRepoImplTest {
                 .fetch();
 
     }
+    @Test
+    @DisplayName("주문조회 결제정보 함께조회")
+    void test5(){
+        RefundDto fetch = jpaQueryFactory.select(new QRefundDto(orderEntity,cardEntity ))
+                .from(orderEntity)
+                .leftJoin(cardEntity)
+                .on(orderEntity.cardEntity.id.eq(cardEntity.id))
+                .fetchJoin()
+                .where(orderEntity.commonColumn.state.ne(deleteState),orderEntity.id.eq(1L),orderEntity.storeEntity.id.eq(1L))
+                .fetchOne();
+
+    }
 
 }

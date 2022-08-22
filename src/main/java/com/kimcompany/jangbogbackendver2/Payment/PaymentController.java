@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Payment;
 import com.kimcompany.jangbogbackendver2.Api.Kg.Dto.CardResultDto;
 import com.kimcompany.jangbogbackendver2.Api.Kg.Dto.RequestCancelPartialDto;
 import com.kimcompany.jangbogbackendver2.Api.Kg.Service.KgService;
+import com.kimcompany.jangbogbackendver2.Order.Dto.TryRefundDto;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CommonPaymentEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Repo.CardRepo;
@@ -19,13 +20,11 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -117,11 +116,11 @@ public class PaymentController {
         response.put("message", "결제번호:" + cardId + "가 전부 환불 되었습니다");
         return ResponseEntity.ok().body(response);
     }
-    @RequestMapping("/payment/cancle/{orderId}")
-    public ResponseEntity<?> fail2(@PathVariable String orderId) throws NoSuchAlgorithmException {
-        paymentService.refund(Long.parseLong(orderId));
+    @RequestMapping(value = "/payment/cancle",method = RequestMethod.POST)
+    public ResponseEntity<?> fail2(@Valid @RequestBody TryRefundDto refundDto) throws NoSuchAlgorithmException {
+        paymentService.refund(refundDto);
         JSONObject response = new JSONObject();
-        response.put("message", "주문번호:" + orderId + "가 전부 환불 되었습니다");
+        response.put("message", "주문번호:" + refundDto.getOrderId() + "가 환불 되었습니다");
         return ResponseEntity.ok().body(response);
     }
 }

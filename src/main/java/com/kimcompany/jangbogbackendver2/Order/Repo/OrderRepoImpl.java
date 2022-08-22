@@ -86,7 +86,13 @@ public class OrderRepoImpl implements OrderRepoCustom{
 
     @Override
     public Optional<RefundDto> selectByOrderJoinCard(long orderId) {
-        return Optional.empty();
+        return Optional.ofNullable(jpaQueryFactory.select(new QRefundDto(orderEntity,cardEntity ))
+                .from(orderEntity)
+                .leftJoin(cardEntity)
+                .on(orderEntity.cardEntity.id.eq(cardEntity.id))
+                .fetchJoin()
+                .where(orderEntity.commonColumn.state.ne(deleteState),orderEntity.id.eq(1L),orderEntity.storeEntity.id.eq(1L))
+                .fetchOne());
     }
 
 }
