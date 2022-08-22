@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Order.Repo;
 import com.kimcompany.jangbogbackendver2.Order.Dto.QSelectListDto;
 import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Order.Dto.SelectListDto;
+import com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static com.kimcompany.jangbogbackendver2.Member.Model.QClientEntity.clientEntity;
 import static com.kimcompany.jangbogbackendver2.Order.Model.QOrderEntity.orderEntity;
+import static com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity.cardEntity;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.orderListPageSize;
 
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class OrderRepoImpl implements OrderRepoCustom{
 
     public Page<SelectListDto> selectForList(SearchCondition searchCondition){
         PageRequest pageRequest = PageRequest.of(0, orderListPageSize);
-        List<SelectListDto> fetch = jpaQueryFactory.select(new QSelectListDto(orderEntity, clientEntity))
+        List<SelectListDto> fetch = jpaQueryFactory.select(new QSelectListDto(orderEntity, clientEntity, cardEntity))
                 .from(orderEntity)
                 .leftJoin(clientEntity)
                 .on(orderEntity.clientEntity.id.eq(clientEntity.id))

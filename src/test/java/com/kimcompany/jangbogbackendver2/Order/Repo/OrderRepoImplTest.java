@@ -7,6 +7,7 @@ import com.kimcompany.jangbogbackendver2.Order.Dto.QSelectListDto;
 import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Order.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.Order.Model.QOrderEntity;
+import com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity;
 import com.kimcompany.jangbogbackendver2.Store.Repo.StoreRepo;
 import com.kimcompany.jangbogbackendver2.TestConfig;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
@@ -38,6 +39,7 @@ import java.util.List;
 
 import static com.kimcompany.jangbogbackendver2.Member.Model.QClientEntity.clientEntity;
 import static com.kimcompany.jangbogbackendver2.Order.Model.QOrderEntity.orderEntity;
+import static com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity.cardEntity;
 import static com.kimcompany.jangbogbackendver2.Store.Model.QStoreEntity.storeEntity;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.closingOfBusinessState;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.orderListPageSize;
@@ -86,10 +88,12 @@ class OrderRepoImplTest {
     }
     private void query(SearchCondition searchCondition){
         PageRequest pageRequest = PageRequest.of(0, orderListPageSize);
-        List<SelectListDto> fetch = jpaQueryFactory.select(new QSelectListDto(orderEntity, clientEntity))
+        List<SelectListDto> fetch = jpaQueryFactory.select(new QSelectListDto(orderEntity, clientEntity,cardEntity))
                 .from(orderEntity)
                 .leftJoin(clientEntity)
                 .on(orderEntity.clientEntity.id.eq(clientEntity.id))
+                .leftJoin(cardEntity)
+                .on(cardEntity.id.eq(orderEntity.cardEntity.id))
                 .fetchJoin()
                 .where(orderEntity.commonColumn.state.eq(searchCondition.getState()), whereDate(searchCondition), whereCategory(searchCondition))
                 .orderBy(orderEntity.id.desc())
