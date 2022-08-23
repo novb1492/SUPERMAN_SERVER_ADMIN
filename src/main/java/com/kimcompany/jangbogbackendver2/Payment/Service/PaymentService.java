@@ -60,7 +60,7 @@ public class PaymentService {
         if(orderRepo.updateAfterRefund(refundNum, newCount, orderId,storeId)!=1){
             throw new SQLException("주문정보 갱신 실패");
         }
-        if(cardRepo.updateAfterRefund(Integer.toString(newPrice),cardId,storeId,refundDto.getCardEntity().getCommonPaymentEntity().getPrtcCnt()+1)!=1){
+        if(cardRepo.updateAfterRefund(newPrice,cardId,storeId,refundDto.getCardEntity().getCommonPaymentEntity().getPrtcCnt()+1)!=1){
             throw new SQLException("결제 정보 정보 갱신 실패");
         }
         RequestCancelPartialDto dto =

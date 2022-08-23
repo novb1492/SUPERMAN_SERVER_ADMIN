@@ -19,5 +19,5 @@ public interface CardRepo extends JpaRepository<CardEntity,Long> {
 
     @Modifying
     @Query("update CardEntity c set c.commonPaymentEntity.prtcRemains=:price,c.commonPaymentEntity.prtcCnt=:count where c.id=:id and c.commonPaymentEntity.storeEntity.id=:storeId")
-    Integer updateAfterRefund(@Param("price") String price, @Param("id") long cardId,@Param("storeId")long storeId,@Param("count") int count);
+    Integer updateAfterRefund(@Param("price") int price, @Param("id") long cardId,@Param("storeId")long storeId,@Param("count") int count);
 }
