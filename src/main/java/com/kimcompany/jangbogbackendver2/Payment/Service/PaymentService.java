@@ -10,6 +10,7 @@ import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindStoreMess
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentService {
     private final KgService kgService;
     private final OrderSelectService orderSelectService;
@@ -46,6 +48,7 @@ public class PaymentService {
         int cardPrice = Integer.parseInt(refundDto.getCardEntity().getP_CARD_APPLPRICE());
         confirmPrice(cancelPrice,refundDto.getOrderEntity().getPrice()*refundDto.getOrderEntity().getTotalCount());
         confirmPriceAll(cancelPrice,cardPrice);
+        log.info("취소요청 금액:{},원금액:{},남은금액:{}",cancelPrice,cardPrice,cardPrice-cancelPrice);
         RequestCancelPartialDto dto =
                 RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card"
                                 , refundDto.getCardEntity().getCommonPaymentEntity().getPTid(), "매장에서 직접환불", PartialRefundText))

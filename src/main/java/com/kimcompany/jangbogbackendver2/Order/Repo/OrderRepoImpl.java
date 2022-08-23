@@ -91,7 +91,7 @@ public class OrderRepoImpl implements OrderRepoCustom{
                 .leftJoin(cardEntity)
                 .on(orderEntity.cardEntity.id.eq(cardEntity.id))
                 .fetchJoin()
-                .where(orderEntity.commonColumn.state.ne(deleteState),orderEntity.id.eq(1L),orderEntity.storeEntity.id.eq(1L))
+                .where(orderEntity.commonColumn.state.ne(deleteState).or(orderEntity.commonColumn.state.ne(refundNum)).or(orderEntity.commonColumn.state.ne(refundAllNum)),orderEntity.id.eq(orderId))
                 .fetchOne());
     }
 
