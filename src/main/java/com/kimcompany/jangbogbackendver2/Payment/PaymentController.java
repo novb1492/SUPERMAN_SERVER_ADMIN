@@ -111,7 +111,7 @@ public class PaymentController {
      * @throws NoSuchAlgorithmException
      */
     @RequestMapping(value = "/payment/cancle/all/{cardId}",method = RequestMethod.POST)
-    public ResponseEntity<?> fail(@PathVariable String cardId) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> fail(@PathVariable String cardId) throws NoSuchAlgorithmException, SQLException {
         paymentService.refundAll(Long.parseLong(cardId));
         JSONObject response = new JSONObject();
         response.put("message", "결제번호:" + cardId + "가 전부 환불 되었습니다");

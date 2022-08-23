@@ -5,8 +5,10 @@ import com.kimcompany.jangbogbackendver2.Api.Kg.Service.KgService;
 import com.kimcompany.jangbogbackendver2.Employee.EmployeeSelectService;
 import com.kimcompany.jangbogbackendver2.Order.Dto.RefundDto;
 import com.kimcompany.jangbogbackendver2.Order.Dto.TryRefundDto;
+import com.kimcompany.jangbogbackendver2.Order.Model.OrderEntity;
 import com.kimcompany.jangbogbackendver2.Order.Repo.OrderRepo;
 import com.kimcompany.jangbogbackendver2.Order.Service.OrderSelectService;
+import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Repo.CardRepo;
 import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
@@ -36,16 +38,31 @@ public class PaymentService {
     private final OrderRepo orderRepo;
     private final CardRepo cardRepo;
 
-    public void refundAll(long cardId) throws NoSuchAlgorithmException {
-//        String msg="거래취소요청";
-//        RequestCancelPartialDto dto =
-//                RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card", testTid, msg, BasicText.RefundText)).build();
-//        kgService.cancelAllService(dto);
+    @Transactional(rollbackFor = Exception.class)
+    public void refundAll(long cardId) throws NoSuchAlgorithmException, SQLException {
+        CardEntity cardEntity = cardRepo.findByIdForRefundAll(cardId, deleteState).orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 결제 내역입니다"));
+        long storeId = cardEntity.getCommonPaymentEntity().getStoreEntity().getId();
+        confirmOwn(storeId);
+        orderRepo.updateAfterRefundCheck(refundAllNum, 0, cardId, storeId);
+        RequestCancelPartialDto dto =
+                RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card"
+                        , cardEntity.getCommonPaymentEntity().getPTid(), "매장에서 직접환불", BasicText.RefundText)).build();
+        JSONObject jsonObject = kgService.cancelAllService(dto);
+        if(!jsonObject.get("resultCode").equals("00")){
+            String msg = jsonObject.get("resultMsg").toString();
+            if(msg.equals("부분취소 원거래 취소불가")){
+                throw new IllegalArgumentException("환불에 실패했습니다 사유:" +msg +"부분취소로 진행해 주세요");
+            }
+            throw new IllegalArgumentException("환불에 실패했습니다 사유:" + jsonObject.get("resultMsg"));
+        }
     }
     @Transactional(rollbackFor = Exception.class)
     public void refund(TryRefundDto tryRefundDto) throws NoSuchAlgorithmException, SQLException {
         long orderId = Long.parseLong(tryRefundDto.getOrderId());
         RefundDto refundDto = orderSelectService.selectForRefund(orderId).orElseThrow(() -> new IllegalArgumentException("찾을 수없는 주문정보 입니다"));
+        if(refundDto.getOrderEntity().getCommonColumn().getState()!= trueStateNum){
+            throw new IllegalArgumentException("이미 환불된 상품입니다");
+        }
         long cardId = refundDto.getCardEntity().getId();
         long storeId = refundDto.getOrderEntity().getStoreEntity().getId();
         confirmOwn(storeId);

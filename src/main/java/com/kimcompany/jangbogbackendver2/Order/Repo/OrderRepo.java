@@ -20,4 +20,8 @@ public interface OrderRepo extends JpaRepository<OrderEntity,Long>,OrderRepoCust
     @Modifying
     @Query("update OrderEntity o set o.commonColumn.state=:state,o.totalCount=:count where o.cardEntity.id=:cardId and o.storeEntity.id=:storeId")
     Integer updateAfterRefundCheck(@Param("state")int refundState,@Param("count")int count,@Param("cardId")long cardId,@Param("storeId")long storeId);
+
+    @Query("select o from OrderEntity o where o.commonColumn.state<>:state and o.cardEntity.id=:cardId and o.storeEntity.id=:storeId and o.commonColumn.state<>:state2")
+    List<OrderEntity> selectForRefundAll(@Param("state2") int trueState,@Param("state") int deleteState, @Param("cardId") long cardId, @Param("storeId") long storeId);
+
 }
