@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 @RestController
@@ -117,7 +118,7 @@ public class PaymentController {
         return ResponseEntity.ok().body(response);
     }
     @RequestMapping(value = "/payment/cancle",method = RequestMethod.POST)
-    public ResponseEntity<?> fail2(@Valid @RequestBody TryRefundDto refundDto) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> fail2(@Valid @RequestBody TryRefundDto refundDto) throws NoSuchAlgorithmException, SQLException {
         paymentService.refund(refundDto);
         JSONObject response = new JSONObject();
         response.put("message", "주문번호:" + refundDto.getOrderId() + "가 환불 되었습니다");

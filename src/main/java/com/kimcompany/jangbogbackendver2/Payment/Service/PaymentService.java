@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindStoreMessage;
@@ -41,7 +42,7 @@ public class PaymentService {
 //        kgService.cancelAllService(dto);
     }
     @Transactional(rollbackFor = Exception.class)
-    public void refund(TryRefundDto tryRefundDto) throws NoSuchAlgorithmException {
+    public void refund(TryRefundDto tryRefundDto) throws NoSuchAlgorithmException, SQLException {
         long orderId = Long.parseLong(tryRefundDto.getOrderId());
         RefundDto refundDto = orderSelectService.selectForRefund(orderId).orElseThrow(() -> new IllegalArgumentException("찾을 수없는 주문정보 입니다"));
         long cardId = refundDto.getCardEntity().getId();
@@ -51,12 +52,17 @@ public class PaymentService {
         int requestCount = tryRefundDto.getCount();
         int newCount=confirmCount(requestCount,totalCount);
         int cancelPrice= tryRefundDto.getCount()*refundDto.getOrderEntity().getPrice();
-        int cardPrice = Integer.parseInt(refundDto.getCardEntity().getP_CARD_APPLPRICE());
+        int cardPrice = refundDto.getCardEntity().getCommonPaymentEntity().getPrtcRemains();
         confirmPrice(cancelPrice,refundDto.getOrderEntity().getPrice()*refundDto.getOrderEntity().getTotalCount());
         int newPrice=confirmPriceAll(cancelPrice,cardPrice);
         log.info("취소요청 금액:{},원금액:{},남은금액:{}",cancelPrice,cardPrice,cardPrice-cancelPrice);
-        orderRepo.updateAfterRefund(refundNum, newCount, orderId,storeId);
-        cardRepo.updateAfterRefund(Integer.toString(newPrice),cardId,storeId,refundDto.getCardEntity().getCommonPaymentEntity().getPrtcCnt()+1);
+        System.out.println(orderRepo.updateAfterRefund(refundNum, newCount, orderId,storeId));
+        if(orderRepo.updateAfterRefund(refundNum, newCount, orderId,storeId)!=1){
+            throw new SQLException("주문정보 갱신 실패");
+        }
+        if(cardRepo.updateAfterRefund(Integer.toString(newPrice),cardId,storeId,refundDto.getCardEntity().getCommonPaymentEntity().getPrtcCnt()+1)!=1){
+            throw new SQLException("결제 정보 정보 갱신 실패");
+        }
         RequestCancelPartialDto dto =
                 RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card"
                                 , refundDto.getCardEntity().getCommonPaymentEntity().getPTid(), "매장에서 직접환불", PartialRefundText))
