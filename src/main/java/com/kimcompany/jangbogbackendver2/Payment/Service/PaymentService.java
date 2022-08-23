@@ -44,9 +44,8 @@ public class PaymentService {
     public void refund(TryRefundDto tryRefundDto) throws NoSuchAlgorithmException {
         long orderId = Long.parseLong(tryRefundDto.getOrderId());
         RefundDto refundDto = orderSelectService.selectForRefund(orderId).orElseThrow(() -> new IllegalArgumentException("찾을 수없는 주문정보 입니다"));
-        long cardId = refundDto.getCardEntity().getCommonPaymentEntity().getStoreEntity().getId();
+        long cardId = refundDto.getCardEntity().getId();
         long storeId = refundDto.getOrderEntity().getStoreEntity().getId();
-        confirmOwn(cardId);
         confirmOwn(storeId);
         int totalCount = refundDto.getOrderEntity().getTotalCount();
         int requestCount = tryRefundDto.getCount();
