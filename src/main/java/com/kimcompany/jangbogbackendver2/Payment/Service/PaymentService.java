@@ -51,13 +51,23 @@ public class PaymentService {
         if(!jsonObject.get("resultCode").equals("00")){
             String msg = jsonObject.get("resultMsg").toString();
             if(msg.equals("부분취소 원거래 취소불가")){
-                throw new IllegalArgumentException("환불에 실패했습니다 사유:" +msg +"부분취소로 진행해 주세요");
+                log.info("부분취소 원거래 취소불가로 인해 자동 부분취소 요청 시작");
+                RequestCancelPartialDto dto2 =
+                        RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card"
+                                        , cardEntity.getCommonPaymentEntity().getPTid(), "매장에서 직접환불", PartialRefundText))
+                                .price(Integer.toString(cardEntity.getCommonPaymentEntity().getPrtcRemains())).confirmPrice("0").build();
+                JSONObject jsonObject2 = kgService.cancelAllService(dto2);
+                if(!jsonObject2.get("resultCode").equals("00")){
+                    throw new IllegalArgumentException("환불에 실패했습니다 사유:" + jsonObject2.get("resultMsg"));
+                }
+                return;
             }
             throw new IllegalArgumentException("환불에 실패했습니다 사유:" + jsonObject.get("resultMsg"));
         }
     }
     @Transactional(rollbackFor = Exception.class)
     public void refund(TryRefundDto tryRefundDto) throws NoSuchAlgorithmException, SQLException {
+        log.info("부분취소");
         long orderId = Long.parseLong(tryRefundDto.getOrderId());
         RefundDto refundDto = orderSelectService.selectForRefund(orderId).orElseThrow(() -> new IllegalArgumentException("찾을 수없는 주문정보 입니다"));
         if(refundDto.getOrderEntity().getCommonColumn().getState()!= trueStateNum){
