@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Payment.Repo;
 import com.kimcompany.jangbogbackendver2.Payment.Dto.SelectForOrderDto;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,4 +16,8 @@ public interface CardRepo extends JpaRepository<CardEntity,Long> {
             "from CardEntity  c " +
             "where c.commonColumn.state<>:flag and c.id=:id and c.commonPaymentEntity.storeEntity.id=:storeId")
     Optional<SelectForOrderDto>findByIdAndStoreId(@Param("flag")int deleteFlag,@Param("id")long cardId,@Param("storeId")long storeId);
+
+    @Modifying
+    @Query("update CardEntity c set c.P_CARD_APPLPRICE=:price where c.id=:id")
+    Integer updateAfterRefund(@Param("price") String price, @Param("id") long cardId);
 }
