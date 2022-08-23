@@ -44,8 +44,10 @@ public class PaymentService {
     public void refund(TryRefundDto tryRefundDto) throws NoSuchAlgorithmException {
         long orderId = Long.parseLong(tryRefundDto.getOrderId());
         RefundDto refundDto = orderSelectService.selectForRefund(orderId).orElseThrow(() -> new IllegalArgumentException("찾을 수없는 주문정보 입니다"));
-        confirmOwn(refundDto.getCardEntity().getCommonPaymentEntity().getStoreEntity().getId());
-        confirmOwn(refundDto.getOrderEntity().getStoreEntity().getId());
+        long cardId = refundDto.getCardEntity().getCommonPaymentEntity().getStoreEntity().getId();
+        long storeId = refundDto.getOrderEntity().getStoreEntity().getId();
+        confirmOwn(cardId);
+        confirmOwn(storeId);
         int totalCount = refundDto.getOrderEntity().getTotalCount();
         int requestCount = tryRefundDto.getCount();
         int newCount=confirmCount(requestCount,totalCount);
@@ -54,8 +56,8 @@ public class PaymentService {
         confirmPrice(cancelPrice,refundDto.getOrderEntity().getPrice()*refundDto.getOrderEntity().getTotalCount());
         int newPrice=confirmPriceAll(cancelPrice,cardPrice);
         log.info("취소요청 금액:{},원금액:{},남은금액:{}",cancelPrice,cardPrice,cardPrice-cancelPrice);
-        orderRepo.updateAfterRefund(refundNum, newCount, orderId);
-        cardRepo.updateAfterRefund(Integer.toString(newPrice), refundDto.getCardEntity().getId());
+        orderRepo.updateAfterRefund(refundNum, newCount, orderId,storeId);
+        cardRepo.updateAfterRefund(Integer.toString(newPrice),cardId,storeId);
         RequestCancelPartialDto dto =
                 RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card"
                                 , refundDto.getCardEntity().getCommonPaymentEntity().getPTid(), "매장에서 직접환불", PartialRefundText))

@@ -18,6 +18,6 @@ public interface CardRepo extends JpaRepository<CardEntity,Long> {
     Optional<SelectForOrderDto>findByIdAndStoreId(@Param("flag")int deleteFlag,@Param("id")long cardId,@Param("storeId")long storeId);
 
     @Modifying
-    @Query("update CardEntity c set c.P_CARD_APPLPRICE=:price where c.id=:id")
-    Integer updateAfterRefund(@Param("price") String price, @Param("id") long cardId);
+    @Query("update CardEntity c set c.P_CARD_APPLPRICE=:price where c.id=:id and c.commonPaymentEntity.storeEntity.id=:storeId")
+    Integer updateAfterRefund(@Param("price") String price, @Param("id") long cardId,@Param("storeId")long storeId);
 }
