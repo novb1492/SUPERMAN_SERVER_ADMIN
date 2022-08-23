@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.List;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindStoreMessage;
@@ -73,6 +74,24 @@ public class PaymentService {
         JSONObject jsonObject = kgService.cancelAllService(dto);
         if(!jsonObject.get("resultCode").equals("00")){
             throw new IllegalArgumentException("환불에 실패했습니다 사유:" + jsonObject.get("resultMsg"));
+        }
+        afterRefund(storeId,cardId);
+    }
+    @Transactional
+    public void afterRefund(long storeId,long cardId){
+        List<Integer> states = orderSelectService.selectForAfterRefund(storeId, cardId);
+        if(states.isEmpty()){
+            return;
+        }
+        boolean flag=true;
+        for(int state:states){
+            if(state!= refundNum){
+                flag=false;
+                break;
+            }
+        }
+        if(flag){
+            orderRepo.updateAfterRefundCheck(refundAllNum, 0, cardId, storeId);
         }
     }
     private int confirmPriceAll(int cancelPrice,int cardPrice){
