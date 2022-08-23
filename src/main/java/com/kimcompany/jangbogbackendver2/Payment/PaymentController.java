@@ -3,9 +3,11 @@ package com.kimcompany.jangbogbackendver2.Payment;
 import com.kimcompany.jangbogbackendver2.Api.Kg.Dto.CardResultDto;
 import com.kimcompany.jangbogbackendver2.Api.Kg.Dto.RequestCancelPartialDto;
 import com.kimcompany.jangbogbackendver2.Api.Kg.Service.KgService;
+import com.kimcompany.jangbogbackendver2.Order.Dto.TryRefundDto;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CommonPaymentEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Repo.CardRepo;
+import com.kimcompany.jangbogbackendver2.Payment.Service.PaymentService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +18,16 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 @RestController
@@ -34,6 +36,7 @@ import java.util.HashMap;
 public class PaymentController {
     private final KgService KgService;
     private final CardRepo cardRepo;
+    private final PaymentService paymentService;
 
     /**
      * 어드민 페이지 환불요청 테스트위해 임시 구축한 결제 api컨트롤러
@@ -100,20 +103,25 @@ public class PaymentController {
             UtilService.goForward( "https://localhost:3030/html/test?tid="+P_TID,request,response);
         }
     }
-    @RequestMapping("/payment/cancle/all/{testTid}")
-    public ResponseEntity<?> fail(@PathVariable String testTid) throws NoSuchAlgorithmException {
-        String msg="거래취소요청";
-        RequestCancelPartialDto dto =
-                RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card", testTid, msg, BasicText.RefundText)).build();
-        return ResponseEntity.ok().body(KgService.cancelAllService(dto));
-    }
-    @RequestMapping("/payment/cancle/{testTid}")
-    public void fail2(@PathVariable String testTid) throws NoSuchAlgorithmException {
-        String msg="부분거래취소요청";
-        RequestCancelPartialDto dto =
-                RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card", testTid, msg, BasicText.PartialRefundText))
-                        .price("500").confirmPrice("504").build();
-        KgService.cancelAllService(dto);
 
+    /**
+     * 부분 취소 요청
+     * @param cardId
+     * @return
+     * @throws NoSuchAlgorithmException
+     */
+    @RequestMapping(value = "/payment/cancle/all/{cardId}",method = RequestMethod.POST)
+    public ResponseEntity<?> fail(@PathVariable String cardId) throws NoSuchAlgorithmException, SQLException {
+        paymentService.refundAll(Long.parseLong(cardId));
+        JSONObject response = new JSONObject();
+        response.put("message", "결제번호:" + cardId + "가 전부 환불 되었습니다");
+        return ResponseEntity.ok().body(response);
+    }
+    @RequestMapping(value = "/payment/cancle",method = RequestMethod.POST)
+    public ResponseEntity<?> fail2(@Valid @RequestBody TryRefundDto refundDto) throws NoSuchAlgorithmException, SQLException {
+        paymentService.refund(refundDto);
+        JSONObject response = new JSONObject();
+        response.put("message", "주문번호:" + refundDto.getOrderId() + "가 환불 되었습니다");
+        return ResponseEntity.ok().body(response);
     }
 }

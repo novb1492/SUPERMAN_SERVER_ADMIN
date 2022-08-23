@@ -65,6 +65,7 @@ public class CardResultDto {
                         .pUserEmail(cardResultDto.getPUserEmail())
                         .pUserId("test")
                         .pUserName("fdsfs")
+                        .prtcRemains(Integer.parseInt(cardResultDto.getP_CARD_APPLPRICE()))
                         .storeEntity(StoreEntity.builder().id(1L).build()).build()).NAVERPOINT_CSHRApplAmt(cardResultDto.getNAVERPOINT_CSHRApplAmt())
                 .NAVERPOINT_CSHRApplYN(cardResultDto.getNAVERPOINT_CSHRApplYN())
                 .P_CARD_APPLPRICE(cardResultDto.getP_CARD_APPLPRICE())

@@ -96,7 +96,7 @@ class OrderRepoImplTest {
                 .leftJoin(cardEntity)
                 .on(cardEntity.id.eq(orderEntity.cardEntity.id))
                 .fetchJoin()
-                .where(orderEntity.commonColumn.state.eq(searchCondition.getState()), whereDate(searchCondition), whereCategory(searchCondition))
+                .where(whereState(searchCondition), whereDate(searchCondition), whereCategory(searchCondition))
                 .orderBy(orderEntity.id.desc())
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
@@ -106,10 +106,16 @@ class OrderRepoImplTest {
         JPAQuery<Long> count = jpaQueryFactory
                 .select(orderEntity.cardEntity.id.countDistinct())
                 .from(orderEntity)
-                .where(orderEntity.commonColumn.state.eq(searchCondition.getState()), whereDate(searchCondition), whereCategory(searchCondition));
+                .where(whereState(searchCondition), whereDate(searchCondition), whereCategory(searchCondition));
         // Result
         Page<SelectListDto> SelectListDtos = PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
         logger.info("결과 사이즈:{}",SelectListDtos.getTotalElements());
+    }
+    private BooleanExpression whereState(SearchCondition searchCondition) {
+        if (searchCondition.getState()== trueStateNum) {
+            return orderEntity.commonColumn.state.eq(trueStateNum).or(orderEntity.commonColumn.state.eq(refundNum));
+        }
+        return orderEntity.commonColumn.state.eq(searchCondition.getState());
     }
     private BooleanExpression whereDate( SearchCondition searchCondition) {
         if (searchCondition.getPeriodFlag().equals("true")) {
@@ -140,6 +146,18 @@ class OrderRepoImplTest {
                 .where(orderEntity.commonColumn.state.ne(deleteState),orderEntity.cardEntity.id.eq(1L),orderEntity.storeEntity.id.eq(1L))
                 .orderBy(orderEntity.id.desc())
                 .fetch();
+
+    }
+    @Test
+    @DisplayName("주문조회 결제정보 함께조회")
+    void test5(){
+        RefundDto fetch = jpaQueryFactory.select(new QRefundDto(orderEntity,cardEntity ))
+                .from(orderEntity)
+                .leftJoin(cardEntity)
+                .on(orderEntity.cardEntity.id.eq(cardEntity.id))
+                .fetchJoin()
+                .where(orderEntity.commonColumn.state.ne(deleteState),orderEntity.id.eq(1L),orderEntity.storeEntity.id.eq(1L))
+                .fetchOne();
 
     }
 

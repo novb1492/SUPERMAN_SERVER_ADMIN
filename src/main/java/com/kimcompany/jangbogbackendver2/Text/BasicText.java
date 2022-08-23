@@ -35,4 +35,7 @@ public class BasicText {
     public static String RefundText = "Refund";
     public static String PartialRefundText = "PartialRefund";
     public static int orderListPageSize = 10;
+    public static int refundNum=127;
+    public static int refundAllNum=10;
+    private static int doneOrderNum=100;
 }

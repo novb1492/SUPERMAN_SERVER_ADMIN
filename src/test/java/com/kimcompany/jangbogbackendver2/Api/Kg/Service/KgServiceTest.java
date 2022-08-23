@@ -22,7 +22,7 @@ class KgServiceTest {
 
         RequestCancelPartialDto dto =
                 RequestCancelPartialDto.builder().requestCancelDto(
-                        RequestCancelPartialDto.setRequestCancelDto("Card", "INIMX_CARDINIpayTest20220821184139445240", "test", BasicText.PartialRefundText))
+                        RequestCancelPartialDto.setRequestCancelDto("Card", "INIMX_CARDINIpayTest20220823103543585258", "test", BasicText.PartialRefundText))
                         .price("1").confirmPrice("1003").build();
         kgService.cancelAllService(dto);
     }

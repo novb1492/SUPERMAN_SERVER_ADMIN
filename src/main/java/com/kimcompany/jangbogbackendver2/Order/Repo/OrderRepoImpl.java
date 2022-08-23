@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Order.Repo;
 
 import com.kimcompany.jangbogbackendver2.Order.Dto.*;
 import com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity;
+import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,14 +13,14 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 import static com.kimcompany.jangbogbackendver2.Member.Model.QClientEntity.clientEntity;
 import static com.kimcompany.jangbogbackendver2.Order.Model.QOrderEntity.orderEntity;
 import static com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity.cardEntity;
 import static com.kimcompany.jangbogbackendver2.Product.Model.QProductEntity.productEntity;
 import static com.kimcompany.jangbogbackendver2.ProductEvent.Model.QProductEventEntity.productEventEntity;
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.deleteState;
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.orderListPageSize;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 @RequiredArgsConstructor
 public class OrderRepoImpl implements OrderRepoCustom{
@@ -34,7 +35,7 @@ public class OrderRepoImpl implements OrderRepoCustom{
                 .leftJoin(cardEntity)
                 .on(cardEntity.id.eq(orderEntity.cardEntity.id))
                 .fetchJoin()
-                .where(orderEntity.commonColumn.state.eq(searchCondition.getState()), whereDate(searchCondition), whereCategory(searchCondition))
+                .where(whereState(searchCondition), whereDate(searchCondition), whereCategory(searchCondition))
                 .orderBy(orderEntity.id.desc())
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
@@ -43,10 +44,16 @@ public class OrderRepoImpl implements OrderRepoCustom{
         JPAQuery<Long> count = jpaQueryFactory
                 .select(orderEntity.cardEntity.id.countDistinct())
                 .from(orderEntity)
-                .where(orderEntity.commonColumn.state.eq(searchCondition.getState()), whereDate(searchCondition), whereCategory(searchCondition));
+                .where(whereState(searchCondition), whereDate(searchCondition), whereCategory(searchCondition));
         // Result
         Page<SelectListDto> SelectListDtos = PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
         return SelectListDtos;
+    }
+    private BooleanExpression whereState(SearchCondition searchCondition) {
+        if (searchCondition.getState()== trueStateNum) {
+            return orderEntity.commonColumn.state.eq(trueStateNum).or(orderEntity.commonColumn.state.eq(refundNum));
+        }
+        return orderEntity.commonColumn.state.eq(searchCondition.getState());
     }
     private BooleanExpression whereDate(SearchCondition searchCondition) {
         if (searchCondition.getPeriodFlag().equals("true")) {
@@ -75,6 +82,17 @@ public class OrderRepoImpl implements OrderRepoCustom{
                 .where(orderEntity.commonColumn.state.ne(deleteState),orderEntity.cardEntity.id.eq(cardId),orderEntity.storeEntity.id.eq(storeId))
                 .orderBy(orderEntity.id.desc())
                 .fetch();
+    }
+
+    @Override
+    public Optional<RefundDto> selectByOrderJoinCard(long orderId) {
+        return Optional.ofNullable(jpaQueryFactory.select(new QRefundDto(orderEntity,cardEntity ))
+                .from(orderEntity)
+                .leftJoin(cardEntity)
+                .on(orderEntity.cardEntity.id.eq(cardEntity.id))
+                .fetchJoin()
+                .where(orderEntity.commonColumn.state.eq(trueStateNum),orderEntity.id.eq(orderId))
+                .fetchOne());
     }
 
 }
