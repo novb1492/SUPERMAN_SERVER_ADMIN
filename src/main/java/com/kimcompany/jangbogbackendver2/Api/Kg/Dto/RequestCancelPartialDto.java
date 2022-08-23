@@ -1,5 +1,6 @@
 package com.kimcompany.jangbogbackendver2.Api.Kg.Dto;
 
+import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Text.PropertiesText;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.PartialRefundText;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -57,6 +60,15 @@ public class RequestCancelPartialDto {
         CashReceiptsMap.add("price", requestCancelPartialDto.getPrice());
         CashReceiptsMap.add("confirmPrice", requestCancelPartialDto.getConfirmPrice());
         return CashReceiptsMap;
+    }
+    public static RequestCancelPartialDto set(String msg,String tid,String price,String confirmPrice,String situation){
+        return RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card"
+                        , tid, msg, situation))
+                .price(price).confirmPrice(confirmPrice).build();
+    }
+    public static RequestCancelPartialDto set(String msg,String pid){
+        return RequestCancelPartialDto.builder().requestCancelDto(RequestCancelPartialDto.setRequestCancelDto("Card"
+                ,pid, msg, BasicText.RefundText)).build();
     }
 
 }
