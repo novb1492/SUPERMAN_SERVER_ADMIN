@@ -56,8 +56,11 @@ public class PaymentService {
         confirmPrice(cancelPrice,refundDto.getOrderEntity().getPrice()*refundDto.getOrderEntity().getTotalCount());
         int newPrice=confirmPriceAll(cancelPrice,cardPrice);
         log.info("취소요청 금액:{},원금액:{},남은금액:{}",cancelPrice,cardPrice,cardPrice-cancelPrice);
-        System.out.println(orderRepo.updateAfterRefund(refundNum, newCount, orderId,storeId));
-        if(orderRepo.updateAfterRefund(refundNum, newCount, orderId,storeId)!=1){
+        int state= refundNum;
+        if(newCount>=1){
+            state= trueStateNum;
+        }
+        if(orderRepo.updateAfterRefund(state, newCount, orderId,storeId)!=1){
             throw new SQLException("주문정보 갱신 실패");
         }
         if(cardRepo.updateAfterRefund(newPrice,cardId,storeId,refundDto.getCardEntity().getCommonPaymentEntity().getPrtcCnt()+1)!=1){
@@ -87,7 +90,7 @@ public class PaymentService {
         }
     }
     private int  confirmCount(int requestCount,int count){
-        int newCount=requestCount-count;
+        int newCount=count-requestCount;
         if(newCount<0){
             throw new IllegalArgumentException("해당 제품 최대 환불 가능개수는:"+count+"개 입니다 \n 요청개수:"+requestCount);
         }
