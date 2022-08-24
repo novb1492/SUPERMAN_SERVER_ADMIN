@@ -26,7 +26,7 @@ public class BasicController {
 
     private final FileService fileService;
 
-    @RequestMapping(value = "/auth/file/upload",method = RequestMethod.POST)
+    @RequestMapping(value = "/file/upload",method = RequestMethod.POST)
     public ResponseEntity<?> uploadImg(MultipartHttpServletRequest request){
         List<File> files = new ArrayList<>();
         JSONObject response = new JSONObject();
