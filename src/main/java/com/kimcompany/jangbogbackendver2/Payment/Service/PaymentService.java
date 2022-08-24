@@ -43,7 +43,12 @@ public class PaymentService {
         CardEntity cardEntity = cardRepo.findByIdForRefundAll(cardId, deleteState).orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 결제 내역입니다"));
         long storeId = cardEntity.getCommonPaymentEntity().getStoreEntity().getId();
         confirmOwn(storeId);
-        orderRepo.updateAfterRefundCheck(refundAllNum, 0, cardId, storeId);
+        if(orderRepo.updateAfterRefundCheck(refundAllNum, 0, cardId, storeId)!=1){
+            throw new IllegalArgumentException(failOrderUpdateMessage);
+        }
+        if(cardRepo.updateState(deleteState, refundAllNum, cardId, storeId)!=1){
+            throw new IllegalArgumentException(failCardUpdateMessage);
+        }
         RequestCancelPartialDto dto = RequestCancelPartialDto.set("매장에서 직접환불", cardEntity.getCommonPaymentEntity().getPTid());
         JSONObject jsonObject = kgService.cancelAllService(dto);
         if(!jsonObject.get("resultCode").equals("00")){
@@ -85,10 +90,10 @@ public class PaymentService {
             state= trueStateNum;
         }
         if(orderRepo.updateAfterRefund(state, newCount, orderId,storeId)!=1){
-            throw new SQLException("주문정보 갱신 실패");
+            throw new SQLException(failOrderUpdateMessage);
         }
         if(cardRepo.updateAfterRefund(newPrice,cardId,storeId,refundDto.getCardEntity().getCommonPaymentEntity().getPrtcCnt()+1)!=1){
-            throw new SQLException("결제 정보 정보 갱신 실패");
+            throw new SQLException(failCardUpdateMessage);
         }
         RequestCancelPartialDto dto =RequestCancelPartialDto.set("매장에서 직접환불",refundDto.getCardEntity().getCommonPaymentEntity().getPTid()
                 , Integer.toString(cancelPrice), Integer.toString(cardPrice-cancelPrice), PartialRefundText);
@@ -113,6 +118,7 @@ public class PaymentService {
         }
         if(flag){
             orderRepo.updateAfterRefundCheck(refundAllNum, 0, cardId, storeId);
+            cardRepo.updateState(deleteState, refundAllNum, cardId, storeId);
         }
     }
     private int confirmPriceAll(int cancelPrice,int cardPrice){
