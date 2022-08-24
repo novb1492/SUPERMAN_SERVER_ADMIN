@@ -56,7 +56,7 @@ public class SecurityConfig  {
                 .antMatchers("/login","/token-expire/**","/login-fail/**").permitAll()
                 .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/manage/**").hasAnyAuthority("MANAGE","ADMIN")
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 ;
 
         return http.build();
