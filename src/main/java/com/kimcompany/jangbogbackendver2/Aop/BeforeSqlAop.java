@@ -6,6 +6,7 @@ import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Product.Service.ProductSelectService;
 import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.kimcompany.jangbogbackendver2.Util.EtcService;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +31,7 @@ import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 @Aspect
 @Slf4j
 public class BeforeSqlAop {
-    private final EmployeeSelectService employeeSelectService;
-    private final StoreSelectService storeSelectService;
-
+    private final EtcService etcService;
     /**
      * 상품/직원등록전 해당 매장에 대한
      * 권리가 있는지 확인
@@ -57,7 +56,7 @@ public class BeforeSqlAop {
                 storeId = Long.parseLong(tryInsertDto.getId());
             }
         }
-        checkOwn(storeId);
+        etcService.confirmOwn(storeId);
     }
 
     /**
@@ -78,19 +77,7 @@ public class BeforeSqlAop {
                 break;
             }
         }
-        checkOwn(storeId);
+        etcService.confirmOwn(storeId);
     }
-    private void checkOwn(long storeId){
-        long adminId= UtilService.getLoginUserId();
-        String role = UtilService.getLoginUserRole();
-        if(role.equals(ROLE_ADMIN)){
-            if(!storeSelectService.checkExist(storeId,adminId)){
-                throw new IllegalArgumentException(cantFindStoreMessage);
-            }
-        }else if(role.equals(ROLE_MANAGE)||role.equals(ROLE_USER)){
-            if(!employeeSelectService.exist(storeId, adminId, trueStateNum)){
-                throw new IllegalArgumentException(cantFindStoreMessage);
-            }
-        }
-    }
+
 }
