@@ -64,10 +64,16 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
     }
     @Override//연결이되면 자동으로 작동하는함수
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        /**
+         * 점원이 연결시 최소에 배달방있는지 검사 없다면 객체생성
+         */
         Map<String,Object>params=UtilService.getQueryMap(session.getUri().getQuery());
         String deliverId = params.get("roomid").toString();
         if(!roomList.containsKey(Integer.parseInt(deliverId))){
             List<Map<String, Object>> room = new ArrayList<>();
+            /**
+             * 테스트용 임시 손님 입력 로직
+             */
             room.add(makeRoomDetail(session, deliverId, 1L));
             roomList.put(Integer.parseInt(deliverId), room);
         }
@@ -93,4 +99,11 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         roomDetail.put("session", session);
         return roomDetail;
     }
+/**
+ *  나중에 구매자 웹소캣에 들어갈 내용
+ */
+//    List<Map<String, Object>> room = new ArrayList<>();
+//            room.add(makeRoomDetail(session, deliverId, 1L));
+//            roomList.put(Integer.parseInt(deliverId), room);
+
 }
