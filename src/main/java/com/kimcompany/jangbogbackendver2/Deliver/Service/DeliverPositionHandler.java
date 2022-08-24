@@ -45,12 +45,10 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
                     WebSocketSession wss = (WebSocketSession) room.get("session");
                     wss.sendMessage(new TextMessage(xAndYAndRoom.toJSONString()));
                 } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
 
         } catch (NullPointerException e) {
-            e.printStackTrace();
             UtilService.ExceptionValue("만들어진 방이 없습니다",DeliverPositionHandler.class);
         }
 
@@ -74,6 +72,15 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
             /**
              * 테스트용 임시 손님 입력 로직
              */
+            room.add(makeRoomDetail(session, deliverId, 1L));
+            roomList.put(Integer.parseInt(deliverId), room);
+        }else{
+            /**
+             * 테스트용 이미방이 있을때 임시 손님 입력 로직
+             * 추후에 손님인경우 방만들 수없게 해야하고
+             * 이미 있는데 다시온거면 이전 세션 배열에서 지워줘야한다
+             */
+            List<Map<String, Object>> room = roomList.get(Integer.parseInt(deliverId));
             room.add(makeRoomDetail(session, deliverId, 1L));
             roomList.put(Integer.parseInt(deliverId), room);
         }
