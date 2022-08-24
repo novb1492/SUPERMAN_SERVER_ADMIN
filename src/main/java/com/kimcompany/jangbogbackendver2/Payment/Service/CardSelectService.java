@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.deleteState;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.trueStateNum;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,6 @@ public class CardSelectService {
         return cardRepo.findByIdAndStoreId(deleteState, id, storeId);
     }
     public Optional<CardEntity>selectById(long cardId){
-        return cardRepo.findByIdNotDelete(cardId, deleteState);
+        return cardRepo.findByIdNotDelete(cardId, trueStateNum);
     }
 }

@@ -35,7 +35,7 @@ public class DeliverDetailEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DELIVER_DETAIL_ADMIN_ID", referencedColumnName = "ADMIN_ID", nullable = true)
-    private MemberEntity adminEntity;
+    private MemberEntity deliverAdminEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DELIVER_DETAIL_DELIVER_ID",referencedColumnName = "DELIVER_ID",nullable = false)
