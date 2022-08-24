@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Deliver.Service;
 
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.PrincipalDetails;
+import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.ROLE_ADMIN;
 
 @Service
 @RequiredArgsConstructor
@@ -67,23 +70,40 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
          */
         Map<String,Object>params=UtilService.getQueryMap(session.getUri().getQuery());
         String deliverId = params.get("roomid").toString();
-        if(!roomList.containsKey(Integer.parseInt(deliverId))){
-            List<Map<String, Object>> room = new ArrayList<>();
-            /**
-             * 테스트용 임시 손님 입력 로직
-             */
-            room.add(makeRoomDetail(session, deliverId, 1L));
-            roomList.put(Integer.parseInt(deliverId), room);
+        String role=params.get("role").toString();
+        if(role.equals(ROLE_ADMIN)){
+            adminAction(Integer.parseInt(deliverId));
         }else{
-            /**
-             * 테스트용 이미방이 있을때 임시 손님 입력 로직
-             * 추후에 손님인경우 방만들 수없게 해야하고
-             * 이미 있는데 다시온거면 이전 세션 배열에서 지워줘야한다
-             */
-            List<Map<String, Object>> room = roomList.get(Integer.parseInt(deliverId));
-            room.add(makeRoomDetail(session, deliverId, 1L));
-            roomList.put(Integer.parseInt(deliverId), room);
+            clientAction(session,Integer.parseInt(deliverId));
         }
+    }
+
+    /**
+     * 직원이 접속시 방이 존재 하지 않는다면
+     * 새 배달방생성
+     * @param deliverId
+     */
+    private void adminAction(int deliverId){
+        if(!roomList.containsKey(deliverId)){
+            List<Map<String, Object>> room = new ArrayList<>();
+            roomList.put(deliverId, room);
+        }
+    }
+
+    /**
+     * 주문자가 배달조회시 입장
+     * @param session
+     * @param deliverId
+     */
+    private void clientAction(WebSocketSession session,int deliverId){
+        if(!roomList.containsKey(deliverId)){
+            throw new IllegalArgumentException("아직 배달이 시작되지 않았습니다");
+        }
+        //배달방 정보 가져오기
+        List<Map<String, Object>> room = roomList.get(deliverId);
+        //현재 접속 웹세션 정보 배열에 추가
+        room.add(makeRoomDetail(session, Integer.toString(deliverId), 1L));
+        roomList.put(deliverId, room);
     }
     private MemberEntity getLoginInfo(WebSocketSession session) {
         AbstractAuthenticationToken principal=(AbstractAuthenticationToken) session.getPrincipal();
