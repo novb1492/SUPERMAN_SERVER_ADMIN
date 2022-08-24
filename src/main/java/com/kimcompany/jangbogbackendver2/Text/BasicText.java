@@ -37,6 +37,7 @@ public class BasicText {
     public static int orderListPageSize = 10;
     public static int refundNum=127;
     public static int refundAllNum=10;
+    public static int orderAndDeliverDoneNum=100;
     public static String failOrderUpdateMessage = "주문 정보 갱신에 실패했습니다";
     public static String failCardUpdateMessage = "결제정보 갱신에 실패했습니다";
 
