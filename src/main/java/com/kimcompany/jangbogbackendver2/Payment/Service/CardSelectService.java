@@ -1,6 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Payment.Service;
 
 import com.kimcompany.jangbogbackendver2.Payment.Dto.SelectForOrderDto;
+import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Repo.CardRepo;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,8 @@ public class CardSelectService {
 
     public Optional<SelectForOrderDto> selectForOrder(long storeId, long id){
         return cardRepo.findByIdAndStoreId(deleteState, id, storeId);
+    }
+    public Optional<CardEntity>selectById(long cardId){
+        return cardRepo.findByIdNotDelete(cardId, deleteState);
     }
 }

@@ -27,4 +27,7 @@ public interface CardRepo extends JpaRepository<CardEntity,Long> {
     @Modifying
     @Query("update CardEntity c set c.commonColumn=:state where c.commonColumn.state<>:deleteState and c.id=:id and c.commonPaymentEntity.storeEntity=:storeId")
     Integer updateState(@Param("deleteState") int deleteState, @Param("state") int state, @Param("id") long cardId, @Param("storeId") long storeId);
+
+    @Query("select c from CardEntity c where c.commonColumn.state<>:deleteState and c.id=:id")
+    Optional<CardEntity> findByIdNotDelete(@Param("id") long id, @Param("deleteState") int deleteState);
 }
