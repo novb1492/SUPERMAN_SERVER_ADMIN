@@ -16,8 +16,10 @@ public class DeliverController {
 
     @RequestMapping(value = "/deliver/save/{cardId}",method = RequestMethod.POST)
     public ResponseEntity<?>save(@PathVariable String cardId){
+        long id = deliverService.save(Long.parseLong(cardId));
         JSONObject response = new JSONObject();
         response.put("message", "배달방 생성에 성공했습니다");
+        response.put("roomId", id);
         return ResponseEntity.ok().body(response);
     }
 

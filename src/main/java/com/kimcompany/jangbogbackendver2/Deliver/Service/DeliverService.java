@@ -32,7 +32,7 @@ public class DeliverService {
 
 
     @Transactional(rollbackFor=Exception.class)
-    public void save(long cardId){
+    public Long save(long cardId){
         CardEntity cardEntity = cardSelectService.selectById(cardId).orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 거래 내역입니다"));
         etcService.confirmOwn(cardEntity.getCommonPaymentEntity().getStoreEntity().getId());
         DeliverEntity deliverEntity = set(cardEntity.getCommonPaymentEntity().getStoreEntity().getId());
@@ -41,6 +41,7 @@ public class DeliverService {
                 .cardEntity(cardEntity).clientEntity(ClientEntity.builder().id(Long.parseLong(cardEntity.getCommonPaymentEntity().getPUserId())).build())
                 .commonColumn(CommonColumn.builder().state(trueStateNum).build()).build();
         deliverDetailRepo.save(deliverDetailEntity);
+        return deliverEntity.getId();
     }
     public DeliverEntity set(long StoreId){
         return DeliverEntity.builder().memberEntity(MemberEntity.builder().id(UtilService.getLoginUserId()).build())
