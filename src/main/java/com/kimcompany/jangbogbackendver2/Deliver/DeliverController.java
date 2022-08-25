@@ -14,6 +14,11 @@ import javax.validation.Valid;
 public class DeliverController {
     private final DeliverService deliverService;
 
+    /**
+     * 배달방 생성
+     * @param tryInsertDto
+     * @return
+     */
     @RequestMapping(value = "/deliver/save",method = RequestMethod.POST)
     public ResponseEntity<?>save(@Valid @RequestBody TryInsertDto tryInsertDto){
         long id = deliverService.save(tryInsertDto);

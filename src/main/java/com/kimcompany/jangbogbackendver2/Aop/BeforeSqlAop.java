@@ -39,7 +39,8 @@ public class BeforeSqlAop {
      * @throws Throwable
      */
     @Before("execution(* com.kimcompany.jangbogbackendver2.Employee.EmployeeService.save(..))"
-            +"||execution(* com.kimcompany.jangbogbackendver2.Product.Service.ProductService.save(..))")
+            +"||execution(* com.kimcompany.jangbogbackendver2.Product.Service.ProductService.save(..))"
+            +"||execution(* com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverService.save(..))")
     public void beforeSaveCheck(JoinPoint joinPoint) throws Throwable {
         log.info("save전 소유 검사");
         Object[] values=joinPoint.getArgs();
@@ -54,6 +55,10 @@ public class BeforeSqlAop {
                 log.info("상품 등록전 검사");
                 com.kimcompany.jangbogbackendver2.Product.Dto.TryInsertDto tryInsertDto=(com.kimcompany.jangbogbackendver2.Product.Dto.TryInsertDto)dto;
                 storeId = Long.parseLong(tryInsertDto.getId());
+            }else if(dto instanceof com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto ){
+                log.info("배달방 등록전 검사");
+                com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto tryInsertDto = (com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto) dto;
+                storeId =Long.parseLong(tryInsertDto.getStoreId());
             }
         }
         etcService.confirmOwn(storeId);
