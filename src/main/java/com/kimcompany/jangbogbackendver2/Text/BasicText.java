@@ -34,8 +34,11 @@ public class BasicText {
     public static int companyPageSize=3;
     public static String RefundText = "Refund";
     public static String PartialRefundText = "PartialRefund";
-    public static int orderListPageSize = 10;
+    public static int orderListPageSize = 2;
     public static int refundNum=127;
     public static int refundAllNum=10;
-    private static int doneOrderNum=100;
+    public static int orderAndDeliverDoneNum=100;
+    public static String failOrderUpdateMessage = "주문 정보 갱신에 실패했습니다";
+    public static String failCardUpdateMessage = "결제정보 갱신에 실패했습니다";
+
 }

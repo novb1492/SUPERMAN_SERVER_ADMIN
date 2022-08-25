@@ -6,6 +6,7 @@ import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Product.Service.ProductSelectService;
 import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.kimcompany.jangbogbackendver2.Util.EtcService;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +31,7 @@ import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 @Aspect
 @Slf4j
 public class BeforeSqlAop {
-    private final EmployeeSelectService employeeSelectService;
-    private final StoreSelectService storeSelectService;
-
+    private final EtcService etcService;
     /**
      * 상품/직원등록전 해당 매장에 대한
      * 권리가 있는지 확인
@@ -40,7 +39,8 @@ public class BeforeSqlAop {
      * @throws Throwable
      */
     @Before("execution(* com.kimcompany.jangbogbackendver2.Employee.EmployeeService.save(..))"
-            +"||execution(* com.kimcompany.jangbogbackendver2.Product.Service.ProductService.save(..))")
+            +"||execution(* com.kimcompany.jangbogbackendver2.Product.Service.ProductService.save(..))"
+            +"||execution(* com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverService.save(..))")
     public void beforeSaveCheck(JoinPoint joinPoint) throws Throwable {
         log.info("save전 소유 검사");
         Object[] values=joinPoint.getArgs();
@@ -55,9 +55,13 @@ public class BeforeSqlAop {
                 log.info("상품 등록전 검사");
                 com.kimcompany.jangbogbackendver2.Product.Dto.TryInsertDto tryInsertDto=(com.kimcompany.jangbogbackendver2.Product.Dto.TryInsertDto)dto;
                 storeId = Long.parseLong(tryInsertDto.getId());
+            }else if(dto instanceof com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto ){
+                log.info("배달방 등록전 검사");
+                com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto tryInsertDto = (com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto) dto;
+                storeId =Long.parseLong(tryInsertDto.getStoreId());
             }
         }
-        checkOwn(storeId);
+        etcService.confirmOwn(storeId);
     }
 
     /**
@@ -78,19 +82,7 @@ public class BeforeSqlAop {
                 break;
             }
         }
-        checkOwn(storeId);
+        etcService.confirmOwn(storeId);
     }
-    private void checkOwn(long storeId){
-        long adminId= UtilService.getLoginUserId();
-        String role = UtilService.getLoginUserRole();
-        if(role.equals(ROLE_ADMIN)){
-            if(!storeSelectService.checkExist(storeId,adminId)){
-                throw new IllegalArgumentException(cantFindStoreMessage);
-            }
-        }else if(role.equals(ROLE_MANAGE)||role.equals(ROLE_USER)){
-            if(!employeeSelectService.exist(storeId, adminId, trueStateNum)){
-                throw new IllegalArgumentException(cantFindStoreMessage);
-            }
-        }
-    }
+
 }
