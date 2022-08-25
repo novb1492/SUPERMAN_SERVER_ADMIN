@@ -1,11 +1,15 @@
 package com.kimcompany.jangbogbackendver2.Aop;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.kimcompany.jangbogbackendver2.Employee.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Employee.EmployeeSelectService;
+import com.kimcompany.jangbogbackendver2.Exception.Exceptions.TokenException;
+import com.kimcompany.jangbogbackendver2.Filter.AuthorizationFilter;
 import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Product.Service.ProductSelectService;
 import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.kimcompany.jangbogbackendver2.Util.AuthorizationService;
 import com.kimcompany.jangbogbackendver2.Util.EtcService;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +18,21 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
+import static com.kimcompany.jangbogbackendver2.Util.UtilService.*;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * 해당 매장의 접근 권리가 있는지 확인하는 aop입니다
@@ -32,6 +43,8 @@ import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 @Slf4j
 public class BeforeSqlAop {
     private final EtcService etcService;
+    private final AuthorizationService authorizationService;
+
     /**
      * 상품/직원등록전 해당 매장에 대한
      * 권리가 있는지 확인
@@ -83,6 +96,46 @@ public class BeforeSqlAop {
             }
         }
         etcService.confirmOwn(storeId);
+    }
+
+    @Before("execution(* com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverPositionHandler.afterConnectionEstablished(..))")
+    public void ws(JoinPoint joinPoint) throws Throwable{
+        log.info("select전 소유 검사");
+        WebSocketSession session = null;
+        for (Object obj : joinPoint.getArgs()) {
+            if (obj instanceof WebSocketSession) {
+                session =  (WebSocketSession) obj;
+                break;
+            }
+        }
+        Map<String, String> tokens = getAuthentication();
+        String access_token = null;
+        try {
+            access_token = tokens.get(AuthenticationText);  // 엑세스 토큰 발급
+            if(UtilService.confirmNull(access_token)){
+                throw new IllegalArgumentException("sfsdf");
+            }
+            log.info("엑세스 토큰: " + access_token);
+            authorizationService.pro(access_token);
+
+        } catch (TokenExpiredException e) {
+            log.info("만료된 토큰: " + access_token);
+            goForward("/token-expire/true",getHttpSerRequest(),getHttpSerResponse());
+            return;
+        } catch (NullPointerException e2) {
+            log.info("토큰이 없음 비로그인 사용자 요청");
+
+        } catch (TokenException e) {
+            HttpStatus httpStatus = e.getHttpStatus();
+            if(httpStatus.equals(INTERNAL_SERVER_ERROR)){
+                log.info("redis에서 리프레시토큰 정보 찾기 실패");
+            }else if(httpStatus.equals(NOT_FOUND)){
+                log.info("회원정보 를 찾을 수없스니다 인증필터");
+            }
+            goForward("/token-expire/false", getHttpSerRequest(), getHttpSerResponse());
+            return;
+        }
+        log.info("인증필터 통과");
     }
 
 }
