@@ -23,7 +23,7 @@ public class CardSelectService {
     public Optional<SelectForOrderDto> selectForOrder(long storeId, long id){
         return cardRepo.findByIdAndStoreId(deleteState, id, storeId);
     }
-    public Optional<CardEntity>selectById(long cardId){
-        return cardRepo.findByIdNotDelete(cardId, trueStateNum);
+    public Optional<CardEntity>selectById(long cardId,long storeId){
+        return cardRepo.findByIdNotDelete(cardId, trueStateNum,storeId);
     }
 }

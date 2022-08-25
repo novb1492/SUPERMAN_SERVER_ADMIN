@@ -1,6 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Deliver.Service;
 
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverDetailEntity;
 import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverEntity;
 import com.kimcompany.jangbogbackendver2.Deliver.Repo.DeliverDetailRepo;
@@ -18,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.trueStateNum;
 
 @Service
@@ -32,21 +35,20 @@ public class DeliverService {
 
 
     @Transactional(rollbackFor=Exception.class)
-    public Long save(long cardId){
-        CardEntity cardEntity = cardSelectService.selectById(cardId).orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 거래 내역입니다"));
-        etcService.confirmOwn(cardEntity.getCommonPaymentEntity().getStoreEntity().getId());
-        DeliverEntity deliverEntity = set(cardEntity.getCommonPaymentEntity().getStoreEntity().getId());
+    public Long save(TryInsertDto tryInsertDto){
+//        etcService.confirmOwn(storeId);
+        DeliverEntity deliverEntity = TryInsertDto.dtoToEntity(tryInsertDto);
+        long storeId = Long.parseLong(tryInsertDto.getStoreId());
         deliverRepo.save(deliverEntity);
-        DeliverDetailEntity deliverDetailEntity=DeliverDetailEntity.builder().deliverEntity(deliverEntity)
-                .cardEntity(cardEntity).clientEntity(ClientEntity.builder().id(Long.parseLong(cardEntity.getCommonPaymentEntity().getPUserId())).build())
-                .commonColumn(CommonColumn.builder().state(trueStateNum).build()).build();
-        deliverDetailRepo.save(deliverDetailEntity);
+        List<Long> cardIds = tryInsertDto.getCardIds();
+        for(long cardId:cardIds){
+            CardEntity cardEntity = cardSelectService.selectById(cardId,storeId).orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 거래 내역입니다"));
+            DeliverDetailEntity deliverDetailEntity=DeliverDetailEntity.builder().deliverEntity(deliverEntity)
+                    .cardEntity(cardEntity).clientEntity(ClientEntity.builder().id(Long.parseLong(cardEntity.getCommonPaymentEntity().getPUserId())).build())
+                    .commonColumn(CommonColumn.builder().state(trueStateNum).build()).build();
+            deliverDetailRepo.save(deliverDetailEntity);
+        }
         return deliverEntity.getId();
     }
-    public DeliverEntity set(long StoreId){
-        return DeliverEntity.builder().memberEntity(MemberEntity.builder().id(UtilService.getLoginUserId()).build())
-                .commonColumn(CommonColumn.builder().state(trueStateNum).build())
-                .storeEntity(StoreEntity.builder().id(StoreId).build())
-                .build();
-    }
+
 }
