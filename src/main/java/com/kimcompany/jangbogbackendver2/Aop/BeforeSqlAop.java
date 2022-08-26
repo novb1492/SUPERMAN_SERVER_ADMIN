@@ -98,4 +98,44 @@ public class BeforeSqlAop {
         etcService.confirmOwn(storeId);
     }
 
+    @Before("execution(* com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverPositionHandler.afterConnectionEstablished(..))")
+    public void ws(JoinPoint joinPoint) throws Throwable{
+        log.info("select전 소유 검사");
+        WebSocketSession session = null;
+        for (Object obj : joinPoint.getArgs()) {
+            if (obj instanceof WebSocketSession) {
+                session =  (WebSocketSession) obj;
+                break;
+            }
+        }
+        Map<String, String> tokens = getAuthentication();
+        String access_token = null;
+        try {
+            access_token = tokens.get(AuthenticationText);  // 엑세스 토큰 발급
+            if(UtilService.confirmNull(access_token)){
+                throw new IllegalArgumentException("sfsdf");
+            }
+            log.info("엑세스 토큰: " + access_token);
+            authorizationService.pro(access_token);
+
+        } catch (TokenExpiredException e) {
+            log.info("만료된 토큰: " + access_token);
+            goForward("/token-expire/true",getHttpSerRequest(),getHttpSerResponse());
+            return;
+        } catch (NullPointerException e2) {
+            log.info("토큰이 없음 비로그인 사용자 요청");
+
+        } catch (TokenException e) {
+            HttpStatus httpStatus = e.getHttpStatus();
+            if(httpStatus.equals(INTERNAL_SERVER_ERROR)){
+                log.info("redis에서 리프레시토큰 정보 찾기 실패");
+            }else if(httpStatus.equals(NOT_FOUND)){
+                log.info("회원정보 를 찾을 수없스니다 인증필터");
+            }
+            goForward("/token-expire/false", getHttpSerRequest(), getHttpSerResponse());
+            return;
+        }
+        log.info("인증필터 통과");
+    }
+
 }
