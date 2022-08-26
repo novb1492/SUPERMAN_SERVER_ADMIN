@@ -6,6 +6,7 @@ import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverEntity;
 import com.kimcompany.jangbogbackendver2.Order.Model.OrderEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +23,7 @@ public class SelectDto {
     private String detailAddress;
     private String price;
 
+    @QueryProjection
     public SelectDto(CardEntity cardEntity, OrderEntity orderEntity, DeliverEntity deliverEntity, DeliverDetailEntity deliverDetailEntity) {
         AddressColumn addressColumn = orderEntity.getAddressColumn();
         this.orderId = orderEntity.getId();

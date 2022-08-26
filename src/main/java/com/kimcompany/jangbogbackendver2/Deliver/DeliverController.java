@@ -43,5 +43,11 @@ public class DeliverController {
         SearchCondition searchCondition = SearchCondition.set(page, deliverPageSize, storeIdToLong, deliverIdToLong,stateToInt);
         return ResponseEntity.ok().body(deliverSelectService.selectForList(searchCondition));
     }
+    @RequestMapping(value = "/deliver/{storeId}/{deliverId}",method = RequestMethod.GET)
+    public ResponseEntity<?>selectForDetail(@PathVariable String storeId,@PathVariable String deliverId){
+        long storeIdToLong = Long.parseLong(storeId);
+        long deliverIdToLong = Long.parseLong(deliverId);
+        return ResponseEntity.ok().body(deliverSelectService.selectForDetail(storeIdToLong, deliverIdToLong));
+    }
 
 }

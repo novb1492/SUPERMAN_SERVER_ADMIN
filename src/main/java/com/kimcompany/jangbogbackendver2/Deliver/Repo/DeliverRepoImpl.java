@@ -1,7 +1,9 @@
 package com.kimcompany.jangbogbackendver2.Deliver.Repo;
 
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.QSelectDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.QSelectListDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SearchCondition;
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.Order.Dto.*;
 import com.kimcompany.jangbogbackendver2.Order.Repo.OrderRepoCustom;
@@ -54,6 +56,19 @@ public class DeliverRepoImpl implements DeliverRepoCustom {
                 .from(deliverDetailEntity)
                 .where(deliverDetailEntity.deliverEntity.id.eq(searchCondition.getDeliverId()), deliverEntity.commonColumn.state.eq(searchCondition.getState()));
         return PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
+    }
+    public List<SelectDto>selectForDetail(long storeId,long deliverId){
+       return jpaQueryFactory.select(new QSelectDto(cardEntity, orderEntity, deliverEntity,deliverDetailEntity))
+                .from(deliverDetailEntity)
+                .leftJoin(cardEntity)
+                .on(deliverDetailEntity.cardEntity.id.eq(cardEntity.id))
+                .leftJoin(orderEntity)
+                .on(orderEntity.cardEntity.id.eq(cardEntity.id))
+                .leftJoin(deliverEntity)
+                .on(deliverDetailEntity.deliverEntity.id.eq(deliverEntity.id))
+                .where(deliverDetailEntity.deliverEntity.id.eq(deliverId), deliverEntity.storeEntity.id.eq(storeId),deliverEntity.commonColumn.state.ne(deleteState))
+                .groupBy(orderEntity.cardEntity.id)
+                .fetch();
     }
 
 }

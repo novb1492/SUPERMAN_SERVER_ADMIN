@@ -1,6 +1,8 @@
 package com.kimcompany.jangbogbackendver2.Deliver.Repo;
 
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.QSelectDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.QSelectListDto;
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectListDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Model.QDeliverDetailEntity;
 import com.kimcompany.jangbogbackendver2.Deliver.Model.QDeliverEntity;
@@ -11,6 +13,8 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -33,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(TestConfig.class)
 class DeliverRepoImplTest {
-
+    private Logger logger = LoggerFactory.getLogger(DeliverRepoImplTest.class);
     @Autowired
     private  JPAQueryFactory jpaQueryFactory;
 
@@ -62,8 +66,24 @@ class DeliverRepoImplTest {
                 .where(deliverDetailEntity.deliverEntity.id.eq(5L));
         // Result
         Page<SelectListDto> SelectListDtos = PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
-        System.out.println(SelectListDtos.getTotalPages());
+        logger.info("페이지:{}",SelectListDtos.getTotalPages());
     }
-
-
+    @Test
+    @DisplayName("배달 상세 조회")
+    void test2(){
+        List<SelectDto> fetch = jpaQueryFactory.select(new QSelectDto(cardEntity, orderEntity, deliverEntity,deliverDetailEntity))
+                .from(deliverDetailEntity)
+                .leftJoin(cardEntity)
+                .on(deliverDetailEntity.cardEntity.id.eq(cardEntity.id))
+                .leftJoin(orderEntity)
+                .on(orderEntity.cardEntity.id.eq(cardEntity.id))
+                .leftJoin(deliverEntity)
+                .on(deliverDetailEntity.deliverEntity.id.eq(deliverEntity.id))
+                .where(deliverDetailEntity.deliverEntity.id.eq(5L), deliverEntity.storeEntity.id.eq(1L))
+                .groupBy(orderEntity.cardEntity.id)
+                .fetch();
+        for(SelectDto s:fetch){
+            logger.info("배달디테일 아이디:{}",s.getDeliverDetailId());
+        }
+    }
 }
