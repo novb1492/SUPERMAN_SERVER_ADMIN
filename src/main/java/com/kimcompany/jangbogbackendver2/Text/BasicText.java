@@ -33,6 +33,7 @@ public class BasicText {
     public static String cantFindCompanyNum="등록한 사업자번호가 없습니다";
     public static int companyPageSize=3;
     public static String RefundText = "Refund";
+    public static int deliverPageSize = 1;
     public static String PartialRefundText = "PartialRefund";
     public static int orderListPageSize = 2;
     public static int refundNum=127;
