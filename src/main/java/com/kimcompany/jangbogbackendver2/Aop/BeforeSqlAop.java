@@ -1,11 +1,11 @@
 package com.kimcompany.jangbogbackendver2.Aop;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Employee.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Employee.EmployeeSelectService;
 import com.kimcompany.jangbogbackendver2.Exception.Exceptions.TokenException;
 import com.kimcompany.jangbogbackendver2.Filter.AuthorizationFilter;
-import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Product.Service.ProductSelectService;
 import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
@@ -84,7 +84,7 @@ public class BeforeSqlAop {
      * @throws Throwable
      */
     @Before("execution(* com.kimcompany.jangbogbackendver2.Product.Service.ProductService.selectForList(..))"
-//            +"||execution(* com.kimcompany.jangbogbackendver2.Order.Service.OrderService.selectForList(..))"
+            +"||execution(* com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverSelectService.selectForList(..))"
     )
     public void checkBelong(JoinPoint joinPoint) throws Throwable{
         log.info("select전 소유 검사");
@@ -93,6 +93,10 @@ public class BeforeSqlAop {
             if (obj instanceof Long) {
                 storeId =  (long) obj;
                 break;
+            }else if(obj instanceof SearchCondition){
+                log.info("배달리스트 조회전 소유검사");
+                SearchCondition searchCondition = (SearchCondition) obj;
+                storeId = searchCondition.getStoreId();
             }
         }
         etcService.confirmOwn(storeId);

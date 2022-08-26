@@ -47,7 +47,7 @@ public class DeliverController {
     public ResponseEntity<?>selectForDetail(@PathVariable String storeId,@PathVariable String deliverId){
         long storeIdToLong = Long.parseLong(storeId);
         long deliverIdToLong = Long.parseLong(deliverId);
-        return ResponseEntity.ok().body(deliverSelectService.selectForDetail(storeIdToLong, deliverIdToLong));
+        return ResponseEntity.ok().body(deliverService.selectForDetail(storeIdToLong, deliverIdToLong));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Deliver.Service;
 
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverDetailEntity;
 import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverEntity;
@@ -49,6 +50,10 @@ public class DeliverService {
             deliverDetailRepo.save(deliverDetailEntity);
         }
         return deliverEntity.getId();
+    }
+    public List<SelectDto>selectForDetail(long storeId, long deliverId){
+        etcService.confirmOwn(storeId);
+        return deliverSelectService.selectForDetail(storeId, deliverId);
     }
 
 
