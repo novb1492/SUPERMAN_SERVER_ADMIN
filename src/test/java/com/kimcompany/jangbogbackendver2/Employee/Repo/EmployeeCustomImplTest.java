@@ -2,10 +2,14 @@ package com.kimcompany.jangbogbackendver2.Employee.Repo;
 
 import com.kimcompany.jangbogbackendver2.Employee.Dto.NotyEmployeeDto;
 import com.kimcompany.jangbogbackendver2.Employee.Dto.QNotyEmployeeDto;
+import com.kimcompany.jangbogbackendver2.Employee.Dto.QSelectListDto;
+import com.kimcompany.jangbogbackendver2.Employee.Dto.SelectListDto;
+import com.kimcompany.jangbogbackendver2.Member.Model.QMemberEntity;
 import com.kimcompany.jangbogbackendver2.Store.Dto.InsertEmployNotyDto;
 import com.kimcompany.jangbogbackendver2.Store.Repo.StoreRepo;
 import com.kimcompany.jangbogbackendver2.TestConfig;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,9 +20,14 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
+import static com.kimcompany.jangbogbackendver2.Deliver.Model.QDeliverDetailEntity.deliverDetailEntity;
+import static com.kimcompany.jangbogbackendver2.Deliver.Model.QDeliverEntity.deliverEntity;
 import static com.kimcompany.jangbogbackendver2.Employee.Model.QEmployeeEntity.employeeEntity;
 import static com.kimcompany.jangbogbackendver2.Member.Model.QMemberEntity.memberEntity;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
@@ -60,5 +69,27 @@ class EmployeeCustomImplTest {
         for(NotyEmployeeDto dto:fetch){
             logger.info("결과:{}",dto.getEmail());
         }
+    }
+    @Test
+    @DisplayName("소속 직원들 조회 쿼리")
+    void test3(){
+        PageRequest pageRequest = PageRequest.of(0, 1);
+        List<SelectListDto> fetch = jpaQueryFactory.select(new QSelectListDto(memberEntity, employeeEntity))
+                .from(employeeEntity)
+                .leftJoin(memberEntity)
+                .on(employeeEntity.memberEntity.id.eq(memberEntity.id))
+                .where(employeeEntity.commonColumn.state.eq(trueStateNum), employeeEntity.storeEntity.id.eq(1L))
+                .orderBy(employeeEntity.id.desc())
+                .offset(pageRequest.getOffset())
+                .limit(pageRequest.getPageSize())
+                .fetch();
+        JPAQuery<Long> count = jpaQueryFactory
+                .select(employeeEntity.count())
+                .from(employeeEntity)
+                .where(employeeEntity.commonColumn.state.eq(trueStateNum), employeeEntity.storeEntity.id.eq(1L));
+
+        Page<SelectListDto> page = PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
+
+
     }
 }

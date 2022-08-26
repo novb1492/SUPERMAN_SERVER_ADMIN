@@ -34,6 +34,15 @@ public class DeliverController {
         response.put("roomId", id);
         return ResponseEntity.ok().body(response);
     }
+
+    /**
+     * 배달 리스트 조회
+     * @param request
+     * @param storeId
+     * @param deliverId
+     * @param state
+     * @return
+     */
     @RequestMapping(value = "/deliver/list/{storeId}/{deliverId}/{state}",method = RequestMethod.POST)
     public ResponseEntity<?>selectForList(HttpServletRequest request,@PathVariable String storeId,@PathVariable String deliverId,@PathVariable String state){
         int page = Integer.parseInt(request.getParameter("page"));
@@ -43,6 +52,13 @@ public class DeliverController {
         SearchCondition searchCondition = SearchCondition.set(page, deliverPageSize, storeIdToLong, deliverIdToLong,stateToInt);
         return ResponseEntity.ok().body(deliverSelectService.selectForList(searchCondition));
     }
+
+    /**
+     * 배달 상세 조회
+     * @param storeId
+     * @param deliverId
+     * @return
+     */
     @RequestMapping(value = "/deliver/{storeId}/{deliverId}",method = RequestMethod.GET)
     public ResponseEntity<?>selectForDetail(@PathVariable String storeId,@PathVariable String deliverId){
         long storeIdToLong = Long.parseLong(storeId);

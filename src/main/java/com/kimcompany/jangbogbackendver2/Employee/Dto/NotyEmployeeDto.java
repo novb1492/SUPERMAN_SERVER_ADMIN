@@ -12,7 +12,6 @@ public class NotyEmployeeDto {
     private String email;
 
     @QueryProjection
-
     public NotyEmployeeDto(String phone, String email) {
         this.phone = phone;
         this.email = email;

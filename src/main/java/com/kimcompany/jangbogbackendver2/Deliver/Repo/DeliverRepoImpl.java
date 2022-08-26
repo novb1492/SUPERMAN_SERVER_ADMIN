@@ -57,6 +57,7 @@ public class DeliverRepoImpl implements DeliverRepoCustom {
                 .where(deliverDetailEntity.deliverEntity.id.eq(searchCondition.getDeliverId()), deliverEntity.commonColumn.state.eq(searchCondition.getState()));
         return PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
     }
+    @Override
     public List<SelectDto>selectForDetail(long storeId,long deliverId){
        return jpaQueryFactory.select(new QSelectDto(cardEntity, orderEntity, deliverEntity,deliverDetailEntity))
                 .from(deliverDetailEntity)
