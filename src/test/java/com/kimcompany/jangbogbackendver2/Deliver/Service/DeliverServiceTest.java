@@ -1,5 +1,6 @@
 package com.kimcompany.jangbogbackendver2.Deliver.Service;
 
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.PrincipalDetails;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,8 +30,8 @@ class DeliverServiceTest {
     @DisplayName("배달방 및 배달 디테일 생성 테스트")
     @Transactional
     void test(){
-        deliverService.save(10L);
-        assertThrows(IllegalArgumentException.class, () ->   deliverService.save(1L));
-        assertThrows(IllegalArgumentException.class, () ->  deliverService.save(2L));
+        deliverService.save(new TryInsertDto());
+        assertThrows(IllegalArgumentException.class, () ->   deliverService.save(new TryInsertDto()));
+        assertThrows(IllegalArgumentException.class, () ->  deliverService.save(new TryInsertDto()));
     }
 }

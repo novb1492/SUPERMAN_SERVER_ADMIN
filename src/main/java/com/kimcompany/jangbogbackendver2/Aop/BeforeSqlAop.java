@@ -1,11 +1,15 @@
 package com.kimcompany.jangbogbackendver2.Aop;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.kimcompany.jangbogbackendver2.Employee.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Employee.EmployeeSelectService;
+import com.kimcompany.jangbogbackendver2.Exception.Exceptions.TokenException;
+import com.kimcompany.jangbogbackendver2.Filter.AuthorizationFilter;
 import com.kimcompany.jangbogbackendver2.Order.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Product.Service.ProductSelectService;
 import com.kimcompany.jangbogbackendver2.Store.StoreSelectService;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.kimcompany.jangbogbackendver2.Util.AuthorizationService;
 import com.kimcompany.jangbogbackendver2.Util.EtcService;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +18,21 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
+import static com.kimcompany.jangbogbackendver2.Util.UtilService.*;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * 해당 매장의 접근 권리가 있는지 확인하는 aop입니다
@@ -32,6 +43,8 @@ import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 @Slf4j
 public class BeforeSqlAop {
     private final EtcService etcService;
+    private final AuthorizationService authorizationService;
+
     /**
      * 상품/직원등록전 해당 매장에 대한
      * 권리가 있는지 확인
