@@ -18,7 +18,7 @@ public class SelectListDto {
     private String postCode;
     private long cardId;
     private long deliverRoomId;
-    private String price;
+    private int price;
 
     @QueryProjection
     public SelectListDto(CardEntity cardEntity, OrderEntity orderEntity, DeliverEntity deliverEntity) {
@@ -28,7 +28,7 @@ public class SelectListDto {
         this.postCode = addressColumn.getPostCode();
         this.cardId = cardEntity.getId();
         this.deliverRoomId = deliverEntity.getId();
-        this.price = UtilService.confirmPrice(cardEntity.getCommonPaymentEntity().getPrtcRemains());
+        this.price = cardEntity.getCommonPaymentEntity().getPrtcRemains();
     }
 
 
