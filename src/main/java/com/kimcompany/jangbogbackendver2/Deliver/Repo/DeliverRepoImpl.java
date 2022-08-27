@@ -6,9 +6,7 @@ import com.kimcompany.jangbogbackendver2.Deliver.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectListDto;
 
-import com.kimcompany.jangbogbackendver2.Order.Dto.*;
-import com.kimcompany.jangbogbackendver2.Order.Repo.OrderRepoCustom;
-import com.querydsl.core.types.dsl.BooleanExpression;
+import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverDetailEntity;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -16,18 +14,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.support.PageableExecutionUtils;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
 import static com.kimcompany.jangbogbackendver2.Deliver.Model.QDeliverDetailEntity.deliverDetailEntity;
 import static com.kimcompany.jangbogbackendver2.Deliver.Model.QDeliverEntity.deliverEntity;
 
-import static com.kimcompany.jangbogbackendver2.Member.Model.QClientEntity.clientEntity;
 import static com.kimcompany.jangbogbackendver2.Order.Model.QOrderEntity.orderEntity;
 import static com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity.cardEntity;
-import static com.kimcompany.jangbogbackendver2.Product.Model.QProductEntity.productEntity;
-import static com.kimcompany.jangbogbackendver2.ProductEvent.Model.QProductEventEntity.productEventEntity;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 @RequiredArgsConstructor
@@ -73,6 +67,16 @@ public class DeliverRepoImpl implements DeliverRepoCustom {
                 .where(deliverDetailEntity.deliverEntity.id.eq(deliverId), deliverEntity.storeEntity.id.eq(storeId),deliverEntity.commonColumn.state.ne(deleteState))
                 .groupBy(orderEntity.cardEntity.id)
                 .fetch();
+    }
+
+    @Override
+    public Optional<DeliverDetailEntity> selectByDeliverId(long deliverId) {
+        return Optional.ofNullable(jpaQueryFactory
+                .select(deliverDetailEntity)
+                .from(deliverDetailEntity)
+                .where(deliverDetailEntity.deliverEntity.id.eq(deliverId))
+                .fetchOne());
+
     }
 
 

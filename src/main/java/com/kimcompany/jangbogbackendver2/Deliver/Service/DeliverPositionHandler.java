@@ -1,5 +1,6 @@
 package com.kimcompany.jangbogbackendver2.Deliver.Service;
 
+import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.PrincipalDetails;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
@@ -15,12 +16,14 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.rmi.ServerError;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.ROLE_ADMIN;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 @Service
 @Slf4j
@@ -84,8 +87,9 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         Map<String,Object>params=UtilService.getQueryMap(session.getUri().getQuery());
         String deliverId = params.get("roomid").toString();
         String role=params.get("role").toString();
+        String storeId=params.get("storeId").toString();
         if(role.equals(ROLE_ADMIN)){
-            adminAction(Integer.parseInt(deliverId));
+            adminAction(Long.parseLong(deliverId),Long.parseLong(storeId));
         }else{
             clientAction(session,Integer.parseInt(deliverId));
         }
@@ -96,7 +100,11 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
      * 새 배달방생성
      * @param deliverId
      */
-    private void adminAction(long deliverId){
+    private void adminAction(long deliverId,long storeId) throws SQLException {
+        DeliverEntity deliverEntity = deliverSelectService.selectForDeliver(storeId, deliverId).orElseThrow(() -> new IllegalArgumentException("배달이 완료되었거나 조회 할 수없는 배달입니다"));
+        if(deliverEntity.getCommonColumn().getState()!=trueStateNum){
+            throw new IllegalArgumentException("배달이 완료된 상품이거나 진행중인 건입니다");
+        }
         if(!roomList.containsKey(deliverId)){
             List<Map<String, Object>> room = new ArrayList<>();
             roomList.put(deliverId, room);

@@ -113,8 +113,14 @@ public class BeforeSqlAop {
         }
         String query = session.getUri().getQuery();
         Map<String, Object> queryMap = getQueryMap(query);
-        authorizationService.pro(queryMap.get("access").toString());
-        etcService.confirmOwn(Long.parseLong(queryMap.get("storeId").toString()));
+        /**
+         * 테스트위해 유저는 제외
+         */
+        if(!queryMap.get("role").equals(ROLE_USER)){
+            authorizationService.pro(queryMap.get("access").toString());
+            etcService.confirmOwn(Long.parseLong(queryMap.get("storeId").toString()));
+        }
+
 
     }
 

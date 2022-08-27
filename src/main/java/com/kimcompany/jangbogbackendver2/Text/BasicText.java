@@ -42,6 +42,7 @@ public class BasicText {
     public static String failOrderUpdateMessage = "주문 정보 갱신에 실패했습니다";
     public static String failCardUpdateMessage = "결제정보 갱신에 실패했습니다";
     public static int employeePageSize = 10;
+    public static int deliveringState = 20;
 
 
 }

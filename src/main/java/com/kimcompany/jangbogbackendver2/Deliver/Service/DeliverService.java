@@ -10,6 +10,7 @@ import com.kimcompany.jangbogbackendver2.Deliver.Repo.DeliverDetailRepo;
 import com.kimcompany.jangbogbackendver2.Deliver.Repo.DeliverRepo;
 import com.kimcompany.jangbogbackendver2.Member.Model.ClientEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
+import com.kimcompany.jangbogbackendver2.Order.Repo.OrderRepo;
 import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
 import com.kimcompany.jangbogbackendver2.Payment.Service.CardSelectService;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.deliveringState;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.trueStateNum;
 
 @Service
@@ -34,6 +36,7 @@ public class DeliverService {
     private final EtcService etcService;
     private final DeliverRepo deliverRepo;
     private final DeliverDetailRepo deliverDetailRepo;
+    private final OrderRepo orderRepo;
 
 
     @Transactional(rollbackFor=Exception.class)
@@ -55,6 +58,13 @@ public class DeliverService {
     public List<SelectDto>selectForDetail(long storeId, long deliverId){
         etcService.confirmOwn(storeId);
         return deliverSelectService.selectForDetail(storeId, deliverId);
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updateDeliverAndDeliverDetailAndOrderState(long deliverId,int state){
+        deliverRepo.updateState(deliverId,state);
+        deliverDetailRepo.updateStateByDeliverId(state, deliverId);
+        DeliverDetailEntity deliverDetailEntity = deliverRepo.selectByDeliverId(deliverId).orElseThrow(() -> new IllegalArgumentException("조회 할 수없는 배달 입니다"));
+        return orderRepo.updateStateByCardId(state,deliverDetailEntity.getCardEntity().getId());
     }
 
 
