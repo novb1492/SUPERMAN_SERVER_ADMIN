@@ -111,6 +111,10 @@ public class BeforeSqlAop {
                 break;
             }
         }
+        String query = session.getUri().getQuery();
+        Map<String, Object> queryMap = getQueryMap(query);
+        authorizationService.pro(queryMap.get("access").toString());
+        etcService.confirmOwn(Long.parseLong(queryMap.get("storeId").toString()));
 
     }
 

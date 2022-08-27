@@ -62,7 +62,7 @@ public class DeliverRepoImpl implements DeliverRepoCustom {
     }
     @Override
     public List<SelectDto>selectForDetail(long storeId,long deliverId){
-       return jpaQueryFactory.select(new QSelectDto(cardEntity, orderEntity, deliverEntity,deliverDetailEntity))
+       return jpaQueryFactory.select(new QSelectDto(cardEntity, orderEntity,deliverDetailEntity))
                 .from(deliverDetailEntity)
                 .leftJoin(cardEntity)
                 .on(deliverDetailEntity.cardEntity.id.eq(cardEntity.id))
