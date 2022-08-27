@@ -39,17 +39,15 @@ public class DeliverController {
      * 배달 리스트 조회
      * @param request
      * @param storeId
-     * @param deliverId
      * @param state
      * @return
      */
-    @RequestMapping(value = "/deliver/list/{storeId}/{deliverId}/{state}",method = RequestMethod.POST)
-    public ResponseEntity<?>selectForList(HttpServletRequest request,@PathVariable String storeId,@PathVariable String deliverId,@PathVariable String state){
+    @RequestMapping(value = "/deliver/list/{storeId}/{state}",method = RequestMethod.GET)
+    public ResponseEntity<?>selectForList(HttpServletRequest request,@PathVariable String storeId,@PathVariable String state){
         int page = Integer.parseInt(request.getParameter("page"));
         long storeIdToLong = Long.parseLong(storeId);
-        long deliverIdToLong = Long.parseLong(deliverId);
         int stateToInt = Integer.parseInt(state);
-        SearchCondition searchCondition = SearchCondition.set(page, deliverPageSize, storeIdToLong, deliverIdToLong,stateToInt);
+        SearchCondition searchCondition = SearchCondition.set(page, deliverPageSize, storeIdToLong,stateToInt);
         return ResponseEntity.ok().body(deliverSelectService.selectForList(searchCondition));
     }
 

@@ -35,26 +35,27 @@ public class DeliverRepoImpl implements DeliverRepoCustom {
 
     @Override
     public Page<SelectListDto> selectForList(SearchCondition searchCondition) {
-        PageRequest pageRequest = PageRequest.of(searchCondition.getPage(), searchCondition.getPageSize());
+        System.out.println(searchCondition.toString());
+        PageRequest pageRequest = PageRequest.of(searchCondition.getPage()-1, searchCondition.getPageSize());
         List<SelectListDto> fetch = jpaQueryFactory.select(new QSelectListDto(cardEntity, orderEntity, deliverEntity))
                 .from(deliverDetailEntity)
+                .leftJoin(deliverEntity)
+                .on(deliverDetailEntity.deliverEntity.id.eq(deliverEntity.id))
                 .leftJoin(cardEntity)
                 .on(deliverDetailEntity.cardEntity.id.eq(cardEntity.id))
                 .leftJoin(orderEntity)
                 .on(orderEntity.cardEntity.id.eq(cardEntity.id))
-                .leftJoin(deliverEntity)
-                .on(deliverDetailEntity.deliverEntity.id.eq(deliverEntity.id))
-                .where(deliverDetailEntity.deliverEntity.id.eq(searchCondition.getDeliverId()),deliverEntity.commonColumn.state.eq(searchCondition.getState()), deliverEntity.storeEntity.id.eq(searchCondition.getStoreId()))
-                .groupBy(orderEntity.cardEntity.id)
+                .where(deliverEntity.commonColumn.state.eq(searchCondition.getState()), deliverEntity.storeEntity.id.eq(searchCondition.getStoreId()))
+                .groupBy(deliverDetailEntity.deliverEntity.id)
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
                 .orderBy(deliverDetailEntity.id.desc())
                 .fetch();
 
         JPAQuery<Long> count = jpaQueryFactory
-                .select(deliverDetailEntity.count())
+                .select(deliverDetailEntity.deliverEntity.id.countDistinct())
                 .from(deliverDetailEntity)
-                .where(deliverDetailEntity.deliverEntity.id.eq(searchCondition.getDeliverId()), deliverEntity.commonColumn.state.eq(searchCondition.getState()));
+                .where(deliverEntity.commonColumn.state.eq(searchCondition.getState()),deliverEntity.storeEntity.id.eq(searchCondition.getStoreId()));
         return PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
     }
     @Override

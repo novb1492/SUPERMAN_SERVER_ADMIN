@@ -47,23 +47,23 @@ class DeliverRepoImplTest {
         PageRequest pageRequest = PageRequest.of(1-1, 1);
         List<SelectListDto> fetch = jpaQueryFactory.select(new QSelectListDto(cardEntity, orderEntity, deliverEntity))
                 .from(deliverDetailEntity)
+                .leftJoin(deliverEntity)
+                .on(deliverDetailEntity.deliverEntity.id.eq(deliverEntity.id))
                 .leftJoin(cardEntity)
                 .on(deliverDetailEntity.cardEntity.id.eq(cardEntity.id))
                 .leftJoin(orderEntity)
                 .on(orderEntity.cardEntity.id.eq(cardEntity.id))
-                .leftJoin(deliverEntity)
-                .on(deliverDetailEntity.deliverEntity.id.eq(deliverEntity.id))
-                .where(deliverDetailEntity.deliverEntity.id.eq(5L), deliverEntity.storeEntity.id.eq(1L))
-                .groupBy(orderEntity.cardEntity.id)
-                .offset(0)
-                .limit(2)
+                .where(deliverEntity.commonColumn.state.eq(1), deliverEntity.storeEntity.id.eq(1L))
+                .groupBy(deliverDetailEntity.deliverEntity.id)
+                .offset(pageRequest.getOffset())
+                .limit(pageRequest.getPageSize())
                 .orderBy(deliverDetailEntity.id.desc())
                 .fetch();
 
         JPAQuery<Long> count = jpaQueryFactory
                 .select(deliverDetailEntity.count())
                 .from(deliverDetailEntity)
-                .where(deliverDetailEntity.deliverEntity.id.eq(5L));
+                .where(deliverEntity.storeEntity.id.eq(1L));
         // Result
         Page<SelectListDto> SelectListDtos = PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
         logger.info("페이지:{}",SelectListDtos.getTotalPages());

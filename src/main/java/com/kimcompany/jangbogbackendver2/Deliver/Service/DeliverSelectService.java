@@ -3,7 +3,6 @@ package com.kimcompany.jangbogbackendver2.Deliver.Service;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectListDto;
-import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectListDtoAddTotalPrice;
 import com.kimcompany.jangbogbackendver2.Deliver.Repo.DeliverRepo;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +18,8 @@ import java.util.List;
 public class DeliverSelectService {
     private final DeliverRepo deliverRepo;
 
-    public SelectListDtoAddTotalPrice selectForList(SearchCondition searchCondition){
-        Page<SelectListDto> selectListDtos = deliverRepo.selectForList(searchCondition);
-        SelectListDtoAddTotalPrice selectListDtoAddTotalPrice = new SelectListDtoAddTotalPrice();
-        selectListDtoAddTotalPrice.setSelectListDtos(selectListDtos);
-        selectListDtoAddTotalPrice.setTotalPrice(selectListDtos.getContent());
-        return selectListDtoAddTotalPrice;
+    public Page<SelectListDto> selectForList(SearchCondition searchCondition){
+        return  deliverRepo.selectForList(searchCondition);
     }
     public List<SelectDto>selectForDetail(long storeId,long deliverId){
         return deliverRepo.selectForDetail(storeId, deliverId);
