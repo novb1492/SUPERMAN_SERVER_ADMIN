@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -24,4 +25,5 @@ public class DeliverSelectService {
     public List<SelectDto>selectForDetail(long storeId,long deliverId){
         return deliverRepo.selectForDetail(storeId, deliverId);
     }
+
 }

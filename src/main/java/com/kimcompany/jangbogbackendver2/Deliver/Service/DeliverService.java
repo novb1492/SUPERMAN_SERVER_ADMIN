@@ -2,6 +2,7 @@ package com.kimcompany.jangbogbackendver2.Deliver.Service;
 
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectDto;
+
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverDetailEntity;
 import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverEntity;
@@ -55,6 +56,7 @@ public class DeliverService {
         etcService.confirmOwn(storeId);
         return deliverSelectService.selectForDetail(storeId, deliverId);
     }
+
 
 
 }

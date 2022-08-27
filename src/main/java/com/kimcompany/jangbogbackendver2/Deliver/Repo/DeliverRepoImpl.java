@@ -5,6 +5,7 @@ import com.kimcompany.jangbogbackendver2.Deliver.Dto.QSelectListDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectListDto;
+
 import com.kimcompany.jangbogbackendver2.Order.Dto.*;
 import com.kimcompany.jangbogbackendver2.Order.Repo.OrderRepoCustom;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 import static com.kimcompany.jangbogbackendver2.Deliver.Model.QDeliverDetailEntity.deliverDetailEntity;
 import static com.kimcompany.jangbogbackendver2.Deliver.Model.QDeliverEntity.deliverEntity;
+
 import static com.kimcompany.jangbogbackendver2.Member.Model.QClientEntity.clientEntity;
 import static com.kimcompany.jangbogbackendver2.Order.Model.QOrderEntity.orderEntity;
 import static com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity.cardEntity;
@@ -72,5 +74,6 @@ public class DeliverRepoImpl implements DeliverRepoCustom {
                 .groupBy(orderEntity.cardEntity.id)
                 .fetch();
     }
+
 
 }

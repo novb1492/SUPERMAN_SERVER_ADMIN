@@ -44,7 +44,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class BeforeSqlAop {
     private final EtcService etcService;
     private final AuthorizationService authorizationService;
-
     /**
      * 상품/직원등록전 해당 매장에 대한
      * 권리가 있는지 확인
