@@ -1,6 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Deliver;
 
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SearchCondition;
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.StartDeliverDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverSelectService;
 import com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverService;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.deliverPageSize;
+import java.sql.SQLException;
+
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,6 +65,25 @@ public class DeliverController {
         long storeIdToLong = Long.parseLong(storeId);
         long deliverIdToLong = Long.parseLong(deliverId);
         return ResponseEntity.ok().body(deliverService.selectForDetail(storeIdToLong, deliverIdToLong));
+    }
+    @RequestMapping(value = "/deliver/start",method = RequestMethod.PUT)
+    public ResponseEntity<?>deliverStart(@Valid @RequestBody StartDeliverDto startDeliverDto) throws SQLException {
+        int stateToInt=startDeliverDto.getState();
+        deliverService.updateDeliverAndDeliverDetailAndOrderState(startDeliverDto);
+        JSONObject response = new JSONObject();
+        String msg=null;
+        /**
+         * enum으로 if문 제거가능
+         */
+        if (stateToInt==deliveringState){
+            msg = "배달 시작";
+        }else if(stateToInt==deliverDoneState){
+            msg="배달완료";
+        }else if(stateToInt==deliverCancelState){
+            msg="배달취소";
+        }
+        response.put("message",msg);
+        return ResponseEntity.ok().body(response);
     }
 
 }

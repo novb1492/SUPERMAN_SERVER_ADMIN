@@ -3,6 +3,7 @@ package com.kimcompany.jangbogbackendver2.Deliver.Service;
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectDto;
 
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.StartDeliverDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverDetailEntity;
 import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverEntity;
@@ -22,10 +23,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.deliveringState;
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.trueStateNum;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 @Service
 @RequiredArgsConstructor
@@ -60,11 +61,24 @@ public class DeliverService {
         return deliverSelectService.selectForDetail(storeId, deliverId);
     }
     @Transactional(rollbackFor = Exception.class)
-    public Integer updateDeliverAndDeliverDetailAndOrderState(long deliverId,int state){
-        deliverRepo.updateState(deliverId,state);
-        deliverDetailRepo.updateStateByDeliverId(state, deliverId);
+    public void updateDeliverAndDeliverDetailAndOrderState(StartDeliverDto startDeliverDto) throws SQLException {
+        long deliverId = startDeliverDto.getDeliverId();
+        int state = startDeliverDto.getState();
+        long storeId = startDeliverDto.getStoreId();
+        if(state!=deliveringState&&state!=deliverCancelState&&state!=deliverDoneState){
+            throw new IllegalArgumentException("올바르지 않는 스테이트 값입니다");
+        }
+        int a=deliverRepo.updateState(deliverId,state,storeId);
+        int b=deliverDetailRepo.updateStateByDeliverId(state, deliverId);
         DeliverDetailEntity deliverDetailEntity = deliverRepo.selectByDeliverId(deliverId).orElseThrow(() -> new IllegalArgumentException("조회 할 수없는 배달 입니다"));
-        return orderRepo.updateStateByCardId(state,deliverDetailEntity.getCardEntity().getId());
+        int c=orderRepo.updateStateByCardId(state,deliverDetailEntity.getCardEntity().getId(),storeId);
+        System.out.println(a);
+        System.out.println(b);
+        System.out.println(c);
+        if(a==0||b==0||c==0){
+            throw new SQLException("상태갱신 실패");
+        }
+
     }
 
 

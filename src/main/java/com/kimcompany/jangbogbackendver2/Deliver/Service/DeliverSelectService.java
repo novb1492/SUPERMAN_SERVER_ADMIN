@@ -31,7 +31,7 @@ public class DeliverSelectService {
         return deliverRepo.selectForDetail(storeId, deliverId);
     }
     public Optional<DeliverEntity>selectForDeliver(long storeId,long deliverId){
-        return deliverRepo.findByStoreIdAndStateAndId(trueStateNum, deliverId, storeId);
+        return deliverRepo.findByStoreIdAndStateAndId( deliverId, storeId);
     }
 
 }

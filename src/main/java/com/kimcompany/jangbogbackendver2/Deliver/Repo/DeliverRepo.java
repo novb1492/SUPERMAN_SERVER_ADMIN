@@ -10,11 +10,11 @@ import java.util.Optional;
 
 public interface DeliverRepo extends JpaRepository<DeliverEntity,Long>,DeliverRepoCustom {
 
-    @Query("select  d from DeliverEntity d where d.commonColumn.state=:state and d.id=:id and d.storeEntity.id=:storeId")
-    Optional<DeliverEntity> findByStoreIdAndStateAndId(@Param("state") int state, @Param("id") long deliverId, @Param("storeId") long storeId);
+    @Query("select  d from DeliverEntity d where d.id=:id and d.storeEntity.id=:storeId")
+    Optional<DeliverEntity> findByStoreIdAndStateAndId( @Param("id") long deliverId, @Param("storeId") long storeId);
 
     @Modifying
-    @Query("update DeliverEntity d set d.commonColumn.state=:state where d.id=:id")
-    Integer updateState(@Param("id") long deliverId, @Param("state") int state);
+    @Query("update DeliverEntity d set d.commonColumn.state=:state where d.id=:id and d.storeEntity.id=:storeId")
+    Integer updateState(@Param("id") long deliverId, @Param("state") int state,@Param("storeId") long storeId);
 
 }

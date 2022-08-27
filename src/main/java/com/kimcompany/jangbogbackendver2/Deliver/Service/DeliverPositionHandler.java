@@ -46,7 +46,6 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
     }
     public void stataAction(JSONObject xAndYRoom) {
         String state = xAndYRoom.get("state").toString();
-        long storeId = Long.parseLong(xAndYRoom.get("storeId").toString());
         long deliverId=Long.parseLong(xAndYRoom.get("roomid").toString());
         if(state.equals("done")){
 
@@ -55,7 +54,8 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         }else if(state.equals("cancelAll")){
 
         }else if(state.equals("start")){
-            startDeliver(xAndYRoom,deliverId);
+            long storeId = Long.parseLong(xAndYRoom.get("storeId").toString());
+            startDeliver(xAndYRoom,deliverId,storeId);
         }
     }
 
@@ -64,7 +64,7 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
      * 종업원 위치 전송
      * @param xAndYRoom
      */
-    private void startDeliver(JSONObject xAndYRoom,long deliverId){
+    private void startDeliver(JSONObject xAndYRoom,long deliverId,long storeId){
         try {
             for(Map<String,Object>room:roomList.get(deliverId)){
                 try {
@@ -87,8 +87,8 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         Map<String,Object>params=UtilService.getQueryMap(session.getUri().getQuery());
         String deliverId = params.get("roomid").toString();
         String role=params.get("role").toString();
-        String storeId=params.get("storeId").toString();
         if(role.equals(ROLE_ADMIN)){
+            String storeId=params.get("storeId").toString();
             adminAction(Long.parseLong(deliverId),Long.parseLong(storeId));
         }else{
             clientAction(session,Integer.parseInt(deliverId));
@@ -102,8 +102,8 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
      */
     private void adminAction(long deliverId,long storeId) throws SQLException {
         DeliverEntity deliverEntity = deliverSelectService.selectForDeliver(storeId, deliverId).orElseThrow(() -> new IllegalArgumentException("배달이 완료되었거나 조회 할 수없는 배달입니다"));
-        if(deliverEntity.getCommonColumn().getState()!=trueStateNum){
-            throw new IllegalArgumentException("배달이 완료된 상품이거나 진행중인 건입니다");
+        if(deliverEntity.getCommonColumn().getState()!= deleteState){
+            throw new IllegalArgumentException("조회 할 수 없는 배달입니다");
         }
         if(!roomList.containsKey(deliverId)){
             List<Map<String, Object>> room = new ArrayList<>();
