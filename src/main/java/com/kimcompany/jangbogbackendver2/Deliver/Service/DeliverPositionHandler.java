@@ -52,11 +52,20 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         }else if(state.equals("cancel")){
 
         }else if(state.equals("cancelAll")){
-
+            cancelAll(deliverId);
         }else if(state.equals("start")){
             long storeId = Long.parseLong(xAndYRoom.get("storeId").toString());
             startDeliver(xAndYRoom,deliverId,storeId);
         }
+    }
+
+    /**
+     * 매장에서 전체 취소시
+     * 배달방 삭제
+     * @param deliverId
+     */
+    private void cancelAll(long deliverId){
+        roomList.remove(deliverId);
     }
 
     /**
@@ -150,6 +159,7 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         Map<String,Object>roomDetail=new HashMap<>();
         roomDetail.put("roomNumber", deliverId);
         roomDetail.put("userId",userId);
+        roomDetail.put("deliverDetailId",userId);
         roomDetail.put("sessionId", session.getId());
         roomDetail.put("session", session);
         return roomDetail;
