@@ -102,7 +102,7 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
      */
     private void adminAction(long deliverId,long storeId) throws SQLException {
         DeliverEntity deliverEntity = deliverSelectService.selectForDeliver(storeId, deliverId).orElseThrow(() -> new IllegalArgumentException("배달이 완료되었거나 조회 할 수없는 배달입니다"));
-        if(deliverEntity.getCommonColumn().getState()!= deleteState){
+        if(deliverEntity.getCommonColumn().getState()== deleteState){
             throw new IllegalArgumentException("조회 할 수 없는 배달입니다");
         }
         if(!roomList.containsKey(deliverId)){

@@ -7,6 +7,9 @@ import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectListDto;
 
 import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverDetailEntity;
+import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.kimcompany.jangbogbackendver2.Util.UtilService;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ import static com.kimcompany.jangbogbackendver2.Deliver.Model.QDeliverEntity.del
 
 import static com.kimcompany.jangbogbackendver2.Order.Model.QOrderEntity.orderEntity;
 import static com.kimcompany.jangbogbackendver2.Payment.Model.QCardEntity.cardEntity;
+import static com.kimcompany.jangbogbackendver2.Store.Model.QStoreEntity.storeEntity;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 @RequiredArgsConstructor
@@ -41,7 +45,7 @@ public class DeliverRepoImpl implements DeliverRepoCustom {
                 .on(deliverDetailEntity.cardEntity.id.eq(cardEntity.id))
                 .leftJoin(orderEntity)
                 .on(orderEntity.cardEntity.id.eq(cardEntity.id))
-                .where(deliverEntity.commonColumn.state.eq(searchCondition.getState()), deliverEntity.storeEntity.id.eq(searchCondition.getStoreId()))
+                .where(whereState(searchCondition.getState()), deliverEntity.storeEntity.id.eq(searchCondition.getStoreId()))
                 .groupBy(deliverDetailEntity.deliverEntity.id)
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
@@ -51,8 +55,14 @@ public class DeliverRepoImpl implements DeliverRepoCustom {
         JPAQuery<Long> count = jpaQueryFactory
                 .select(deliverDetailEntity.deliverEntity.id.countDistinct())
                 .from(deliverDetailEntity)
-                .where(deliverEntity.commonColumn.state.eq(searchCondition.getState()),deliverEntity.storeEntity.id.eq(searchCondition.getStoreId()));
+                .where(whereState(searchCondition.getState()),deliverEntity.storeEntity.id.eq(searchCondition.getStoreId()));
         return PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
+    }
+    private BooleanExpression whereState(int state) {
+        if (state==1) {
+            return deliverEntity.commonColumn.state.eq(state).or(deliverEntity.commonColumn.state.eq(deliveringState));
+        }
+        return deliverEntity.commonColumn.state.eq(state);
     }
     @Override
     public List<SelectDto>selectForDetail(long storeId,long deliverId){
