@@ -1,24 +1,25 @@
 package com.kimcompany.jangbogbackendver2.Employee;
 
 
+import com.kimcompany.jangbogbackendver2.Employee.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Employee.Dto.TryInsertDto;
+import com.kimcompany.jangbogbackendver2.Text.BasicText;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.employeePageSize;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequiredArgsConstructor
 public class EmployeeController {
     private final EmployeeService employeeService;
-
+    private final EmployeeSelectService employeeSelectService;
     /**
      * 직원등록
      * @param tryInsertDto
@@ -30,6 +31,14 @@ public class EmployeeController {
         JSONObject response = new JSONObject();
         response.put("message","종업원 등록에 성공했습니다");
         return ResponseEntity.ok().body(response);
+    }
+
+    @RequestMapping(value = "/employee/list/{storeId}",method = POST)
+    public ResponseEntity<?>selectForList(HttpServletRequest request, @PathVariable String storeId){
+        int page = Integer.parseInt(request.getParameter("page"));
+        long storeIdToLong = Long.parseLong(storeId);
+        SearchCondition searchCondition = SearchCondition.set(page, employeePageSize, storeIdToLong);
+        return ResponseEntity.ok().body(employeeSelectService.selectForList(searchCondition));
     }
 
 }

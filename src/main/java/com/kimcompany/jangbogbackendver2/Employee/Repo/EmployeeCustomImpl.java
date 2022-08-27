@@ -1,15 +1,18 @@
 package com.kimcompany.jangbogbackendver2.Employee.Repo;
 
-import com.kimcompany.jangbogbackendver2.Employee.Dto.NotyEmployeeDto;
-import com.kimcompany.jangbogbackendver2.Employee.Dto.QNotyEmployeeDto;
+import com.kimcompany.jangbogbackendver2.Employee.Dto.*;
 import com.kimcompany.jangbogbackendver2.Employee.Model.QEmployeeEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.QMemberEntity;
 import com.kimcompany.jangbogbackendver2.Store.Dto.InsertEmployNotyDto;
 import com.kimcompany.jangbogbackendver2.Store.Dto.QInsertEmployNotyDto;
 import com.kimcompany.jangbogbackendver2.Store.Model.QStoreEntity;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
@@ -53,6 +56,25 @@ public class EmployeeCustomImpl implements EmployeeCustom{
                 .where(employeeEntity.commonColumn.state.eq(trueStateNum), employeeEntity.storeEntity.id.eq(storeId)
                         , memberEntity.role.eq(ROLE_ADMIN).or(memberEntity.role.eq(ROLE_MANAGE)))
                 .fetch();
+    }
+    @Override
+    public Page<SelectListDto>selectForList(SearchCondition searchCondition){
+        PageRequest pageRequest = PageRequest.of(searchCondition.getPage(), searchCondition.getPageSize());
+        List<SelectListDto> fetch = jpaQueryFactory.select(new QSelectListDto(memberEntity, employeeEntity))
+                .from(employeeEntity)
+                .leftJoin(memberEntity)
+                .on(employeeEntity.memberEntity.id.eq(memberEntity.id))
+                .where(employeeEntity.commonColumn.state.eq(trueStateNum), employeeEntity.storeEntity.id.eq(searchCondition.getStoreId()))
+                .orderBy(employeeEntity.id.desc())
+                .offset(pageRequest.getOffset())
+                .limit(pageRequest.getPageSize())
+                .fetch();
+        JPAQuery<Long> count = jpaQueryFactory
+                .select(employeeEntity.count())
+                .from(employeeEntity)
+                .where(employeeEntity.commonColumn.state.eq(trueStateNum), employeeEntity.storeEntity.id.eq(searchCondition.getStoreId()));
+
+        return PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
     }
 
 }
