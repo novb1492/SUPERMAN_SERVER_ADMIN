@@ -72,9 +72,6 @@ public class DeliverService {
         int b=deliverDetailRepo.updateStateByDeliverId(state, deliverId);
         DeliverDetailEntity deliverDetailEntity = deliverRepo.selectByDeliverId(deliverId).orElseThrow(() -> new IllegalArgumentException("조회 할 수없는 배달 입니다"));
         int c=orderRepo.updateStateByCardId(state,deliverDetailEntity.getCardEntity().getId(),storeId);
-        System.out.println(a);
-        System.out.println(b);
-        System.out.println(c);
         if(a==0||b==0||c==0){
             throw new SQLException("상태갱신 실패");
         }
