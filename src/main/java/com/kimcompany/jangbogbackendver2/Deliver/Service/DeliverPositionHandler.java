@@ -48,9 +48,9 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         String state = xAndYRoom.get("state").toString();
         long deliverId=Long.parseLong(xAndYRoom.get("roomid").toString());
         if(state.equals("done")){
-
+            sendOutAtArr(Long.parseLong(xAndYRoom.get("deliverDetailId").toString()), deliverId);
         }else if(state.equals("cancel")){
-            cancel(Long.parseLong(xAndYRoom.get("deliverDetailId").toString()),deliverId);
+            sendOutAtArr(Long.parseLong(xAndYRoom.get("deliverDetailId").toString()),deliverId);
         }else if(state.equals("cancelAll")){
             cancelAll(deliverId);
         }else if(state.equals("start")){
@@ -58,7 +58,14 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
             startDeliver(xAndYRoom,deliverId,storeId);
         }
     }
-    private void cancel(long deliverDetailId,long deliverId){
+
+    /**
+     * 각 배달완료 아니면 배달취소시
+     * 웹소캣 배열에서 내보내는 함수
+     * @param deliverDetailId
+     * @param deliverId
+     */
+    private void sendOutAtArr(long deliverDetailId,long deliverId){
         try {
             int index=0;
             for(Map<String,Object>room:roomList.get(deliverId)){
@@ -158,17 +165,9 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         room.add(makeRoomDetail(session, deliverId, deliverDetailId));
         roomList.put(deliverId, room);
     }
-    private MemberEntity getLoginInfo(WebSocketSession session) {
-        AbstractAuthenticationToken principal=(AbstractAuthenticationToken) session.getPrincipal();
-        PrincipalDetails principalDetails= (PrincipalDetails) principal.getPrincipal();
-        return principalDetails.getMemberEntity();
-    }
     @Override //연결이끊기면 자동으로 작동하는함수
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         //권한에 따라
-        Map<String,Object>params=UtilService.getQueryMap(session.getUri().getQuery());
-        String deliverId = params.get("roomid").toString();
-
     }
 
     /**
@@ -186,11 +185,4 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         roomDetail.put("session", session);
         return roomDetail;
     }
-/**
- *  나중에 구매자 웹소캣에 들어갈 내용
- */
-//    List<Map<String, Object>> room = new ArrayList<>();
-//            room.add(makeRoomDetail(session, deliverId, 1L));
-//            roomList.put(Integer.parseInt(deliverId), room);
-
 }
