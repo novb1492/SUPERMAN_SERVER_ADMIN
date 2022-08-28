@@ -77,13 +77,12 @@ public class DeliverController {
          */
         if (stateToInt==deliveringState){
             msg = "배달 시작";
-        }else if(stateToInt==deliverDoneState){
-            msg="배달완료";
         }else if(stateToInt==deliverCancelState){
-            msg="배달취소";
+            msg="전체 배달취소";
         }
         response.put("message",msg);
         return ResponseEntity.ok().body(response);
     }
+
 
 }

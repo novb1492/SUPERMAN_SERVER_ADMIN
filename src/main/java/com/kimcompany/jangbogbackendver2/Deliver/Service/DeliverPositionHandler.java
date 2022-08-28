@@ -50,7 +50,7 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         if(state.equals("done")){
 
         }else if(state.equals("cancel")){
-
+            cancel(Long.parseLong(xAndYRoom.get("deliverDetailId").toString()),deliverId);
         }else if(state.equals("cancelAll")){
             cancelAll(deliverId);
         }else if(state.equals("start")){
@@ -58,7 +58,29 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
             startDeliver(xAndYRoom,deliverId,storeId);
         }
     }
+    private void cancel(long deliverDetailId,long deliverId){
+        try {
+            int index=0;
+            for(Map<String,Object>room:roomList.get(deliverId)){
+                try {
+                    if(room.get("deliverDetailId").toString().equals(Long.toString(deliverDetailId))){
+                        log.info("삭제번호:{}",deliverDetailId);
+                        List<Map<String, Object>> roomDetails = roomList.get(deliverId);
+                        roomDetails.remove(index);
+                        roomList.put(deliverId, roomDetails);
+                        break;
+                    }
+                } catch (Exception e) {
 
+                }
+                index += 1;
+            }
+
+        } catch (NullPointerException e) {
+
+
+        }
+    }
     /**
      * 매장에서 전체 취소시
      * 배달방 삭제
@@ -100,7 +122,8 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
             String storeId=params.get("storeId").toString();
             adminAction(Long.parseLong(deliverId),Long.parseLong(storeId));
         }else{
-            clientAction(session,Integer.parseInt(deliverId));
+            String deliverDetailId = params.get("deliverDetailId").toString();
+            clientAction(session,Long.parseLong(deliverId),Long.parseLong(deliverDetailId));
         }
     }
 
@@ -125,14 +148,14 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
      * @param session
      * @param deliverId
      */
-    private void clientAction(WebSocketSession session,long deliverId){
+    private void clientAction(WebSocketSession session,long deliverId,long deliverDetailId){
         if(!roomList.containsKey(deliverId)){
             throw new IllegalArgumentException("아직 배달이 시작되지 않았습니다");
         }
         //배달방 정보 가져오기
         List<Map<String, Object>> room = roomList.get(deliverId);
         //현재 접속 웹세션 정보 배열에 추가
-        room.add(makeRoomDetail(session, deliverId, 1L));
+        room.add(makeRoomDetail(session, deliverId, deliverDetailId));
         roomList.put(deliverId, room);
     }
     private MemberEntity getLoginInfo(WebSocketSession session) {
@@ -152,14 +175,13 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
      * 웹소캣 배달방 입장시 필요 정보 만드는 함수
      * @param session
      * @param deliverId
-     * @param userId
      * @return
      */
-    public Map<String,Object> makeRoomDetail(WebSocketSession session, long deliverId, long userId) {
+    public Map<String,Object> makeRoomDetail(WebSocketSession session, long deliverId,long deliverDetailId) {
         Map<String,Object>roomDetail=new HashMap<>();
         roomDetail.put("roomNumber", deliverId);
-        roomDetail.put("userId",userId);
-        roomDetail.put("deliverDetailId",userId);
+        roomDetail.put("userId",1L);
+        roomDetail.put("deliverDetailId",deliverDetailId);
         roomDetail.put("sessionId", session.getId());
         roomDetail.put("session", session);
         return roomDetail;
