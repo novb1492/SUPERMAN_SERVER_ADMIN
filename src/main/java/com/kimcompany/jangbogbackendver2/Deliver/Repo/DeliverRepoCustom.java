@@ -15,5 +15,5 @@ public interface DeliverRepoCustom {
 
     public Page<SelectListDto> selectForList(SearchCondition searchCondition);
     public List<SelectDto> selectForDetail(long storeId, long deliverId);
-    Optional<DeliverDetailEntity> selectByDeliverId(long deliverId);
+   List<DeliverDetailEntity> selectByDeliverId(long deliverId);
 }

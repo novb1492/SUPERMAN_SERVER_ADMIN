@@ -62,7 +62,7 @@ public class DeliverRepoImpl implements DeliverRepoCustom {
         if (state==1) {
             return deliverEntity.commonColumn.state.eq(state).or(deliverEntity.commonColumn.state.eq(deliveringState));
         }
-        return deliverEntity.commonColumn.state.eq(state);
+        return deliverEntity.commonColumn.state.eq(state).or(deliverEntity.commonColumn.state.eq(deliverCancelState));
     }
     @Override
     public List<SelectDto>selectForDetail(long storeId,long deliverId){
@@ -80,12 +80,12 @@ public class DeliverRepoImpl implements DeliverRepoCustom {
     }
 
     @Override
-    public Optional<DeliverDetailEntity> selectByDeliverId(long deliverId) {
-        return Optional.ofNullable(jpaQueryFactory
+    public List<DeliverDetailEntity> selectByDeliverId(long deliverId) {
+        return jpaQueryFactory
                 .select(deliverDetailEntity)
                 .from(deliverDetailEntity)
                 .where(deliverDetailEntity.deliverEntity.id.eq(deliverId))
-                .fetchOne());
+                .fetch();
 
     }
 

@@ -40,6 +40,7 @@ public class DeliverService {
     private final DeliverRepo deliverRepo;
     private final DeliverDetailRepo deliverDetailRepo;
     private final OrderRepo orderRepo;
+    private final AsyncService asyncService;
 
 
     @Transactional(rollbackFor=Exception.class)
@@ -72,8 +73,11 @@ public class DeliverService {
         }
         int a=deliverRepo.updateState(deliverId,state,storeId);
         int b=deliverDetailRepo.updateStateByDeliverId(state, deliverId);
-        DeliverDetailEntity deliverDetailEntity = deliverRepo.selectByDeliverId(deliverId).orElseThrow(() -> new IllegalArgumentException("조회 할 수없는 배달 입니다"));
-        int c=orderRepo.updateStateByCardId(state,deliverDetailEntity.getCardEntity().getId(),storeId);
+        List<DeliverDetailEntity> deliverDetailEntity = deliverRepo.selectByDeliverId(deliverId);
+        if(deliverDetailEntity.isEmpty()){
+            throw new IllegalArgumentException("조회 할 수없는 배달 입니다");
+        }
+        int c=orderRepo.updateStateByCardId(state,deliverDetailEntity.get(0).getCardEntity().getId(),storeId);
         if(a==0||b==0||c==0){
             throw new SQLException("상태갱신 실패");
         }
@@ -83,7 +87,8 @@ public class DeliverService {
     public void updateDeliverAndDeliverDetailAndOrderState(ChangeDetailDto changeDetailDto){
         long deliverDetailId = changeDetailDto.getDeliverDetailId();
         long storeId = changeDetailDto.getStoreId();
-        DeliverEntity deliverEntity = deliverRepo.findByStoreIdAndStateAndId(changeDetailDto.getDeliverId(),storeId).orElseThrow(() -> new IllegalArgumentException("조회 할 수없는 배달 입니다"));
+        long deliverId = changeDetailDto.getDeliverId();
+        DeliverEntity deliverEntity = deliverRepo.findByStoreIdAndStateAndId(deliverId,storeId).orElseThrow(() -> new IllegalArgumentException("조회 할 수없는 배달 입니다"));
         List<DeliverDetailEntity> deliverDetailEntitys = deliverEntity.getDeliverDetailEntity();
         /**
          * 해당방 번호에 있는 배달이 맞는지 검사
@@ -101,6 +106,7 @@ public class DeliverService {
             int state = changeDetailDto.getState();
             deliverDetailRepo.updateDetailState(state, deliverDetailId);
             orderRepo.updateStateByCardId(state, deliverDetailEntity.getCardEntity().getId(), storeId);
+            asyncService.checkAfterUpdateDetail(deliverId,storeId);
         }else{
             throw new IllegalArgumentException("배달 상태변경에 실패했습니다");
         }
