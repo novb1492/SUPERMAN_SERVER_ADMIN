@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,6 +34,9 @@ public class DeliverEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INSERT_USER",referencedColumnName = "ADMIN_ID",nullable = false)
     private MemberEntity memberEntity;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "deliverEntity")
+    private List<DeliverDetailEntity> deliverDetailEntity;
 
     @Embedded
     private CommonColumn commonColumn;

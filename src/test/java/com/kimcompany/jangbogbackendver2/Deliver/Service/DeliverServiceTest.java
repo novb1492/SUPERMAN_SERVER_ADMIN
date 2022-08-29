@@ -1,5 +1,6 @@
 package com.kimcompany.jangbogbackendver2.Deliver.Service;
 
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.ChangeDetailDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.PrincipalDetails;
@@ -33,5 +34,15 @@ class DeliverServiceTest {
         deliverService.save(new TryInsertDto());
         assertThrows(IllegalArgumentException.class, () ->   deliverService.save(new TryInsertDto()));
         assertThrows(IllegalArgumentException.class, () ->  deliverService.save(new TryInsertDto()));
+    }
+    @Test
+    @DisplayName("one to many")
+    void test2(){
+        ChangeDetailDto changeDetailDto = new ChangeDetailDto();
+        changeDetailDto.setDeliverDetailId(5L);
+        changeDetailDto.setDeliverId(5L);
+        changeDetailDto.setState(100);
+        changeDetailDto.setStoreId(1L);
+        deliverService.updateDeliverAndDeliverDetailAndOrderState(changeDetailDto);
     }
 }

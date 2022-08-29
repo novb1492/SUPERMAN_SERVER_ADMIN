@@ -22,9 +22,10 @@ public class SelectDto {
     private String postcode;
     private String detailAddress;
     private String price;
+    private int state;
 
     @QueryProjection
-    public SelectDto(CardEntity cardEntity, OrderEntity orderEntity, DeliverEntity deliverEntity, DeliverDetailEntity deliverDetailEntity) {
+    public SelectDto(CardEntity cardEntity, OrderEntity orderEntity, DeliverDetailEntity deliverDetailEntity) {
         AddressColumn addressColumn = orderEntity.getAddressColumn();
         this.orderId = orderEntity.getId();
         this.cardId = cardEntity.getId();
@@ -33,6 +34,7 @@ public class SelectDto {
         this.detailAddress = addressColumn.getDetailAddress();
         this.price = UtilService.confirmPrice(cardEntity.getCommonPaymentEntity().getPrtcRemains());
         this.deliverDetailId = deliverDetailEntity.getId();
-        this.deliverId = deliverEntity.getId();
+        this.deliverId = deliverDetailEntity.getDeliverEntity().getId();
+        this.state = deliverDetailEntity.getCommonColumn().getState();
     }
 }
