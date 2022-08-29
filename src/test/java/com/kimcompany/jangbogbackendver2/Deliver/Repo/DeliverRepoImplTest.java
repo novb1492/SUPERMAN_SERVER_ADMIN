@@ -71,7 +71,7 @@ class DeliverRepoImplTest {
     @Test
     @DisplayName("배달 상세 조회")
     void test2(){
-        List<SelectDto> fetch = jpaQueryFactory.select(new QSelectDto(cardEntity, orderEntity, deliverEntity,deliverDetailEntity))
+        List<SelectDto> fetch = jpaQueryFactory.select(new QSelectDto(cardEntity, orderEntity,deliverDetailEntity))
                 .from(deliverDetailEntity)
                 .leftJoin(cardEntity)
                 .on(deliverDetailEntity.cardEntity.id.eq(cardEntity.id))

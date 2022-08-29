@@ -1,5 +1,6 @@
 package com.kimcompany.jangbogbackendver2.Deliver;
 
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.ChangeDetailDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SearchCondition;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.StartDeliverDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto;
@@ -66,7 +67,7 @@ public class DeliverController {
         long deliverIdToLong = Long.parseLong(deliverId);
         return ResponseEntity.ok().body(deliverService.selectForDetail(storeIdToLong, deliverIdToLong));
     }
-    @RequestMapping(value = "/deliver/start",method = RequestMethod.PUT)
+    @RequestMapping(value = "/deliver/state",method = RequestMethod.PUT)
     public ResponseEntity<?>deliverStart(@Valid @RequestBody StartDeliverDto startDeliverDto) throws SQLException {
         int stateToInt=startDeliverDto.getState();
         deliverService.updateDeliverAndDeliverDetailAndOrderState(startDeliverDto);
@@ -83,6 +84,25 @@ public class DeliverController {
         response.put("message",msg);
         return ResponseEntity.ok().body(response);
     }
+    @RequestMapping(value = "/deliver-detail/state",method = RequestMethod.PUT)
+    public ResponseEntity<?>deliverDetailState(@Valid @RequestBody ChangeDetailDto changeDetailDto) throws SQLException {
+        int state = changeDetailDto.getState();
+        deliverService.updateDeliverAndDeliverDetailAndOrderState(changeDetailDto);
+        JSONObject response = new JSONObject();
+        String msg=null;
+        /**
+         * enum으로 if문 제거가능
+         */
+        if (state==deliverDoneState){
+            msg = changeDetailDto.getDeliverDetailId()+"배달 완료";
+        }else if(state==deliverCancelState){
+            msg=changeDetailDto.getDeliverDetailId()+"배달취소";
+        }
+        response.put("message",msg);
+        return ResponseEntity.ok().body(response);
+    }
+
+
 
 
 }

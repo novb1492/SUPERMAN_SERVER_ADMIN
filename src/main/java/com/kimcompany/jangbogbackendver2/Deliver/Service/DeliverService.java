@@ -1,6 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Deliver.Service;
 
 import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.ChangeDetailDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SelectDto;
 
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.StartDeliverDto;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
@@ -74,6 +76,33 @@ public class DeliverService {
         int c=orderRepo.updateStateByCardId(state,deliverDetailEntity.getCardEntity().getId(),storeId);
         if(a==0||b==0||c==0){
             throw new SQLException("상태갱신 실패");
+        }
+
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public void updateDeliverAndDeliverDetailAndOrderState(ChangeDetailDto changeDetailDto){
+        long deliverDetailId = changeDetailDto.getDeliverDetailId();
+        long storeId = changeDetailDto.getStoreId();
+        DeliverEntity deliverEntity = deliverRepo.findByStoreIdAndStateAndId(changeDetailDto.getDeliverId(),storeId).orElseThrow(() -> new IllegalArgumentException("조회 할 수없는 배달 입니다"));
+        List<DeliverDetailEntity> deliverDetailEntitys = deliverEntity.getDeliverDetailEntity();
+        /**
+         * 해당방 번호에 있는 배달이 맞는지 검사
+         */
+        boolean flag=false;
+        DeliverDetailEntity deliverDetailEntity = new DeliverDetailEntity();
+        for(DeliverDetailEntity d:deliverDetailEntitys){
+            if(d.getId().equals(deliverDetailId)){
+                flag=true;
+                deliverDetailEntity = d;
+                break;
+            }
+        }
+        if(flag){
+            int state = changeDetailDto.getState();
+            deliverDetailRepo.updateDetailState(state, deliverDetailId);
+            orderRepo.updateStateByCardId(state, deliverDetailEntity.getCardEntity().getId(), storeId);
+        }else{
+            throw new IllegalArgumentException("배달 상태변경에 실패했습니다");
         }
 
     }
