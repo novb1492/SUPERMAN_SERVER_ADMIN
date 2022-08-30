@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.ROLE_ADMIN;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindCompanyNum;
 
 @Service
@@ -58,7 +59,7 @@ public class CompanyService {
     }
     public List<SelectListDto>selectForListNotPaging(){
         List<SelectListDto> selectListDtos = companySelectService.selectForListNotPaging(UtilService.getLoginUserId());
-        if(selectListDtos.isEmpty()){
+        if(selectListDtos.isEmpty()&&UtilService.getLoginUserRole().equals(ROLE_ADMIN)){
             throw new IllegalArgumentException(cantFindCompanyNum);
         }
         return selectListDtos;

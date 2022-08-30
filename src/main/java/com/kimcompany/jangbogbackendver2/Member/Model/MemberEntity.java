@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Table(name = "ADMIN",indexes = {@Index(name = "EMAIL_INDEX", columnList = "EMAIL"),@Index(name = "PHONE_INDEX", columnList = "PHONE"),@Index(name = "ID_INDEX", columnList = "ID")})
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class MemberEntity {
 
