@@ -53,7 +53,7 @@ public class SecurityConfig  {
                 .addFilter(new AuthorizationFilter(authenticationManager(authenticationConfiguration), authorizationService))
                 .formLogin().disable().httpBasic().disable()
                 .authorizeRequests()
-                .antMatchers("/login","/token-expire/**","/login-fail/**","/ws/**","/file/**").permitAll()
+                .antMatchers("/login","/token-expire/**","/login-fail/**","/ws/**").permitAll()
                 .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/manage/**").hasAnyAuthority("MANAGE","ADMIN")
                 .anyRequest().authenticated()
