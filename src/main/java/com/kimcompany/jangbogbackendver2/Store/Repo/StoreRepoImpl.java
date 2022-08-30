@@ -128,6 +128,7 @@ public class StoreRepoImpl implements StoreRepoCustom{
         JPAQuery<Long> count = jpaQueryFactory
                 .select(storeEntity.count())
                 .from(storeEntity)
+                .innerJoin(employeeEntity)
                 .on(storeEntity.id.eq(employeeEntity.storeEntity.id))
                 .where(employeeEntity.memberEntity.id.eq(adminId),storeEntity.commonColumn.state.ne(closingOfBusinessState));
         // Result
