@@ -1,6 +1,7 @@
 package com.kimcompany.jangbogbackendver2.Payment.Dto;
 
 import com.kimcompany.jangbogbackendver2.Payment.Model.CardEntity;
+import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,6 @@ public class SelectForOrderDto {
     public SelectForOrderDto(CardEntity cardEntity) {
         this.cardNum = cardEntity.getP_CARD_NUM();
         this.bankName = cardEntity.getP_FN_NM();
-        this.totalPrice = cardEntity.getP_CARD_APPLPRICE();
+        this.totalPrice = UtilService.confirmPrice( cardEntity.getCommonPaymentEntity().getPrtcRemains());
     }
 }
