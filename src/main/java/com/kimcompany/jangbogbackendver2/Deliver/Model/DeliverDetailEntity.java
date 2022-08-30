@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
@@ -17,6 +18,7 @@ import javax.persistence.*;
 @Getter
 @Table(name = "DELIVER_DETAIL",indexes = {@Index(name = "DELIVER_ID_INDEX",columnList = "DELIVER_DETAIL_DELIVER_ID"),
         @Index(name = "CARD_ID_INDEX",columnList = "DELIVER_DETAIL_CARD_ID")})
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class DeliverDetailEntity {
 
