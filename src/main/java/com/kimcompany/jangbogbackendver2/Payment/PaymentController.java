@@ -117,11 +117,26 @@ public class PaymentController {
         response.put("message", "결제번호:" + cardId + "가 전부 환불 되었습니다");
         return ResponseEntity.ok().body(response);
     }
+
+    /**
+     * 전체환불 요청
+     * @param refundDto
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws SQLException
+     */
     @RequestMapping(value = "/payment/cancle",method = RequestMethod.POST)
     public ResponseEntity<?> fail2(@Valid @RequestBody TryRefundDto refundDto) throws NoSuchAlgorithmException, SQLException {
         paymentService.refund(refundDto);
         JSONObject response = new JSONObject();
         response.put("message", "주문번호:" + refundDto.getOrderId() + "가 환불 되었습니다");
         return ResponseEntity.ok().body(response);
+    }
+    @RequestMapping(value = "/payment/chart/{year}/{month}/{storeId}",method = RequestMethod.GET)
+    public ResponseEntity<?> selectForChart(@PathVariable("year")String year,@PathVariable("month")String month,@PathVariable("storeId")String storeId) {
+        long storeIdLong = Long.parseLong(storeId);
+        int yearInt = Integer.parseInt(year);
+        int monthInt = Integer.parseInt(month);
+        return ResponseEntity.ok().body(paymentService.selectForPeriod(storeIdLong, yearInt, monthInt));
     }
 }

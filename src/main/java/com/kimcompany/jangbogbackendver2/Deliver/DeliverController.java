@@ -67,6 +67,13 @@ public class DeliverController {
         long deliverIdToLong = Long.parseLong(deliverId);
         return ResponseEntity.ok().body(deliverService.selectForDetail(storeIdToLong, deliverIdToLong));
     }
+
+    /**
+     * 배달시작/전체취소
+     * @param startDeliverDto
+     * @return
+     * @throws SQLException
+     */
     @RequestMapping(value = "/deliver/state",method = RequestMethod.PUT)
     public ResponseEntity<?>deliverStart(@Valid @RequestBody StartDeliverDto startDeliverDto) throws SQLException {
         int stateToInt=startDeliverDto.getState();
@@ -84,6 +91,13 @@ public class DeliverController {
         response.put("message",msg);
         return ResponseEntity.ok().body(response);
     }
+
+    /**
+     * 배달완료/해당배달취소
+     * @param changeDetailDto
+     * @return
+     * @throws SQLException
+     */
     @RequestMapping(value = "/deliver-detail/state",method = RequestMethod.PUT)
     public ResponseEntity<?>deliverDetailState(@Valid @RequestBody ChangeDetailDto changeDetailDto) throws SQLException {
         int state = changeDetailDto.getState();
