@@ -23,12 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.time.format.TextStyle;
+import java.util.*;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindStoreMessage;
@@ -163,21 +163,25 @@ public class PaymentService {
         }
         return newCount;
     }
-    public List<JSONObject>selectForPeriod(long storeId,int year,int requestMonth){
+    public Map<String,JSONObject>selectForPeriod(long storeId,int year,int requestMonth){
         LocalDateTime start = LocalDateTime.of(year, requestMonth, 1, 0, 0, 0);
-        LocalDateTime end = LocalDateTime.of(year, requestMonth, 31, 23, 59, 59);
+        /*
+         월별 말일 구하기
+         */
+        Calendar cal = Calendar.getInstance();
+        cal.set(year,requestMonth-1,1);
+        LocalDateTime end = LocalDateTime.of(year, requestMonth, cal.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
         List<CardEntity> cardEntities = cardSelectService.selectByStoreIdAndPeriod(storeId, start, end);
-        List<JSONObject> payments = new ArrayList<>();
+        Map<String, JSONObject> payments = new HashMap<>();
         JSONObject days = new JSONObject();
         JSONObject hours = new JSONObject();
         JSONObject dayOfWeeks = new JSONObject();
         for(CardEntity c:cardEntities){
             LocalDateTime localDateTime = c.getCommonColumn().getCreated();
-            System.out.println(localDateTime);
             int day = localDateTime.getDayOfMonth();
             int hour = localDateTime.getHour();
             DayOfWeek dayOfWeek = localDateTime.getDayOfWeek();
-            String dayOfWeekString = UtilService.getDayOfWeekString(dayOfWeek.getValue());
+            int dayOfWeekInt = dayOfWeek.getValue();
             long price = c.getCommonPaymentEntity().getPrtcRemains();
             if(days.containsKey(day)){
                 long dayPrice = Long.parseLong(days.get(day).toString());
@@ -193,17 +197,17 @@ public class PaymentService {
             }else{
                 hours.put(hour, price);
             }
-            if(dayOfWeeks.containsKey(dayOfWeekString)){
-                long hourPrice= Long.parseLong(dayOfWeeks.get(dayOfWeekString).toString());
+            if(dayOfWeeks.containsKey(dayOfWeekInt)){
+                long hourPrice= Long.parseLong(dayOfWeeks.get(dayOfWeekInt).toString());
                 hourPrice += price;
-                dayOfWeeks.put(dayOfWeekString, hourPrice);
+                dayOfWeeks.put(dayOfWeekInt, hourPrice);
             }else{
-                dayOfWeeks.put(dayOfWeekString, price);
+                dayOfWeeks.put(dayOfWeekInt, price);
             }
         }
-        payments.add(days);
-        payments.add(hours);
-        payments.add(dayOfWeeks);
+        payments.put("days",days);
+        payments.put("hours",hours);
+        payments.put("dayOfWeeks",dayOfWeeks);
         return payments;
     }
 

@@ -55,7 +55,28 @@ public class UtilService {
         }
         return s;
     }
-
+    public static String getHourString(int num){
+        String s = null;
+        switch (num){
+            case 0:  s = "twenty-four";
+                break;
+            case 1:  s = "one";
+                break;
+            case 2:  s = "two";
+                break;
+            case 3:  s = "three";
+                break;
+            case 4:  s = "목";
+                break;
+            case 5:  s = "금";
+                break;
+            case 6:  s = "토";
+                break;
+            default: s = "잘못된 숫자입니다";
+                break;
+        }
+        return s;
+    }
     public static Map<String, Object> getQueryMap(String query)
     {
         if (query==null) return null;

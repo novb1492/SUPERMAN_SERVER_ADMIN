@@ -132,7 +132,7 @@ public class PaymentController {
         response.put("message", "주문번호:" + refundDto.getOrderId() + "가 환불 되었습니다");
         return ResponseEntity.ok().body(response);
     }
-    @RequestMapping(value = "/payment/chart/{year}/{month}/{storeId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/payment/chart/{year}/{month}/{storeId}",method = RequestMethod.GET)
     public ResponseEntity<?> selectForChart(@PathVariable("year")String year,@PathVariable("month")String month,@PathVariable("storeId")String storeId) {
         long storeIdLong = Long.parseLong(storeId);
         int yearInt = Integer.parseInt(year);
