@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.employeePageSize;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
@@ -33,7 +34,13 @@ public class EmployeeController {
         return ResponseEntity.ok().body(response);
     }
 
-    @RequestMapping(value = "/employee/list/{storeId}",method = POST)
+    /**
+     * 매장별 직원조회
+     * @param request
+     * @param storeId
+     * @return
+     */
+    @RequestMapping(value = "/employee/list/{storeId}",method = GET)
     public ResponseEntity<?>selectForList(HttpServletRequest request, @PathVariable String storeId){
         int page = Integer.parseInt(request.getParameter("page"));
         long storeIdToLong = Long.parseLong(storeId);

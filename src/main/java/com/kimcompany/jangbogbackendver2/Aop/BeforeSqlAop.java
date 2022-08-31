@@ -88,6 +88,7 @@ public class BeforeSqlAop {
      */
     @Before("execution(* com.kimcompany.jangbogbackendver2.Product.Service.ProductService.selectForList(..))"
             +"||execution(* com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverSelectService.selectForList(..))"
+            +"||execution(* com.kimcompany.jangbogbackendver2.Employee.EmployeeSelectService.selectForList(..))"
     )
     public void checkBelong(JoinPoint joinPoint) throws Throwable{
         log.info("select전 소유 검사");
@@ -98,8 +99,10 @@ public class BeforeSqlAop {
                 break;
             }else if(obj instanceof SearchCondition){
                 log.info("배달리스트 조회전 소유검사");
-                SearchCondition searchCondition = (SearchCondition) obj;
-                storeId = searchCondition.getStoreId();
+                storeId = ((SearchCondition) obj).getStoreId();
+                break;
+            }else if(obj instanceof com.kimcompany.jangbogbackendver2.Employee.Dto.SearchCondition){
+                storeId = ((com.kimcompany.jangbogbackendver2.Employee.Dto.SearchCondition) obj).getStoreId();
                 break;
             }
         }
