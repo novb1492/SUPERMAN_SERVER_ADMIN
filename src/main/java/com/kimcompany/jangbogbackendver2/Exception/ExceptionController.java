@@ -54,9 +54,9 @@ public class ExceptionController {
         return ResponseEntity.status(BAD_REQUEST).body(response);
     }
 
-    @ExceptionHandler(InternalError.class)
-    public ResponseEntity<?> InternalError(Exception exception) {
-        log.info("InternalError:{}",exception.getMessage());
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> RuntimeException(RuntimeException exception) {
+        log.info("RuntimeException:{}",exception.getMessage());
         JSONObject response = new JSONObject();
         response.put("message", exception.getMessage());
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(response);
