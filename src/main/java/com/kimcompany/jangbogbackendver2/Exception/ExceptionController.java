@@ -109,4 +109,17 @@ public class ExceptionController {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(response);
     }
 
+    /**
+     * 널포인터
+     * @param exception
+     * @return
+     */
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<?> NullPointerException(NullPointerException exception) {
+        log.info("NullPointerException:{}",exception.getMessage());
+        JSONObject response = new JSONObject();
+        response.put("message", "예상치 못한 오류발생");
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(response);
+    }
+
 }
