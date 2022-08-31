@@ -8,10 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.deleteState;
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.trueStateNum;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,5 +26,8 @@ public class CardSelectService {
     }
     public Optional<CardEntity>selectById(long cardId,long storeId){
         return cardRepo.findByIdNotDelete(cardId, trueStateNum,storeId);
+    }
+    public List<CardEntity>selectByStoreIdAndPeriod(long storeId, LocalDateTime start,LocalDateTime end){
+        return cardRepo.findByPeriod(trueStateNum, start, end,storeId);
     }
 }

@@ -23,7 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindStoreMessage;
@@ -37,6 +42,8 @@ public class PaymentService {
     private final EtcService etcService;
     private final OrderRepo orderRepo;
     private final CardRepo cardRepo;
+    private final CardSelectService cardSelectService;
+
 
     @Transactional(rollbackFor = Exception.class)
     public void refundAll(long cardId) throws NoSuchAlgorithmException, SQLException {
@@ -101,15 +108,25 @@ public class PaymentService {
         if(!jsonObject.get("resultCode").equals("00")){
             throw new IllegalArgumentException("환불에 실패했습니다 사유:" + jsonObject.get("resultMsg"));
         }
+        /*
+            환불 요청 완료후
+            해당 결제번호 소속 주문 상태 검사 및 후처리
+         */
         afterRefund(storeId,cardId);
     }
     @Transactional
     public void afterRefund(long storeId,long cardId){
+        /*
+            해당결제번호의 모든 주문 조회
+         */
         List<Integer> states = orderSelectService.selectForAfterRefund(storeId, cardId);
         if(states.isEmpty()){
             return;
         }
         boolean flag=true;
+        /*
+            해당 결제 번호 모든 소속 주문 상태확인
+         */
         for(int state:states){
             if(state!= refundNum){
                 flag=false;
@@ -117,6 +134,10 @@ public class PaymentService {
             }
         }
         if(flag){
+            /*
+                해당 결제번호 소속 주문이 모두 환불되었다면
+                결제상태 변경
+             */
             orderRepo.updateAfterRefundCheck(refundAllNum, 0, cardId, storeId);
             cardRepo.updateState(deleteState, refundAllNum, cardId, storeId);
         }
@@ -142,4 +163,48 @@ public class PaymentService {
         }
         return newCount;
     }
+    public List<JSONObject>selectForPeriod(long storeId,int year,int requestMonth){
+        LocalDateTime start = LocalDateTime.of(year, requestMonth, 1, 0, 0, 0);
+        LocalDateTime end = LocalDateTime.of(year, requestMonth, 31, 23, 59, 59);
+        List<CardEntity> cardEntities = cardSelectService.selectByStoreIdAndPeriod(storeId, start, end);
+        List<JSONObject> payments = new ArrayList<>();
+        JSONObject days = new JSONObject();
+        JSONObject hours = new JSONObject();
+        JSONObject dayOfWeeks = new JSONObject();
+        for(CardEntity c:cardEntities){
+            LocalDateTime localDateTime = c.getCommonColumn().getCreated();
+            System.out.println(localDateTime);
+            int day = localDateTime.getDayOfMonth();
+            int hour = localDateTime.getHour();
+            DayOfWeek dayOfWeek = localDateTime.getDayOfWeek();
+            String dayOfWeekString = UtilService.getDayOfWeekString(dayOfWeek.getValue());
+            long price = c.getCommonPaymentEntity().getPrtcRemains();
+            if(days.containsKey(day)){
+                long dayPrice = Long.parseLong(days.get(day).toString());
+                dayPrice += price;
+                days.put(day, dayPrice);
+            }else{
+                days.put(day, price);
+            }
+            if(hours.containsKey(hour)){
+                long hourPrice= Long.parseLong(hours.get(hour).toString());
+                hourPrice += price;
+                hours.put(hour, hourPrice);
+            }else{
+                hours.put(hour, price);
+            }
+            if(dayOfWeeks.containsKey(dayOfWeekString)){
+                long hourPrice= Long.parseLong(dayOfWeeks.get(dayOfWeekString).toString());
+                hourPrice += price;
+                dayOfWeeks.put(dayOfWeekString, hourPrice);
+            }else{
+                dayOfWeeks.put(dayOfWeekString, price);
+            }
+        }
+        payments.add(days);
+        payments.add(hours);
+        payments.add(dayOfWeeks);
+        return payments;
+    }
+
 }

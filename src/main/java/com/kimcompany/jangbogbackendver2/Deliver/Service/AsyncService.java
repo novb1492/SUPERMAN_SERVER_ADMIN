@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.deliverDoneState;
-import static com.kimcompany.jangbogbackendver2.Text.BasicText.trueStateNum;
+import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +37,7 @@ public class AsyncService {
          */
         boolean flag=true;
         for(DeliverDetailEntity d:deliverDetailEntitys){
-            if(d.getCommonColumn().getState()== trueStateNum){
+            if(d.getCommonColumn().getState()== trueStateNum||d.getCommonColumn().getState()== deliveringState){
                 flag=false;
                 break;
             }

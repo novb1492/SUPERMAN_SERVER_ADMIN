@@ -1,7 +1,9 @@
 package com.kimcompany.jangbogbackendver2.Aop;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.ChangeDetailDto;
 import com.kimcompany.jangbogbackendver2.Deliver.Dto.SearchCondition;
+import com.kimcompany.jangbogbackendver2.Deliver.Dto.StartDeliverDto;
 import com.kimcompany.jangbogbackendver2.Employee.Dto.TryInsertDto;
 import com.kimcompany.jangbogbackendver2.Employee.EmployeeSelectService;
 import com.kimcompany.jangbogbackendver2.Exception.Exceptions.TokenException;
@@ -67,10 +69,12 @@ public class BeforeSqlAop {
                 log.info("상품 등록전 검사");
                 com.kimcompany.jangbogbackendver2.Product.Dto.TryInsertDto tryInsertDto=(com.kimcompany.jangbogbackendver2.Product.Dto.TryInsertDto)dto;
                 storeId = Long.parseLong(tryInsertDto.getId());
+                break;
             }else if(dto instanceof com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto ){
                 log.info("배달방 등록전 검사");
                 com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto tryInsertDto = (com.kimcompany.jangbogbackendver2.Deliver.Dto.TryInsertDto) dto;
                 storeId =Long.parseLong(tryInsertDto.getStoreId());
+                break;
             }
         }
         etcService.confirmOwn(storeId);
@@ -96,11 +100,17 @@ public class BeforeSqlAop {
                 log.info("배달리스트 조회전 소유검사");
                 SearchCondition searchCondition = (SearchCondition) obj;
                 storeId = searchCondition.getStoreId();
+                break;
             }
         }
         etcService.confirmOwn(storeId);
     }
 
+    /**
+     * 웹소켓 연결전 인증주입
+     * @param joinPoint
+     * @throws Throwable
+     */
     @Before("execution(* com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverPositionHandler.afterConnectionEstablished(..))")
     public void ws(JoinPoint joinPoint) throws Throwable{
         log.info("웹소캣 접근전 소유 검사");
@@ -120,8 +130,30 @@ public class BeforeSqlAop {
             authorizationService.pro(queryMap.get("access").toString());
             etcService.confirmOwn(Long.parseLong(queryMap.get("storeId").toString()));
         }
-
-
     }
+
+    /**
+     * 업데이트전 소유확인
+     * @param joinPoint
+     * @throws Throwable
+     */
+    @Before("execution(* com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverService.updateDeliverAndDeliverDetailAndOrderState(..))"
+            +"||execution(* com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverService.updateDeliverAndDeliverDetailAndOrderState(..))"
+    )
+    public void checkBeforeUpdate(JoinPoint joinPoint) throws Throwable{
+        log.info("update전 소유 검사");
+        long storeId = 0;
+        for (Object obj : joinPoint.getArgs()) {
+            if (obj instanceof StartDeliverDto) {
+                storeId = ((StartDeliverDto) obj).getStoreId();
+                break;
+            }else if(obj instanceof ChangeDetailDto){
+                storeId = ((ChangeDetailDto) obj).getStoreId();
+                break;
+            }
+        }
+        etcService.confirmOwn(storeId);
+    }
+
 
 }
