@@ -25,6 +25,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.StringUtils;
 
 import java.util.LinkedHashMap;
@@ -39,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(TestConfig.class)
+@ActiveProfiles("test")
 class StoreRepoImplTest {
 
     private Logger logger = LoggerFactory.getLogger(StoreRepoImplTest.class);

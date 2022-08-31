@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestControllerAdvice
 @Slf4j
@@ -51,6 +52,14 @@ public class ExceptionController {
         JSONObject response = new JSONObject();
         response.put("message", exception.getMessage());
         return ResponseEntity.status(BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(InternalError.class)
+    public ResponseEntity<?> InternalError(Exception exception) {
+        log.info("InternalError:{}",exception.getMessage());
+        JSONObject response = new JSONObject();
+        response.put("message", exception.getMessage());
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(response);
     }
 
 }

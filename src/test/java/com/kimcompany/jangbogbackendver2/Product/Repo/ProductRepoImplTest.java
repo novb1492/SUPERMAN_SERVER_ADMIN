@@ -31,6 +31,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -43,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(TestConfig.class)
+@ActiveProfiles("test")
 class ProductRepoImplTest {
     private Logger logger = LoggerFactory.getLogger(ProductRepoImplTest.class);
     @BeforeEach
