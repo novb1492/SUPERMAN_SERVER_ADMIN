@@ -59,10 +59,10 @@ public class EmployeeCustomImpl implements EmployeeCustom{
     }
     @Override
     public Page<SelectListDto>selectForList(SearchCondition searchCondition){
-        PageRequest pageRequest = PageRequest.of(searchCondition.getPage(), searchCondition.getPageSize());
+        PageRequest pageRequest = PageRequest.of(searchCondition.getPage()-1, searchCondition.getPageSize());
         List<SelectListDto> fetch = jpaQueryFactory.select(new QSelectListDto(memberEntity, employeeEntity))
                 .from(employeeEntity)
-                .leftJoin(memberEntity)
+                .innerJoin(memberEntity)
                 .on(employeeEntity.memberEntity.id.eq(memberEntity.id))
                 .where(employeeEntity.commonColumn.state.eq(trueStateNum), employeeEntity.storeEntity.id.eq(searchCondition.getStoreId()))
                 .orderBy(employeeEntity.id.desc())
