@@ -82,11 +82,6 @@ public class UtilService {
             e.printStackTrace();
         }
     }
-    public static void setTokenInHeader(String accessToken,String refreshToken) {
-        HttpServletResponse response = getHttpSerResponse();
-        response.setHeader(AuthenticationText, accessToken);
-        response.setHeader(refreshTokenHeaderName, refreshToken);
-    }
     public static boolean confirmNull(String s){
         if(!StringUtils.hasText(s)){
             return true;
@@ -112,12 +107,12 @@ public class UtilService {
     public static void saveAuthenticationInCookie(String accessToken,String refreshToken,HttpServletResponse response) {
         Cookie c=new Cookie(AuthenticationText, accessToken);
         c.setPath("/");
+        c.setHttpOnly(true);
         response.addCookie(c); //테스트용
         Cookie c2=new Cookie(refreshTokenHeaderName, refreshToken);
         c2.setPath("/");
+        c2.setHttpOnly(true);
         response.addCookie(c2); //테스트용
-
-
     }
     public static int LoginExceptionHandle(AuthenticationException failed) {
         int state = 0;
