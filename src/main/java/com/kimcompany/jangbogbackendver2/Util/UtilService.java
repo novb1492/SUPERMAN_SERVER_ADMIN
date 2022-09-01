@@ -114,6 +114,16 @@ public class UtilService {
         c2.setHttpOnly(true);
         response.addCookie(c2); //테스트용
     }
+    public static void deleteAuthenticationInCookie(HttpServletResponse response) {
+        Cookie c=new Cookie(AuthenticationText, null);
+        c.setPath("/");
+        c.setMaxAge(0);
+        response.addCookie(c); //테스트용
+        Cookie c2=new Cookie(refreshTokenHeaderName, null);
+        c2.setPath("/");
+        c2.setMaxAge(0);
+        response.addCookie(c2); //테스트용
+    }
     public static int LoginExceptionHandle(AuthenticationException failed) {
         int state = 0;
         if (Objects.equals(failed.getMessage(), "자격 증명에 실패하였습니다.")) {
