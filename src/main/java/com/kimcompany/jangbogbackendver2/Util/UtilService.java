@@ -32,6 +32,12 @@ import java.util.*;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 public class UtilService {
+    public static void test(HttpServletRequest request){
+        Cookie[] c = request.getCookies();
+        for(Cookie cc:c){
+            System.out.println(cc.getName());
+        }
+    }
     public static Map<String, Object> getQueryMap(String query)
     {
         if (query==null) return null;
@@ -92,15 +98,26 @@ public class UtilService {
     public static Map<String,String> getAuthentication(){
         HttpServletRequest request = getHttpSerRequest();
         Map<String, String> token = new HashMap<>();
-        token.put(AuthenticationText, request.getHeader(AuthenticationText));
-        token.put(refreshTokenHeaderName,request.getHeader(refreshTokenHeaderName));
+        Cookie[] cc = request.getCookies();
+        for(Cookie c:cc){
+            if(c.getName().equals(AuthenticationText)){
+                token.put(AuthenticationText, c.getValue());
+            }else if(c.getName().equals(refreshTokenHeaderName)){
+                token.put(refreshTokenHeaderName,c.getValue());
+            }
+        }
 
         return token;
     }
-    public static void saveAuthenticationInCookie(String accessToken,String refreshToken) {
-        HttpServletResponse response = getHttpSerResponse();
-        response.setHeader(AuthenticationText,accessToken);
-        response.setHeader(refreshTokenHeaderName,refreshToken);
+    public static void saveAuthenticationInCookie(String accessToken,String refreshToken,HttpServletResponse response) {
+        Cookie c=new Cookie(AuthenticationText, accessToken);
+        c.setPath("/");
+        response.addCookie(c); //테스트용
+        Cookie c2=new Cookie(refreshTokenHeaderName, refreshToken);
+        c2.setPath("/");
+        response.addCookie(c2); //테스트용
+
+
     }
     public static int LoginExceptionHandle(AuthenticationException failed) {
         int state = 0;
