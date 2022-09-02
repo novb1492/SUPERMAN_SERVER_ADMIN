@@ -105,30 +105,53 @@ public class UtilService {
         return token;
     }
     public static void saveAuthenticationInCookie(String accessToken,String refreshToken,HttpServletResponse response) {
-        Cookie c=new Cookie(AuthenticationText, accessToken);
-        c.setPath("/");
-        c.setHttpOnly(true);
-        response.addCookie(c); //테스트용
-        Cookie c2=new Cookie(refreshTokenHeaderName, refreshToken);
-        c2.setPath("/");
-        c2.setHttpOnly(true);
-        response.addCookie(c2); //테스트용
+        ResponseCookie cookie = ResponseCookie.from(AuthenticationText, accessToken)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+//                .domain("localhost")
+                .build();
+
+        response.setHeader("Set-Cookie", cookie.toString());
+        ResponseCookie cookie2 = ResponseCookie.from(refreshTokenHeaderName, refreshToken)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+//                .domain("localhost")
+                .build();
+     response.addHeader("Set-Cookie", cookie2.toString());
     }
     public static void deleteAuthenticationInCookie(HttpServletResponse response) {
-        Cookie c=new Cookie(AuthenticationText, null);
-        c.setPath("/");
-        c.setMaxAge(0);
-        response.addCookie(c); //테스트용
-        Cookie c2=new Cookie(refreshTokenHeaderName, null);
-        c2.setPath("/");
-        c2.setMaxAge(0);
-        response.addCookie(c2); //테스트용
+        ResponseCookie cookie = ResponseCookie.from(AuthenticationText, null)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+//                .domain("localhost")
+                .maxAge(0)
+                .build();
+
+        response.setHeader("Set-Cookie", cookie.toString());
+        ResponseCookie cookie2 = ResponseCookie.from(refreshTokenHeaderName, null)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .maxAge(0)
+                .httpOnly(true)
+//                .domain("localhost")
+                .build();
+        response.addHeader("Set-Cookie", cookie2.toString());
     }
     public static int LoginExceptionHandle(AuthenticationException failed) {
         int state = 0;
-        if (Objects.equals(failed.getMessage(), "자격 증명에 실패하였습니다.")) {
+        String message = failed.getMessage();
+        if (message.equals( "자격 증명에 실패하였습니다.")) {
             state = notEqualPwd;
-        } else if (Objects.equals(failed.getMessage(), "사용자 계정이 잠겨 있습니다.")) {
+        } else if (message.equals( "사용자 계정이 잠겨 있습니다.")) {
+            state = accountLock;
+        }else if(message.equals("유효하지 않은 사용자입니다")){
             state = accountLock;
         }
         return state;
