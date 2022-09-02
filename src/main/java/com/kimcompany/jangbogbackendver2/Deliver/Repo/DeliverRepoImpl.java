@@ -85,6 +85,7 @@ public class DeliverRepoImpl implements DeliverRepoCustom {
                 .select(deliverDetailEntity)
                 .from(deliverDetailEntity)
                 .where(deliverDetailEntity.deliverEntity.id.eq(deliverId))
+                .groupBy(deliverDetailEntity.cardEntity.id)
                 .fetch();
 
     }

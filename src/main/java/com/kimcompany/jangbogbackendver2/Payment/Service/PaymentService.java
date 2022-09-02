@@ -51,10 +51,10 @@ public class PaymentService {
         long storeId = cardEntity.getCommonPaymentEntity().getStoreEntity().getId();
         etcService.confirmOwn(storeId);
         if(orderRepo.updateAfterRefundCheck(refundAllNum, 0, cardId, storeId)!=1){
-            throw new IllegalArgumentException(failOrderUpdateMessage);
+            throw new SQLException(failOrderUpdateMessage);
         }
         if(cardRepo.updateState(deleteState, refundAllNum, cardId, storeId)!=1){
-            throw new IllegalArgumentException(failCardUpdateMessage);
+            throw new SQLException(failCardUpdateMessage);
         }
         RequestCancelPartialDto dto = RequestCancelPartialDto.set("매장에서 직접환불", cardEntity.getCommonPaymentEntity().getPTid());
         JSONObject jsonObject = kgService.cancelAllService(dto);

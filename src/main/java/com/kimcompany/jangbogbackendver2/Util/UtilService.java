@@ -32,6 +32,12 @@ import java.util.*;
 import static com.kimcompany.jangbogbackendver2.Text.BasicText.*;
 
 public class UtilService {
+    public static void test(HttpServletRequest request){
+        Cookie[] c = request.getCookies();
+        for(Cookie cc:c){
+            System.out.println(cc.getName());
+        }
+    }
     public static Map<String, Object> getQueryMap(String query)
     {
         if (query==null) return null;
@@ -76,11 +82,6 @@ public class UtilService {
             e.printStackTrace();
         }
     }
-    public static void setTokenInHeader(String accessToken,String refreshToken) {
-        HttpServletResponse response = getHttpSerResponse();
-        response.setHeader(AuthenticationText, accessToken);
-        response.setHeader(refreshTokenHeaderName, refreshToken);
-    }
     public static boolean confirmNull(String s){
         if(!StringUtils.hasText(s)){
             return true;
@@ -92,21 +93,65 @@ public class UtilService {
     public static Map<String,String> getAuthentication(){
         HttpServletRequest request = getHttpSerRequest();
         Map<String, String> token = new HashMap<>();
-        token.put(AuthenticationText, request.getHeader(AuthenticationText));
-        token.put(refreshTokenHeaderName,request.getHeader(refreshTokenHeaderName));
+        Cookie[] cc = request.getCookies();
+        for(Cookie c:cc){
+            if(c.getName().equals(AuthenticationText)){
+                token.put(AuthenticationText, c.getValue());
+            }else if(c.getName().equals(refreshTokenHeaderName)){
+                token.put(refreshTokenHeaderName,c.getValue());
+            }
+        }
 
         return token;
     }
-    public static void saveAuthenticationInCookie(String accessToken,String refreshToken) {
-        HttpServletResponse response = getHttpSerResponse();
-        response.setHeader(AuthenticationText,accessToken);
-        response.setHeader(refreshTokenHeaderName,refreshToken);
+    public static void saveAuthenticationInCookie(String accessToken,String refreshToken,HttpServletResponse response,String domain) {
+        ResponseCookie cookie = ResponseCookie.from(AuthenticationText, accessToken)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .domain(domain)
+                .build();
+
+        response.setHeader("Set-Cookie", cookie.toString());
+        ResponseCookie cookie2 = ResponseCookie.from(refreshTokenHeaderName, refreshToken)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .domain(domain)
+                .build();
+     response.addHeader("Set-Cookie", cookie2.toString());
+    }
+    public static void deleteAuthenticationInCookie(HttpServletResponse response,String domain) {
+        ResponseCookie cookie = ResponseCookie.from(AuthenticationText, null)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .domain(domain)
+                .maxAge(0)
+                .build();
+
+        response.setHeader("Set-Cookie", cookie.toString());
+        ResponseCookie cookie2 = ResponseCookie.from(refreshTokenHeaderName, null)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .maxAge(0)
+                .httpOnly(true)
+                .domain(domain)
+                .build();
+        response.addHeader("Set-Cookie", cookie2.toString());
     }
     public static int LoginExceptionHandle(AuthenticationException failed) {
         int state = 0;
-        if (Objects.equals(failed.getMessage(), "자격 증명에 실패하였습니다.")) {
+        String message = failed.getMessage();
+        if (message.equals( "자격 증명에 실패하였습니다.")) {
             state = notEqualPwd;
-        } else if (Objects.equals(failed.getMessage(), "사용자 계정이 잠겨 있습니다.")) {
+        } else if (message.equals( "사용자 계정이 잠겨 있습니다.")) {
+            state = accountLock;
+        }else if(message.equals("유효하지 않은 사용자입니다")){
             state = accountLock;
         }
         return state;

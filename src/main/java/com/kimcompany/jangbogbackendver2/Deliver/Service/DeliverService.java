@@ -77,11 +77,17 @@ public class DeliverService {
         if(deliverDetailEntity.isEmpty()){
             throw new IllegalArgumentException("조회 할 수없는 배달 입니다");
         }
-        int c=orderRepo.updateStateByCardId(state,deliverDetailEntity.get(0).getCardEntity().getId(),storeId);
-        if(a==0||b==0||c==0){
-            throw new SQLException("상태갱신 실패");
+        /*
+            배달시작/전체취소시
+            해당 배달방 소속의 배달의 카드 아이디값을 가져와서
+            해당 주문상태 값 모두변경
+         */
+        for(DeliverDetailEntity d:deliverDetailEntity) {
+            int c = orderRepo.updateStateByCardId(state, d.getCardEntity().getId(), storeId);
+            if (a == 0 || b == 0 || c == 0) {
+                throw new SQLException("상태갱신 실패");
+            }
         }
-
     }
     @Transactional(rollbackFor = Exception.class)
     public void updateDeliverAndDeliverDetailAndOrderState(ChangeDetailDto changeDetailDto){

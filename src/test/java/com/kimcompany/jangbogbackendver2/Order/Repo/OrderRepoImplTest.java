@@ -32,6 +32,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
@@ -49,6 +50,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(TestConfig.class)
+@ActiveProfiles("test")
 class OrderRepoImplTest {
 
     private Logger logger = LoggerFactory.getLogger(OrderRepoImplTest.class);

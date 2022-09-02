@@ -35,7 +35,7 @@ public class OrderRepoImpl implements OrderRepoCustom{
                 .leftJoin(cardEntity)
                 .on(cardEntity.id.eq(orderEntity.cardEntity.id))
                 .fetchJoin()
-                .where(whereState(searchCondition), whereDate(searchCondition), whereCategory(searchCondition))
+                .where(whereState(searchCondition), whereDate(searchCondition), whereCategory(searchCondition),orderEntity.storeEntity.id.eq(searchCondition.getStoreId()))
                 .orderBy(orderEntity.id.desc())
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
@@ -44,14 +44,14 @@ public class OrderRepoImpl implements OrderRepoCustom{
         JPAQuery<Long> count = jpaQueryFactory
                 .select(orderEntity.cardEntity.id.countDistinct())
                 .from(orderEntity)
-                .where(whereState(searchCondition), whereDate(searchCondition), whereCategory(searchCondition));
+                .where(whereState(searchCondition), whereDate(searchCondition), whereCategory(searchCondition),orderEntity.storeEntity.id.eq(searchCondition.getStoreId()));
         // Result
         Page<SelectListDto> SelectListDtos = PageableExecutionUtils.getPage(fetch, pageRequest, count::fetchOne);
         return SelectListDtos;
     }
     private BooleanExpression whereState(SearchCondition searchCondition) {
         if (searchCondition.getState()== trueStateNum) {
-            return orderEntity.commonColumn.state.eq(trueStateNum).or(orderEntity.commonColumn.state.eq(refundNum));
+            return orderEntity.commonColumn.state.eq(trueStateNum).or(orderEntity.commonColumn.state.eq(refundNum)).or(orderEntity.commonColumn.state.eq(deliveringState));
         }
         return orderEntity.commonColumn.state.eq(searchCondition.getState());
     }
