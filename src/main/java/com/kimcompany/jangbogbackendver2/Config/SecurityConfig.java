@@ -1,7 +1,11 @@
 package com.kimcompany.jangbogbackendver2.Config;
 
 
+import com.kimcompany.jangbogbackendver2.Filter.AuthorizationFilter;
 import com.kimcompany.jangbogbackendver2.Filter.CorsConfig;
+import com.kimcompany.jangbogbackendver2.Filter.LoginFilter;
+import com.kimcompany.jangbogbackendver2.Util.AuthorizationService;
+import com.kimcompany.jangbogbackendver2.Util.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +29,8 @@ public class SecurityConfig  {
     private final CorsConfig corsConfig;
     private final AuthenticationConfiguration authenticationConfiguration;
 
-   // private final LoginService loginService;
-   // private final AuthorizationService authorizationService;
+    private final LoginService loginService;
+    private final AuthorizationService authorizationService;
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -37,18 +41,23 @@ public class SecurityConfig  {
         return  new BCryptPasswordEncoder();
     }
 
-    protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .csrf().disable()
                 //.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 //.and()
                 .addFilter(corsConfig.corsfilter())
-                //.addFilter(new LoginFilter(authenticationManager(), loginService))
-                //.addFilter(new AuthorizationFilter(authenticationManager(), authorizationService))
+                .addFilter(new LoginFilter(loginService,authenticationManager(authenticationConfiguration)))
+                .addFilter(new AuthorizationFilter(authenticationManager(authenticationConfiguration), authorizationService))
                 .formLogin().disable().httpBasic().disable()
-                .authorizeRequests().antMatchers("/auth/**").authenticated()
-                .anyRequest().permitAll();
+                .authorizeRequests()
+                .antMatchers("/login","/token-expire/**","/login-fail/**","/ws/**","/kg/**").permitAll()
+                .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                .antMatchers("/manage/**").hasAnyAuthority("MANAGE","ADMIN")
+                .anyRequest().authenticated()
+                ;
 
         return http.build();
 

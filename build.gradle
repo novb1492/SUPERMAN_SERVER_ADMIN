@@ -27,11 +27,21 @@ repositories {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-aws-messaging aws sqs
+    // HTTP CLIENT
+    implementation group: 'commons-httpclient', name: 'commons-httpclient', version: '3.1'
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.3'
+    // AWS-SQS-MESSAGE
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-aws-messaging', version: '2.2.6.RELEASE'
-    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-sqs aws sqs
+    // https://mvnrepository.com/artifact/net.nurigo/javaSDK
+    implementation group: 'net.nurigo', name: 'javaSDK', version: '2.2'
+
+//    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-aws-messaging aws sqs
+//    implementation group: 'org.springframework.cloud', name: 'spring-cloud-aws-messaging', version: '2.2.6.RELEASE'
+//    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-sqs aws sqs
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-aws
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+    //  https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.6.1'
     // https://mvnrepository.com/artifact/net.nurigo/javaSDK coolsms문자
     implementation group: 'net.nurigo', name: 'javaSDK', version: '2.2'
@@ -56,6 +66,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
 }
 //querydsl 추가 시작
 def querydslDir = "$buildDir/generated/querydsl"
@@ -67,7 +78,7 @@ querydsl {
 sourceSets {
     main.java.srcDir querydslDir
 }
-compileQuerydsl{
+compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
 configurations {
@@ -82,7 +93,7 @@ configurations {
     querydsl.extendsFrom compileClasspath
 }
 
-compileQuerydsl{
+compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
 tasks.named('test') {

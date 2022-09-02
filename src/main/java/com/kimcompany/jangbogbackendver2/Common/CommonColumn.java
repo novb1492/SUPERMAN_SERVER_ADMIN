@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -20,9 +20,13 @@ import java.time.LocalDateTime;
 public class CommonColumn {
 
     @Column(name = "STATE", columnDefinition = "TINYINT")
-    private int state;
+    private Integer state;
 
     @Column(name = "CREATED")
     @CreatedDate
     private LocalDateTime created;
+
+    public static CommonColumn set(int state){
+        return CommonColumn.builder().state(state).build();
+    }
 }
