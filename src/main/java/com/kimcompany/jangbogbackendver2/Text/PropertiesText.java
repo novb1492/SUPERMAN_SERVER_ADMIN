@@ -33,6 +33,11 @@ public class PropertiesText {
 
     public static String cancelUrl;
     public static String serverIp;
+    public static String frontDomain;
+    @Value("${front-domain}")
+    public void setFrontDomain(String value) {
+        this.frontDomain = value;
+    }
     @Value("${back.ip}")
     public void setServerIp(String value) {
         this.serverIp = value;

@@ -104,13 +104,13 @@ public class UtilService {
 
         return token;
     }
-    public static void saveAuthenticationInCookie(String accessToken,String refreshToken,HttpServletResponse response) {
+    public static void saveAuthenticationInCookie(String accessToken,String refreshToken,HttpServletResponse response,String domain) {
         ResponseCookie cookie = ResponseCookie.from(AuthenticationText, accessToken)
                 .path("/")
                 .secure(true)
                 .sameSite("None")
                 .httpOnly(true)
-//                .domain("localhost")
+                .domain(domain)
                 .build();
 
         response.setHeader("Set-Cookie", cookie.toString());
@@ -119,17 +119,17 @@ public class UtilService {
                 .secure(true)
                 .sameSite("None")
                 .httpOnly(true)
-//                .domain("localhost")
+                .domain(domain)
                 .build();
      response.addHeader("Set-Cookie", cookie2.toString());
     }
-    public static void deleteAuthenticationInCookie(HttpServletResponse response) {
+    public static void deleteAuthenticationInCookie(HttpServletResponse response,String domain) {
         ResponseCookie cookie = ResponseCookie.from(AuthenticationText, null)
                 .path("/")
                 .secure(true)
                 .sameSite("None")
                 .httpOnly(true)
-//                .domain("localhost")
+                .domain(domain)
                 .maxAge(0)
                 .build();
 
@@ -140,7 +140,7 @@ public class UtilService {
                 .sameSite("None")
                 .maxAge(0)
                 .httpOnly(true)
-//                .domain("localhost")
+                .domain(domain)
                 .build();
         response.addHeader("Set-Cookie", cookie2.toString());
     }
