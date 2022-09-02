@@ -1,7 +1,11 @@
 package com.kimcompany.jangbogbackendver2.Store;
 
 import com.kimcompany.jangbogbackendver2.Api.KakaoMapService;
+import com.kimcompany.jangbogbackendver2.Common.CommonColumn;
 import com.kimcompany.jangbogbackendver2.Company.Service.CompanyService;
+import com.kimcompany.jangbogbackendver2.Employee.Model.EmployeeEntity;
+import com.kimcompany.jangbogbackendver2.Employee.Repo.EmployeeRepo;
+import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Noty.NotyService;
 import com.kimcompany.jangbogbackendver2.Store.Dto.*;
 import com.kimcompany.jangbogbackendver2.Store.Model.StoreEntity;
@@ -36,7 +40,9 @@ public class StoreService {
     private final StoreSelectService storeSelectService;
     private final KakaoMapService kakaoMapService;
     private final CompanyService companyService;
-    @Transactional
+    private final EmployeeRepo employeeRepo;
+
+    @Transactional(rollbackFor = Exception.class)
     public void save(TryInsertDto tryInsertDto) throws ParseException {
         //중복검사
         confirmExist(tryInsertDto.getAddress(), tryInsertDto.getName());
@@ -48,6 +54,10 @@ public class StoreService {
         confirmCompanyNum(tryInsertDto.getCompanyNum());
         StoreEntity storeEntity = TryInsertDto.dtoToEntity(tryInsertDto);
         storeRepo.save(storeEntity);
+        employeeRepo.save(EmployeeEntity.builder().storeEntity(storeEntity)
+                .memberEntity(MemberEntity.builder().id(getLoginUserId()).build())
+                .commonColumn(CommonColumn.builder().state(trueStateNum).build())
+                .insertUser(MemberEntity.builder().id(getLoginUserId()).build()).build());
     }
     private void confirmCompanyNum(String companyId) throws ParseException {
         companyService.confirmNumOwn(Long.parseLong(companyId));
