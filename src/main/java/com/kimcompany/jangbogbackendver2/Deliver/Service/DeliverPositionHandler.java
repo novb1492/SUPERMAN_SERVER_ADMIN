@@ -4,6 +4,7 @@ import com.kimcompany.jangbogbackendver2.Deliver.Model.DeliverEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.MemberEntity;
 import com.kimcompany.jangbogbackendver2.Member.Model.PrincipalDetails;
 import com.kimcompany.jangbogbackendver2.Text.BasicText;
+import com.kimcompany.jangbogbackendver2.Util.EtcService;
 import com.kimcompany.jangbogbackendver2.Util.UtilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
 
     private final DeliverService deliverService;
     private final DeliverSelectService deliverSelectService;
+    private final EtcService etcService;
 
 
     @Override//메세지가오는함수
@@ -126,8 +128,9 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         String deliverId = params.get("roomid").toString();
         String role=params.get("role").toString();
         if(role.equals(ROLE_ADMIN)){
-            String storeId=params.get("storeId").toString();
-            adminAction(Long.parseLong(deliverId),Long.parseLong(storeId));
+            long storeId=Long.parseLong(params.get("storeId").toString());
+            confirmAdmin(session,storeId);
+            adminAction(Long.parseLong(deliverId),storeId);
         }else{
             String deliverDetailId = params.get("deliverDetailId").toString();
             clientAction(session,Long.parseLong(deliverId),Long.parseLong(deliverDetailId));
@@ -184,5 +187,26 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
         roomDetail.put("sessionId", session.getId());
         roomDetail.put("session", session);
         return roomDetail;
+    }
+
+    /**
+     * 웹소켓 세션에서 로그인 정보 추출
+     * @param session
+     * @return
+     */
+    private MemberEntity getLoginInfo(WebSocketSession session) {
+        AbstractAuthenticationToken principal=(AbstractAuthenticationToken) session.getPrincipal();
+        PrincipalDetails  principalDetails=(PrincipalDetails) principal.getPrincipal();
+        return principalDetails.getMemberEntity();
+    }
+
+    /**
+     * 어드민 접근시 해당 매장 소속인지 검사
+     * @param session
+     * @param storeId
+     */
+    private void confirmAdmin(WebSocketSession session, long storeId){
+        MemberEntity loginInfo = getLoginInfo(session);
+        etcService.confirmOwn(storeId,loginInfo.getId(),loginInfo.getRole());
     }
 }
