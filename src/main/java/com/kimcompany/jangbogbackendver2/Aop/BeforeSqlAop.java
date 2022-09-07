@@ -109,30 +109,31 @@ public class BeforeSqlAop {
         etcService.confirmOwn(storeId);
     }
 
-    /**
-     * 웹소켓 연결전 인증주입
-     * @param joinPoint
-     * @throws Throwable
-     */
-    @Before("execution(* com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverPositionHandler.afterConnectionEstablished(..))")
-    public void ws(JoinPoint joinPoint) throws Throwable{
-        log.info("웹소캣 접근전 소유 검사");
-        WebSocketSession session = null;
-        for (Object obj : joinPoint.getArgs()) {
-            if (obj instanceof WebSocketSession) {
-                session =  (WebSocketSession) obj;
-                break;
-            }
-        }
-        Map<String, String> queryMap = getAuthentication();
-        /**
-         * 테스트위해 유저는 제외
-         */
-        if(!queryMap.get("role").equals(ROLE_USER)){
-            authorizationService.pro(queryMap.get("access"));
-            etcService.confirmOwn(Long.parseLong(queryMap.get("storeId")));
-        }
-    }
+    //헤더에서 쿠키로 변경하였으므로 불필요
+//    /**
+//     * 웹소켓 연결전 인증주입
+//     * @param joinPoint
+//     * @throws Throwable
+//     */
+//    @Before("execution(* com.kimcompany.jangbogbackendver2.Deliver.Service.DeliverPositionHandler.afterConnectionEstablished(..))")
+//    public void ws(JoinPoint joinPoint) throws Throwable{
+//        log.info("웹소캣 접근전 소유 검사");
+//        WebSocketSession session = null;
+//        for (Object obj : joinPoint.getArgs()) {
+//            if (obj instanceof WebSocketSession) {
+//                session =  (WebSocketSession) obj;
+//                break;
+//            }
+//        }
+//        Map<String, String> queryMap = getAuthentication();
+//        /**
+//         * 테스트위해 유저는 제외
+//         */
+//        if(!queryMap.get("role").equals(ROLE_USER)){
+//            authorizationService.pro(queryMap.get("access"));
+//            etcService.confirmOwn(Long.parseLong(queryMap.get("storeId")));
+//        }
+//    }
 
     /**
      * 업데이트전 소유확인
