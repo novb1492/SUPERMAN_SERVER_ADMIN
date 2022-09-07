@@ -58,7 +58,6 @@ public class StoreService {
                 .memberEntity(MemberEntity.builder().id(getLoginUserId()).build())
                 .commonColumn(CommonColumn.builder().state(trueStateNum).build())
                 .insertUser(MemberEntity.builder().id(getLoginUserId()).build()).build());
-
     }
     private void confirmCompanyNum(String companyId) throws ParseException {
         companyService.confirmNumOwn(Long.parseLong(companyId));
