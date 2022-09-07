@@ -21,6 +21,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -109,9 +110,9 @@ public class BeforeSqlAop {
         etcService.confirmOwn(storeId);
     }
 
-    //헤더에서 쿠키로 변경하였으므로 불필요
 //    /**
-//     * 웹소켓 연결전 인증주입
+//     * 웹소켓 연결전 인증주입 인증 방식이 쿠키로 버뀌어서
+    // 웹소캣 내부에서 검사
 //     * @param joinPoint
 //     * @throws Throwable
 //     */
@@ -125,13 +126,14 @@ public class BeforeSqlAop {
 //                break;
 //            }
 //        }
-//        Map<String, String> queryMap = getAuthentication();
+//        String query = session.getUri().getQuery();
+//        Map<String, Object> queryMap = getQueryMap(query);
 //        /**
 //         * 테스트위해 유저는 제외
 //         */
 //        if(!queryMap.get("role").equals(ROLE_USER)){
-//            authorizationService.pro(queryMap.get("access"));
-//            etcService.confirmOwn(Long.parseLong(queryMap.get("storeId")));
+//            System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+////            etcService.confirmOwn(Long.parseLong(queryMap.get("storeId").toString()));
 //        }
 //    }
 
