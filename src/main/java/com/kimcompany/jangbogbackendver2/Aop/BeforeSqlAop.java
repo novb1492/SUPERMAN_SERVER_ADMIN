@@ -124,14 +124,13 @@ public class BeforeSqlAop {
                 break;
             }
         }
-        String query = session.getUri().getQuery();
-        Map<String, Object> queryMap = getQueryMap(query);
+        Map<String, String> queryMap = getAuthentication();
         /**
          * 테스트위해 유저는 제외
          */
         if(!queryMap.get("role").equals(ROLE_USER)){
-            authorizationService.pro(queryMap.get("access").toString());
-            etcService.confirmOwn(Long.parseLong(queryMap.get("storeId").toString()));
+            authorizationService.pro(queryMap.get("access"));
+            etcService.confirmOwn(Long.parseLong(queryMap.get("storeId")));
         }
     }
 
