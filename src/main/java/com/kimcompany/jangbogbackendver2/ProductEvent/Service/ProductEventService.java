@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class ProductEventService {
         if(events.isEmpty()){
             return;
         }
+        confirmDate(events);
         List<String> dates = new ArrayList<>();
         for(Map<String,Object>event:events){
             if(event.isEmpty()){
@@ -67,5 +69,36 @@ public class ProductEventService {
             }else {
                 dates.add(startDate);
             }
+    }
+
+    /**
+     * 겹치는 이벤트 날짜 검사
+     * @param events
+     */
+    private void confirmDate(List<Map<String,Object>>events){
+        int size=events.size();
+        for(int i=0;i<size-1;i++){
+            Map<String,Object>event=events.get(i);
+            if(event.isEmpty()){
+                continue;
+            }
+            String startDate=event.get("startDate").toString().split("T")[0];
+            String startDate2=event.get("startDate").toString().replace("T"," ")+":59";
+            String endDate=event.get("endDate").toString().replace("T"," ")+":59";
+            if(!Timestamp.valueOf(startDate2).toLocalDateTime().isAfter(LocalDateTime.now())){
+                throw new IllegalArgumentException("이벤트 시작일은 현재보다 빨라야합니다\n"+event.get("name"));
+            }
+            for(int ii=i+1;ii<size;ii++){
+                Map<String,Object>event2=events.get(ii);
+                String startDate3=event2.get("startDate").toString().split("T")[0];
+                String startDate4=event2.get("startDate").toString().replace("T"," ")+":59";
+                if(startDate.equals(startDate3)){
+                    if(!Timestamp.valueOf(startDate4).toLocalDateTime().isAfter(Timestamp.valueOf(endDate).toLocalDateTime())){
+                        throw new IllegalArgumentException("겹치는이벤트가 있습니다\n"+event.get("name")+","+event2.get("name"));
+                    }
+                }
+
+            }
+        }
     }
 }
