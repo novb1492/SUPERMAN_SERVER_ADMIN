@@ -26,16 +26,19 @@ public class ProductEventService {
         if(events.isEmpty()){
             return;
         }
-        confirmDate(events);
+//        confirmDate(events);
         List<String> dates = new ArrayList<>();
+        int index=0;
+        int size=events.size();
         for(Map<String,Object>event:events){
             if(event.isEmpty()){
                 continue;
             }
-            confirmDate(event,dates);
+            confirmDate(event,dates,index,size,events);
             confirmPrice(event);
             confirmName(event);
             productEventRepo.save(TryInsertDto.dtoToEntity(event, productId));
+            index+=1;
         }
     }
     private void confirmName(Map<String,Object>event){
@@ -54,7 +57,7 @@ public class ProductEventService {
         }
 
     }
-    private void confirmDate(Map<String,Object>event,List<String> dates){
+    private void confirmDate(Map<String,Object>event,List<String> dates,int index,int size, List<Map<String,Object>>events){
             String startDate=event.get("startDate").toString().replace("T"," ")+":00";
             String endDate=event.get("endDate").toString().replace("T"," ")+":00";
             System.out.println(startDate+","+endDate);
@@ -69,36 +72,23 @@ public class ProductEventService {
             }else {
                 dates.add(startDate);
             }
-    }
-
-    /**
-     * 겹치는 이벤트 날짜 검사
-     * @param events
-     */
-    private void confirmDate(List<Map<String,Object>>events){
-        int size=events.size();
-        for(int i=0;i<size-1;i++){
-            Map<String,Object>event=events.get(i);
-            if(event.isEmpty()){
-                continue;
-            }
-            String startDate=event.get("startDate").toString().split("T")[0];
-            String startDate2=event.get("startDate").toString().replace("T"," ")+":59";
-            String endDate=event.get("endDate").toString().replace("T"," ")+":59";
-            if(!Timestamp.valueOf(startDate2).toLocalDateTime().isAfter(LocalDateTime.now())){
+            /*
+                이벤트시작일 검사 이전 시간대는 불가
+             */
+            if(!Timestamp.valueOf(startDate).toLocalDateTime().isAfter(LocalDateTime.now())){
                 throw new IllegalArgumentException("이벤트 시작일은 현재보다 빨라야합니다\n"+event.get("name"));
             }
-            for(int ii=i+1;ii<size;ii++){
+            /*
+                이벤트 겹치는날 있는지 검사
+             */
+            for(int ii=index+1;ii<size;ii++){
                 Map<String,Object>event2=events.get(ii);
-                String startDate3=event2.get("startDate").toString().split("T")[0];
-                String startDate4=event2.get("startDate").toString().replace("T"," ")+":59";
-                if(startDate.equals(startDate3)){
-                    if(!Timestamp.valueOf(startDate4).toLocalDateTime().isAfter(Timestamp.valueOf(endDate).toLocalDateTime())){
-                        throw new IllegalArgumentException("겹치는이벤트가 있습니다\n"+event.get("name")+","+event2.get("name"));
-                    }
+                String startDate2=event2.get("startDate").toString().replace("T"," ")+":59";
+                String endDate2=event2.get("endDate").toString().replace("T"," ")+":59";
+                if(Timestamp.valueOf(endDate).toLocalDateTime().isAfter(Timestamp.valueOf(startDate2).toLocalDateTime())&&Timestamp.valueOf(startDate).toLocalDateTime().isBefore(Timestamp.valueOf(endDate2).toLocalDateTime())){
+                    throw new IllegalArgumentException("겹치는이벤트가 있습니다\n"+event.get("name")+","+event2.get("name"));
                 }
 
             }
-        }
     }
 }
