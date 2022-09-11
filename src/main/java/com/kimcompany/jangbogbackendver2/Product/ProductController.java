@@ -41,7 +41,7 @@ public class ProductController {
     public ResponseEntity<?>selectForList(@PathVariable String storeId, HttpServletRequest request){
         SearchCondition searchCondition = new SearchCondition(Integer.parseInt(request.getParameter("page").toString())
                 , Optional.ofNullable(request.getParameter("category")).orElseGet(()->null)
-                , Optional.ofNullable(request.getParameter("val")).orElseGet(()->null));
+                , Optional.ofNullable(request.getParameter("keyword")).orElseGet(()->null));
         return ResponseEntity.ok().body(productService.selectForList(Long.parseLong(storeId), searchCondition));
     }
 }
