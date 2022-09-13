@@ -11,7 +11,6 @@ import static com.kimcompany.jangbogbackendver2.Text.BasicText.cantFindStoreMess
 @Service
 @RequiredArgsConstructor
 public class EtcService {
-    private final StoreSelectService storeSelectService;
     private final EmployeeSelectService employeeSelectService;
 
     /**
@@ -42,14 +41,8 @@ public class EtcService {
      * @param role
      */
     private void confirmOwnCore(long storeId,long adminId,String role){
-        if(role.equals(ROLE_ADMIN)){
-            if(!storeSelectService.checkExist(storeId,adminId)){
-                throw new IllegalArgumentException(cantFindStoreMessage);
-            }
-        }else if(role.equals(ROLE_MANAGE)||role.equals(ROLE_USER)){
-            if(!employeeSelectService.exist(storeId, adminId, trueStateNum)){
-                throw new IllegalArgumentException(cantFindStoreMessage);
-            }
+        if(!employeeSelectService.exist(storeId, adminId, trueStateNum)){
+            throw new IllegalArgumentException(cantFindStoreMessage);
         }
     }
 }
