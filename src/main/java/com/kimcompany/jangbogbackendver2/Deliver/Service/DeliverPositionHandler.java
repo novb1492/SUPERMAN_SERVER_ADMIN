@@ -182,7 +182,7 @@ public class DeliverPositionHandler extends TextWebSocketHandler {
     public Map<String,Object> makeRoomDetail(WebSocketSession session, long deliverId,long deliverDetailId) {
         Map<String,Object>roomDetail=new HashMap<>();
         roomDetail.put("roomNumber", deliverId);
-        roomDetail.put("userId",1L);
+//        roomDetail.put("userId",1L);
         roomDetail.put("deliverDetailId",deliverDetailId);
         roomDetail.put("sessionId", session.getId());
         roomDetail.put("session", session);

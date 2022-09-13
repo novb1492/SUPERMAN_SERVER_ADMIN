@@ -104,9 +104,6 @@ public class StoreService {
     public Page<SelectListDto> selectForList(SearchCondition searchCondition){
         log.info(searchCondition.toString());
         confirmCategory(searchCondition.getCategory(),searchCondition.getKeyword());
-        if(getLoginUserRole().equals(BasicText.ROLE_ADMIN)){
-            return storeSelectService.selectForListAdmin(searchCondition, storeListPageSize);
-        }
         return storeSelectService.selectForListOther(searchCondition, storeListPageSize);
     }
     private void confirmCategory(String category,String val){
