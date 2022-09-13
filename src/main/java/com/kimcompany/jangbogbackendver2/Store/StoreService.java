@@ -93,13 +93,7 @@ public class StoreService {
         return false;
     }
     public Page<SelectRegiDto> selectForRegi(int page){
-        String role = getLoginUserRole();
-        if(role.equals(ROLE_ADMIN)){
-            return storeSelectService.selectForRegi(page, regiEmployeePageSize);
-        }else if(role.equals(ROLE_MANAGE)){
-            return storeSelectService.selectForRegiManage(page, regiEmployeePageSize);
-        }
-        throw new IllegalArgumentException("권한이 없는 행위입니다");
+        return storeSelectService.selectForRegiManage(page, regiEmployeePageSize);
     }
     public Page<SelectListDto> selectForList(SearchCondition searchCondition){
         log.info(searchCondition.toString());
