@@ -31,9 +31,9 @@ public class BasicText {
     public static String cantFindProductCategory = "존재하지 않는 카테고리 이거나 더이상 사용할 수없는 카테고리입니다";
     public static int productListPageSize = 3;
     public static String cantFindCompanyNum="등록한 사업자번호가 없습니다";
-    public static int companyPageSize=3;
+    public static int companyPageSize=1;
     public static String RefundText = "Refund";
-    public static int deliverPageSize = 2;
+    public static int deliverPageSize = 1;
     public static String PartialRefundText = "PartialRefund";
     public static int orderListPageSize = 2;
     public static int refundNum=127;
@@ -41,7 +41,7 @@ public class BasicText {
     public static int orderAndDeliverDoneNum=100;
     public static String failOrderUpdateMessage = "주문 정보 갱신에 실패했습니다";
     public static String failCardUpdateMessage = "결제정보 갱신에 실패했습니다";
-    public static int employeePageSize = 10;
+    public static int employeePageSize = 1;
     public static int deliveringState = 20;
     public static int deliverDoneState = 100;
     public static int deliverCancelState = 10;
