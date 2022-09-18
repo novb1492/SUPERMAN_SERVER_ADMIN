@@ -88,16 +88,26 @@ public class PaymentService {
         int requestCount = tryRefundDto.getCount();
         int newCount=confirmCount(requestCount,totalCount);
         int cancelPrice= tryRefundDto.getCount()*refundDto.getOrderEntity().getPrice();
-        int cardPrice = refundDto.getCardEntity().getCommonPaymentEntity().getPrtcRemains();
+        int cardPrice = Integer.parseInt(refundDto.getCardEntity().getCommonPaymentEntity().getPAmt());
         confirmPrice(cancelPrice,refundDto.getOrderEntity().getPrice()*refundDto.getOrderEntity().getTotalCount());
-        int newPrice=confirmPriceAll(cancelPrice,cardPrice);
-        log.info("취소요청 금액:{},원금액:{},남은금액:{}",cancelPrice,cardPrice,cardPrice-cancelPrice);
+        /*
+            수정가격생성
+         */
+        int newPrice = confirmPriceAll(cancelPrice,refundDto.getCardEntity().getCommonPaymentEntity().getPrtcRemains());
+        int newTotalPrice=cardPrice-cancelPrice;
+        log.info("취소요청 금액:{},원금액:{},남은금액:{}",cancelPrice,cardPrice,newTotalPrice);
         int state= refundNum;
         if(newCount>=1){
             state= trueStateNum;
         }
+        /*
+            요청전 db수정
+         */
         if(orderRepo.updateAfterRefund(state, newCount, orderId,storeId)!=1){
             throw new SQLException(failOrderUpdateMessage);
+        }
+        if(cardRepo.updateAmtByOid(Integer.toString(newTotalPrice),refundDto.getCardEntity().getCommonPaymentEntity().getPOid())<=0){
+            throw new SQLException(failCardUpdateMessage);
         }
         if(cardRepo.updateAfterRefund(newPrice,cardId,storeId,refundDto.getCardEntity().getCommonPaymentEntity().getPrtcCnt()+1)!=1){
             throw new SQLException(failCardUpdateMessage);
