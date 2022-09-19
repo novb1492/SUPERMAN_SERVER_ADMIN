@@ -34,6 +34,6 @@ public class SelectListDto {
         this.destinationAddr =  orderEntity.getAddressColumn().getAddress();
         this.destinationDetailAddr =  orderEntity.getAddressColumn().getDetailAddress();
         this.cardId = cardEntity.getId();
-        this.price= UtilService.confirmPrice(Integer.parseInt(cardEntity.getP_CARD_APPLPRICE()));
+        this.price= UtilService.confirmPrice(cardEntity.getCommonPaymentEntity().getPrtcRemains());
     }
 }

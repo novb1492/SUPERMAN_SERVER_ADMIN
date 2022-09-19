@@ -50,27 +50,18 @@ public class PaymentService {
         CardEntity cardEntity = cardRepo.findByIdForRefundAll(cardId, deleteState).orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 결제 내역입니다"));
         long storeId = cardEntity.getCommonPaymentEntity().getStoreEntity().getId();
         etcService.confirmOwn(storeId);
-        if(orderRepo.updateAfterRefundCheck(refundAllNum, 0, cardId, storeId)!=1){
+        if(orderRepo.updateAfterRefundCheck(refundAllNum, 0, cardId, storeId)<=0){
             throw new SQLException(failOrderUpdateMessage);
         }
-        if(cardRepo.updateState(deleteState, refundAllNum, cardId, storeId)!=1){
+        if(cardRepo.updateState(deleteState, refundAllNum, cardId, storeId)<=0){
             throw new SQLException(failCardUpdateMessage);
         }
-        RequestCancelPartialDto dto = RequestCancelPartialDto.set("매장에서 직접환불", cardEntity.getCommonPaymentEntity().getPTid());
-        JSONObject jsonObject = kgService.cancelAllService(dto);
-        if(!jsonObject.get("resultCode").equals("00")){
-            String msg = jsonObject.get("resultMsg").toString();
-            if(msg.equals("부분취소 원거래 취소불가")){
-                log.info("부분취소 원거래 취소불가로 인해 자동 부분취소 요청 시작");
-                RequestCancelPartialDto dto2 = RequestCancelPartialDto.set("매장에서 직접환불", cardEntity.getCommonPaymentEntity().getPTid()
-                        , Integer.toString(cardEntity.getCommonPaymentEntity().getPrtcRemains()), "0", PartialRefundText);
-                JSONObject jsonObject2 = kgService.cancelAllService(dto2);
-                if(!jsonObject2.get("resultCode").equals("00")){
-                    throw new IllegalArgumentException("환불에 실패했습니다 사유:" + jsonObject2.get("resultMsg"));
-                }
-                return;
-            }
-            throw new IllegalArgumentException("환불에 실패했습니다 사유:" + jsonObject.get("resultMsg"));
+        RequestCancelPartialDto dto2 = RequestCancelPartialDto.set("매장에서 직접환불", cardEntity.getCommonPaymentEntity().getPTid()
+                    , Integer.toString(cardEntity.getCommonPaymentEntity().getPrtcRemains()), "0", PartialRefundText);
+        JSONObject jsonObject2 = kgService.cancelAllService(dto2);
+        log.info("전체취소결과:{}",jsonObject2);
+        if(!jsonObject2.get("resultCode").equals("00")){
+            throw new IllegalArgumentException("환불에 실패했습니다 사유:" + jsonObject2.get("resultMsg"));
         }
     }
     @Transactional(rollbackFor = Exception.class)
